@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <typeAliases>
+        <typeAlias alias="BoardDto" type="com.example.BaseProject.domain.BoardDto"/>
+        <typeAlias alias="InstructorDto" type="com.example.BaseProject.domain.InstructorDto"/>
+        <typeAlias alias="ClassPointDto" type="com.example.BaseProject.domain.ClassPointDto"/>
+        <typeAlias alias="ClassTypeDto" type="com.example.BaseProject.domain.ClassTypeDto"/>
+        <typeAlias alias="ClassTimeDto" type="com.example.BaseProject.domain.ClassTimeDto"/>
+        <typeAlias alias="UserDto" type="com.example.BaseProject.domain.UserDto"/>
+        <typeAlias alias="UserReservationDto" type="com.example.BaseProject.domain.UserReservationDto"/>
+    </typeAliases>
+</configuration>

@@ -1,0 +1,100 @@
+/* 스케쥴 리스트 */
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 40px;
+    margin-bottom: 30px;
+}
+
+.button-container button {
+    padding: 8px 15px;
+    border: 1px solid black;
+    background: white;
+    cursor: pointer;
+}
+
+.table-navigation {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.table-navigation button {
+    padding: 10px 15px;
+    margin: 5px;
+    border: none;
+    background-color: #007BFF;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.table-navigation button:hover {
+    background-color: #0056b3;
+}
+
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.schedule-table th, .schedule-table td {
+    border: 1px solid #ddd;
+    padding: 15px;
+    text-align: center;
+}
+
+.schedule-table th {
+    background-color: #f0f0f0;
+}
+
+.lesson {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.reserve-btn, .cancel-btn, .waitlist-btn, .reserved {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.reserve-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.reserve-btn:hover {
+    background-color: #218838;
+}
+
+.cancel-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.cancel-btn:hover {
+    background-color: #c82333;
+}
+
+.waitlist-btn {
+    background-color: #ffc107;
+    color: black;
+}
+
+.waitlist-btn:hover {
+    background-color: #e0a800;
+}
+
+.reserved {
+    background-color: #6c757d;
+    color: white;
+}

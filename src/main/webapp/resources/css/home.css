@@ -1,0 +1,96 @@
+/* 슬라이드 쇼 */
+.carousel-item img {
+    height: 400px;
+    object-fit: contain;
+    margin: 100px;
+}
+
+.carousel-caption {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.carousel-caption h5 {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.carousel-caption p {
+    font-size: 1.25rem;
+}
+
+/* 컨텐츠 섹션 */
+.container h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.container p {
+    font-size: 1rem;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #f4ebe6;
+    font-weight: bold;
+}
+
+/* 행(tr) 호버 효과 */
+tr:hover {
+    background-color: #f0f0f0; /* 연한 회색 */
+    transition: background-color 0.3s ease;
+}
+
+.lesson-title {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.delete-btn {
+    background-color: #888;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.delete-btn:hover {
+    background-color: #555;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 40px;
+    margin-bottom: 15px;
+}
+
+.button-container button {
+    padding: 8px 15px;
+    border: 1px solid black;
+    background: white;
+    cursor: pointer;
+}
+
+.button-container button:hover {
+    background: #ddd;
+}
+
+
