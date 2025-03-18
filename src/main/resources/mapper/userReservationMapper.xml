@@ -16,14 +16,15 @@
             (#{user_id}, #{class_id})
     </insert>
 
-    <delete id="delete" parameterType="map">
-        DELETE FROM user_reservation
+    <update id="update" parameterType="map">
+        UPDATE user_reservation
+        SET cancel_flag = '1'
         WHERE user_id = #{user_id} and class_id = #{class_id}
-    </delete>
+    </update>
 
     <select id="selectReservedClassIdsByUser" parameterType="int" resultType="int">
         SELECT class_id
         FROM user_reservation
-        WHERE user_id = #{userId}
+        WHERE user_id = #{userId} and cancel_flag = 0
     </select>
 </mapper>

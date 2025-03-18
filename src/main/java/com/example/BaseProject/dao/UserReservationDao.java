@@ -20,11 +20,11 @@ public class UserReservationDao {
         return session.insert(namespace+"insert", dto);
     }
 
-    public int delete(int userId, int classId) throws Exception {
+    public int update(int userId, int classId) throws Exception {
         Map<String, Object> map = new HashMap<>();
         map.put("user_id", userId);
         map.put("class_id", classId);
-        return session.delete(namespace+"delete", map);
+        return session.update(namespace+"update", map);
     }
 
     public List<Integer> findReservedClassIdsByUser(int userId) {
