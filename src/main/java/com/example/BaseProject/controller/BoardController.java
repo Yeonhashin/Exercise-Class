@@ -191,7 +191,6 @@ public class BoardController {
                 startDate = LocalDate.now(); // 기본값: 오늘 날짜
             }
 
-
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d(E)");
 
             List<String> formattedDates = IntStream.range(0, 5)

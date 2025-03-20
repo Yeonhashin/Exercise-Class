@@ -1,5 +1,6 @@
 package com.example.BaseProject.dao;
 
+import com.example.BaseProject.domain.BoardDto;
 import com.example.BaseProject.domain.UserReservationDto;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,5 +30,9 @@ public class UserReservationDao {
 
     public List<Integer> findReservedClassIdsByUser(int userId) {
         return session.selectList(namespace + "selectReservedClassIdsByUser", userId);
+    }
+
+    public List<UserReservationDto> reservedClassByUser(int userId) throws Exception {
+        return session.selectList(namespace+"selectReservedClassByUser", userId);
     }
 }
