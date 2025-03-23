@@ -24,6 +24,7 @@ public class HomeController {
         int userId = (int) session.getAttribute("user_id");
 
         List<UserReservationDto> reservedClass = userReservationDao.reservedClassByUser(userId);
+        m.addAttribute("reservedClass", reservedClass);
 
         System.out.println("reservedClass = " + reservedClass);
 
