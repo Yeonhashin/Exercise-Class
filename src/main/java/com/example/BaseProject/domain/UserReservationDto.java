@@ -7,6 +7,8 @@ public class UserReservationDto {
     private Integer id;
     private Integer user_id;
     private Integer class_id;
+    private int cancel_flag;
+
     private Date create_dt;
     private Date update_dt;
 
@@ -19,12 +21,15 @@ public class UserReservationDto {
     private String class_start_time;
     private String class_end_time;
 
+    private boolean canCancel;
+
     public UserReservationDto() {}
 
-    public UserReservationDto(Integer id, Integer user_id, Integer class_id, Date create_dt, Date update_dt, String class_type_name, String class_name, String class_point_name, String instructor_name, int class_time_id, String class_date, String class_start_time, String class_end_time) {
+    public UserReservationDto(Integer id, Integer user_id, Integer class_id, int cancel_flag, Date create_dt, Date update_dt, String class_type_name, String class_name, String class_point_name, String instructor_name, int class_time_id, String class_date, String class_start_time, String class_end_time, boolean canCancel) {
         this.id = id;
         this.user_id = user_id;
         this.class_id = class_id;
+        this.cancel_flag = cancel_flag;
         this.create_dt = create_dt;
         this.update_dt = update_dt;
         this.class_type_name = class_type_name;
@@ -35,6 +40,7 @@ public class UserReservationDto {
         this.class_date = class_date;
         this.class_start_time = class_start_time;
         this.class_end_time = class_end_time;
+        this.canCancel = canCancel;
     }
 
     public Integer getId() {
@@ -59,6 +65,14 @@ public class UserReservationDto {
 
     public void setClass_id(Integer class_id) {
         this.class_id = class_id;
+    }
+
+    public Integer getCancel_flag() {
+        return cancel_flag;
+    }
+
+    public void setCancel_flag(int cancel_flag) {
+        this.cancel_flag = cancel_flag;
     }
 
     public Date getCreate_dt() {
@@ -141,6 +155,14 @@ public class UserReservationDto {
         this.class_end_time = class_end_time;
     }
 
+    public boolean isCanCancel() {
+        return canCancel;
+    }
+
+    public void setCanCancel(boolean canCancel) {
+        this.canCancel = canCancel;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -160,6 +182,7 @@ public class UserReservationDto {
                 "id=" + id +
                 ", user_id=" + user_id +
                 ", class_id=" + class_id +
+                ", cancel_flag=" + cancel_flag +
                 ", create_dt=" + create_dt +
                 ", update_dt=" + update_dt +
                 ", class_type_name='" + class_type_name + '\'' +
@@ -170,6 +193,7 @@ public class UserReservationDto {
                 ", class_date='" + class_date + '\'' +
                 ", class_start_time='" + class_start_time + '\'' +
                 ", class_end_time='" + class_end_time + '\'' +
+                ", canCancel=" + canCancel +
                 '}';
     }
 }

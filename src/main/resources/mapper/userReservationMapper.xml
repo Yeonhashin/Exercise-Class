@@ -28,6 +28,18 @@
         WHERE user_id = #{userId} and cancel_flag = 0
     </select>
 
+    <select id="selectAllReservedClassByUser" parameterType="int" resultType="UserReservationDto">
+        SELECT UR.*, CTY.class_type_name, CTY.class_name, CP.class_point_name, II.instructor_name, CT.class_start_time, CT.class_end_time, CI.class_date
+        FROM user_reservation AS UR
+                 INNER JOIN post.class_info AS CI ON UR.class_id = CI.id
+                 INNER JOIN post.class_type AS CTY ON CI.class_type_id = CTY.id
+                 INNER JOIN post.class_point AS CP ON CI.class_point_id = CP.id
+                 INNER JOIN post.class_time AS CT ON CI.class_time_id = CT.id
+                 INNER JOIN post.instructor_info AS II ON CI.instructor_id = II.id
+        WHERE UR.user_id = #{userId}
+        ORDER BY UR.create_dt desc
+    </select>
+
     <select id="selectReservedClassByUser" parameterType="int" resultType="UserReservationDto">
         SELECT UR.*, CTY.class_type_name, CTY.class_name, CP.class_point_name, II.instructor_name, CT.class_start_time, CT.class_end_time, CI.class_date
         FROM user_reservation AS UR
@@ -37,7 +49,7 @@
         INNER JOIN post.class_time AS CT ON CI.class_time_id = CT.id
         INNER JOIN post.instructor_info AS II ON CI.instructor_id = II.id
         WHERE UR.user_id = #{userId} and UR.cancel_flag = 0
-        ORDER BY CI.class_date
+        ORDER BY CI.class_date, CT.class_start_time
         LIMIT 3
     </select>
 </mapper>

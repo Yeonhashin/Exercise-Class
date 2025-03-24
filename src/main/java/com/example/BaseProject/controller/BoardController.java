@@ -306,5 +306,22 @@ public class BoardController {
         }
     }
 
+    @GetMapping("/reservedList")
+    public String reservedList(HttpSession session, Model m) {
+        try {
+            int userId = (int) session.getAttribute("user_id");
+
+            List<UserReservationDto> reservedClass = boardService.reservedAllClassByUser(userId);
+            m.addAttribute("reservedClass", reservedClass);
+            System.out.println("reservedClass11111 = " + reservedClass);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "reservedList";
+    }
+
+
+
+
 
 }

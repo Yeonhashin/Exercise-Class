@@ -35,4 +35,11 @@ public class UserReservationDao {
     public List<UserReservationDto> reservedClassByUser(int userId) throws Exception {
         return session.selectList(namespace+"selectReservedClassByUser", userId);
     }
+
+    public List<UserReservationDto> reservedAllClassByUser(int userId) throws Exception {
+        return session.selectList(namespace+"selectAllReservedClassByUser", userId);
+    }
+
+
+
 }
