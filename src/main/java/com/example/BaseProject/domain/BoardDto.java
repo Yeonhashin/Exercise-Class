@@ -17,6 +17,7 @@ public class BoardDto {
     private String class_date;
     private String class_start_time;
     private String class_end_time;
+    private String class_time;
     private String class_memo;
     private int reservation_cnt;
     private Date create_dt;
@@ -26,7 +27,7 @@ public class BoardDto {
     public BoardDto() {
     }
 
-    public BoardDto(Integer id, int class_type_id, String class_type_name, String class_name, int class_point_id, String class_point_name, int class_point_maximum, int instructor_id, String instructor_name, int class_time_id, String class_date, String class_start_time, String class_end_time, String class_memo, int reservation_cnt, Date create_dt, Date update_dt, String updated) {
+    public BoardDto(Integer id, int class_type_id, String class_type_name, String class_name, int class_point_id, String class_point_name, int class_point_maximum, int instructor_id, String instructor_name, int class_time_id, String class_date, String class_start_time, String class_end_time, String class_time, String class_memo, int reservation_cnt, Date create_dt, Date update_dt, String updated) {
         this.id = id;
         this.class_type_id = class_type_id;
         this.class_type_name = class_type_name;
@@ -40,11 +41,20 @@ public class BoardDto {
         this.class_date = class_date;
         this.class_start_time = class_start_time;
         this.class_end_time = class_end_time;
+        this.class_time = class_time;
         this.class_memo = class_memo;
         this.reservation_cnt = reservation_cnt;
         this.create_dt = create_dt;
         this.update_dt = update_dt;
         this.updated = updated;
+    }
+
+    public String getClass_time() {
+        return class_time;
+    }
+
+    public void setClass_time(String class_time) {
+        this.class_time = class_time;
     }
 
     public Integer getId() {
@@ -207,6 +217,7 @@ public class BoardDto {
                 ", class_date='" + class_date + '\'' +
                 ", class_start_time='" + class_start_time + '\'' +
                 ", class_end_time='" + class_end_time + '\'' +
+                ", class_time='" + class_time + '\'' +
                 ", class_memo='" + class_memo + '\'' +
                 ", reservation_cnt=" + reservation_cnt +
                 ", create_dt=" + create_dt +

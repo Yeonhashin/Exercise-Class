@@ -217,7 +217,6 @@ public class BoardController {
                     scheduleMap.get(time).put(formattedDate, boardService.getClassByDateAndTime(date, time));
                 }
             }
-
             m.addAttribute("scheduleMap", scheduleMap); // 변환된 시간-날짜 맵을 전달
             m.addAttribute("formattedDates", formattedDates);
             m.addAttribute("startDate", startDate);

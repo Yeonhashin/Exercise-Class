@@ -85,10 +85,12 @@
                                 예약 취소
                     </button>
 
-                    <!-- 예약이 이미 취소된 경우(cancel_flag == 1) -->
-                    <span th:unless="${reserved.canCancel and reserved.cancel_flag == 0}" class="text-muted">
-        예약 취소 불가
-    </span>
+                    <span th:if="${reserved.cancel_flag == 1}" class="text-muted">
+                        취소된 예약
+                    </span>
+                    <span th:if="${not reserved.canCancel and reserved.cancel_flag == 0}" class="text-muted">
+                        취소 기한 초과
+                    </span>
                 </td>
             </tr>
             </tbody>
