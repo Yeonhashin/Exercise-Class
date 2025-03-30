@@ -7,7 +7,8 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="/board/classList">Class</a></li>
+                <li class="nav-item"><a class="nav-link" href="/class/list">Class</a></li>
+                <li class="nav-item"><a class="nav-link" href="/reservation/list">ReservedClass</a></li>
                 <li class="nav-item">
                     <a class="nav-link"
                        th:href="${session.user_id != null} ? '/login/logout' : '/login/login'"

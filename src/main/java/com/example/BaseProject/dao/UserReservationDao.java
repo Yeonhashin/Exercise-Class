@@ -1,6 +1,5 @@
 package com.example.BaseProject.dao;
 
-import com.example.BaseProject.domain.BoardDto;
 import com.example.BaseProject.domain.UserReservationDto;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -106,8 +106,8 @@
         </table>
 
         <div class="button-container">
-            <button onclick="location.href='/board/classList'" >레슨을 예약하기</button>
-            <button onclick="location.href='/board/reservedList'">레슨 이력을 확인하기</button>
+            <button onclick="location.href='/class/list'" >레슨을 예약하기</button>
+            <button onclick="location.href='/reservation/list'">레슨 이력을 확인하기</button>
             <button onclick="location.href='#'">공지사항</button>
         </div>
     </div>
@@ -132,7 +132,7 @@
                     <p><strong>Instructor : </strong> <span id="modalClassInstructor"></span></p>
                 </div>
 
-                <form id="reserveForm" action="/board/reserve" method="post">
+                <form id="reserveForm" action="/reservation/add" method="post">
                     <input type="hidden" name="class_id" id="modalClassId" />
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
@@ -211,7 +211,7 @@
             confirmCancelBtn.addEventListener('click', function() {
                 const classId = modalClassId.value;
 
-                fetch(`/board/reservation/cancel?classId=${classId}`, {
+                fetch(`/reservation/cancel?classId=${classId}`, {
                     method: 'POST'
                 })
                     .then(response => response.json())
@@ -283,7 +283,7 @@
                 const newStartDate = `${year}-${month}-${day}`;
 
                 // 페이지 이동 (파라미터로 startDate 전달)
-                window.location.href = `/board/classList?startDate=${newStartDate}`;
+                window.location.href = `/class/list?startDate=${newStartDate}`;
             }
         });
     </script>

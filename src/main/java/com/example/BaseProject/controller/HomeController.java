@@ -2,7 +2,6 @@ package com.example.BaseProject.controller;
 
 import com.example.BaseProject.dao.UserReservationDao;
 import com.example.BaseProject.domain.UserReservationDto;
-import com.example.BaseProject.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,8 +12,6 @@ import java.util.List;
 
 @Controller
 public class HomeController {
-    @Autowired
-    BoardService boardService;
     @Autowired
     private UserReservationDao userReservationDao;
 

@@ -135,7 +135,7 @@
                 <p><strong>Instructor : </strong> <span id="modalClassInstructor"></span></p>
             </div>
 
-            <form id="reserveForm" action="/board/reserve" method="post">
+            <form id="reserveForm" action="/reservation/add" method="post">
                 <input type="hidden" name="class_id" id="modalClassId" />
 
                 <div class="modal-footer">
@@ -214,7 +214,7 @@
         confirmCancelBtn.addEventListener('click', function() {
             const classId = modalClassId.value;
 
-            fetch(`/board/reservation/cancel?classId=${classId}`, {
+            fetch(`/reservation/cancel?classId=${classId}`, {
                 method: 'POST'
             })
                 .then(response => response.json())
@@ -286,7 +286,7 @@
             const newStartDate = `${year}-${month}-${day}`;
 
             // 페이지 이동 (파라미터로 startDate 전달)
-            window.location.href = `/board/classList?startDate=${newStartDate}`;
+            window.location.href = `/class/list?startDate=${newStartDate}`;
         }
     });
 </script>

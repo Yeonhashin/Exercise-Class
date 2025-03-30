@@ -3,7 +3,7 @@ package com.example.BaseProject.domain;
 import java.util.Date;
 import java.util.Objects;
 
-public class BoardDto {
+public class ClassInfoDto {
     private Integer id;
     private int class_type_id;
     private String class_type_name;
@@ -24,10 +24,10 @@ public class BoardDto {
     private Date update_dt;
     private String updated;
 
-    public BoardDto() {
+    public ClassInfoDto() {
     }
 
-    public BoardDto(Integer id, int class_type_id, String class_type_name, String class_name, int class_point_id, String class_point_name, int class_point_maximum, int instructor_id, String instructor_name, int class_time_id, String class_date, String class_start_time, String class_end_time, String class_time, String class_memo, int reservation_cnt, Date create_dt, Date update_dt, String updated) {
+    public ClassInfoDto(Integer id, int class_type_id, String class_type_name, String class_name, int class_point_id, String class_point_name, int class_point_maximum, int instructor_id, String instructor_name, int class_time_id, String class_date, String class_start_time, String class_end_time, String class_time, String class_memo, int reservation_cnt, Date create_dt, Date update_dt, String updated) {
         this.id = id;
         this.class_type_id = class_type_id;
         this.class_type_name = class_type_name;
@@ -203,7 +203,7 @@ public class BoardDto {
 
     @Override
     public String toString() {
-        return "BoardDto{" +
+        return "ClassInfoDto{" +
                 "id=" + id +
                 ", class_type_id=" + class_type_id +
                 ", class_type_name='" + class_type_name + '\'' +
@@ -230,8 +230,8 @@ public class BoardDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BoardDto boardDto = (BoardDto) o;
-        return Objects.equals(id, boardDto.id);
+        ClassInfoDto classInfoDto = (ClassInfoDto) o;
+        return Objects.equals(id, classInfoDto.id);
     }
 
     @Override

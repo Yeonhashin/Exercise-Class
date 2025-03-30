@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <typeAliases>
-        <typeAlias alias="BoardDto" type="com.example.BaseProject.domain.BoardDto"/>
+        <typeAlias alias="ClassInfoDto" type="com.example.BaseProject.domain.ClassInfoDto"/>
         <typeAlias alias="InstructorDto" type="com.example.BaseProject.domain.InstructorDto"/>
         <typeAlias alias="ClassPointDto" type="com.example.BaseProject.domain.ClassPointDto"/>
         <typeAlias alias="ClassTypeDto" type="com.example.BaseProject.domain.ClassTypeDto"/>
