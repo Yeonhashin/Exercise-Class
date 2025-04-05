@@ -15,7 +15,7 @@
                 <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="/board/classList">Class</a></li>
                 <li class="nav-item"><a class="nav-link" href="${loginLink}">${loginOut}</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Notice</a></li>
+                <li class="nav-item"><a class="nav-link" href="/notice">Notice</a></li>
             </ul>
         </div>
     </div>

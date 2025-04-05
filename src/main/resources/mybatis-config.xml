@@ -11,5 +11,6 @@
         <typeAlias alias="ClassTimeDto" type="com.example.BaseProject.domain.ClassTimeDto"/>
         <typeAlias alias="UserDto" type="com.example.BaseProject.domain.UserDto"/>
         <typeAlias alias="UserReservationDto" type="com.example.BaseProject.domain.UserReservationDto"/>
+        <typeAlias alias="NoticeDto" type="com.example.BaseProject.domain.NoticeDto"/>
     </typeAliases>
 </configuration>

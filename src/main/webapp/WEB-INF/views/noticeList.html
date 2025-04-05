@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pilates K :: Home</title>
+    <!-- Bootstrap 5 CSS -->
+    <link rel="stylesheet" href="/resources/css/common.css">
+    <link rel="stylesheet" href="/resources/css/schedule.css">
+    <link rel="stylesheet" href="/resources/css/home.css">
+    <link rel="stylesheet" href="/resources/css/notice.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+<!-- Bootstrap 5 JS 및 Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    <div th:replace="layout/header"></div>
+
+    <!-- 추가 콘텐츠 섹션 -->
+    <div class="container mt-2">
+        <div class="title">Notice</div>
+        <p>
+            스튜디오에 대한 공지사항을 표시합니다. <br>
+        </p>
+
+        <div class="container mt-4">
+            <h5 class="mb-3">공지사항</h5>
+            <div class="accordion" id="noticeAccordion">
+                <div class="accordion-item" th:each="notice, stat : ${noticeList}">
+                    <h2 class="accordion-header" th:id="'heading' + ${stat.index}">
+                        <button class="accordion-button collapsed" type="button"
+                                data-bs-toggle="collapse"
+                                th:attr="data-bs-target='#collapse' + ${stat.index}"
+                                aria-expanded="false"
+                                th:attrappend="aria-controls='collapse' + ${stat.index}">
+                            <div class="d-flex justify-content-between w-100">
+                                <div>
+                                    <span class="badge bg-warning text-dark me-2">중요공지</span>
+                                    <span th:text="${notice.title}">공지 제목</span>
+                                </div>
+                                <div th:text="${#dates.format(notice.create_dt, 'yyyy-MM-dd')}" class="text-end text-muted small"></div>
+                            </div>
+                        </button>
+                    </h2>
+                    <div th:id="'collapse' + ${stat.index}"
+                         class="accordion-collapse collapse"
+                         th:attr="aria-labelledby='heading' + ${stat.index}"
+                         data-bs-parent="#noticeAccordion">
+                        <div class="accordion-body">
+                            <p th:utext="${#strings.replace(notice.content, '\n', '<br/>')}">공지 내용</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+<!--    <div th:replace="layout/footer"></div>-->
+</body>
+</html>

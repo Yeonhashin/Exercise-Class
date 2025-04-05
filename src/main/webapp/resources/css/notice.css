@@ -1,0 +1,17 @@
+
+.accordion-button > div {
+    width: 100%;
+}
+
+.accordion-button .text-end {
+    min-width: 100px;
+}
+
+.badge {
+    font-size: 0.75rem;
+}
+
+.accordion-body {
+    white-space: pre-line; /* 줄바꿈 표현 */
+}
+

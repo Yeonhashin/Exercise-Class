@@ -1,10 +1,13 @@
 package com.example.BaseProject.controller;
 
+import com.example.BaseProject.dao.NoticeDao;
 import com.example.BaseProject.dao.UserReservationDao;
+import com.example.BaseProject.domain.NoticeDto;
 import com.example.BaseProject.domain.UserReservationDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpSession;
@@ -14,6 +17,9 @@ import java.util.List;
 public class HomeController {
     @Autowired
     private UserReservationDao userReservationDao;
+
+    @Autowired
+    private NoticeDao noticeDao;
 
     @RequestMapping("/")
     public String home(Model m,HttpSession session) throws Exception {
@@ -27,6 +33,16 @@ public class HomeController {
 
 
         return "index";  // index.html 파일을 반환
+    }
+
+    @GetMapping("/notice")
+    public String noticeList(Model m) throws Exception {
+
+        List<NoticeDto> noticeList = noticeDao.selectList(1);
+        m.addAttribute("noticeList", noticeList);
+        System.out.println("noticeList = " + noticeList);
+
+        return "noticeList";
     }
 
     @RequestMapping("/header")

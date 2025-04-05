@@ -65,50 +65,56 @@
             예약을 캔슬 하고 싶으시면 [삭제] 버튼을 눌러주세요<br>
             ※삭제 기한이 지난 수업은 삭제가 되지 않습니다.
         </p>
-        <table>
-            <thead>
-            <tr>
-                <th>수업시간</th>
-                <th>레슨명</th>
-                <th>레슨타입</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="reserved : ${reservedClass}">
-                <td>
-                    <span th:text="${reserved.class_date}"></span> <br>
-                    <span th:text="${reserved.class_start_time}"></span> -
-                    <span th:text="${reserved.class_end_time}"></span> <br>
-                    <span th:text="${reserved.instructor_name}"></span> <br>
-                    <span th:text="${reserved.class_point_name}"></span>
-                </td>
-                <td class="lesson-title" th:text="${reserved.class_name}"></td>
-                <td th:text="${reserved.class_type_name}"></td>
-                <td>
-                    <button type="button"
-                            class="btn btn-danger btn-sm open-cancel-modal"
-                            data-bs-toggle="modal"
-                            data-bs-target="#reserveModal"
-                            th:attr="data-class-id=${reserved.class_id},
-                                         data-class-type-name=${reserved.class_type_name},
-                                         data-class-name=${reserved.class_name},
-                                         data-class-instructor-name=${reserved.instructor_name},
-                                         data-class-start-time=${reserved.class_start_time},
-                                         data-class-end-time=${reserved.class_end_time},
-                                         data-class-date=${reserved.class_date}">
-                        예약 취소
-                    </button>
 
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <div th:if="${#lists.isEmpty(reservedClass)}">
+            <p class="text-center mt-4">예약된 수업이 없습니다.</p>
+        </div>
+
+        <div th:unless="${#lists.isEmpty(reservedClass)}">
+            <table>
+                <thead>
+                <tr>
+                    <th>수업시간</th>
+                    <th>레슨명</th>
+                    <th>레슨타입</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="reserved : ${reservedClass}">
+                    <td>
+                        <span th:text="${reserved.class_date}"></span> <br>
+                        <span th:text="${reserved.class_start_time}"></span> -
+                        <span th:text="${reserved.class_end_time}"></span> <br>
+                        <span th:text="${reserved.instructor_name}"></span> <br>
+                        <span th:text="${reserved.class_point_name}"></span>
+                    </td>
+                    <td class="lesson-title" th:text="${reserved.class_name}"></td>
+                    <td th:text="${reserved.class_type_name}"></td>
+                    <td>
+                        <button type="button"
+                                class="btn btn-danger btn-sm open-cancel-modal"
+                                data-bs-toggle="modal"
+                                data-bs-target="#reserveModal"
+                                th:attr="data-class-id=${reserved.class_id},
+                                 data-class-type-name=${reserved.class_type_name},
+                                 data-class-name=${reserved.class_name},
+                                 data-class-instructor-name=${reserved.instructor_name},
+                                 data-class-start-time=${reserved.class_start_time},
+                                 data-class-end-time=${reserved.class_end_time},
+                                 data-class-date=${reserved.class_date}">
+                            예약 취소
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
         <div class="button-container">
             <button onclick="location.href='/class/list'" >레슨을 예약하기</button>
             <button onclick="location.href='/reservation/list'">레슨 이력을 확인하기</button>
-            <button onclick="location.href='#'">공지사항</button>
+            <button onclick="location.href='/notice'">공지사항</button>
         </div>
     </div>
 
@@ -149,7 +155,6 @@
         </div>
     </div>
 
-<!--    <div th:replace="layout/footer"></div>-->
     <script src="/resources/js/class-reservate.js"></script>
 </body>
 </html>

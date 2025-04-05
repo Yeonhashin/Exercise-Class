@@ -48,6 +48,12 @@
             예약을 캔슬 하고 싶으시면 [삭제] 버튼을 눌러주세요<br>
             ※삭제 기한이 지난 수업은 삭제가 되지 않습니다.
         </p>
+
+        <div th:if="${#lists.isEmpty(reservedClass)}">
+            <p class="text-center mt-4">예약된 수업이 없습니다.</p>
+        </div>
+
+        <div th:unless="${#lists.isEmpty(reservedClass)}">
         <table>
             <thead>
             <tr>
@@ -95,10 +101,11 @@
             </tr>
             </tbody>
         </table>
+        </div>
 
         <div class="button-container">
             <button onclick="location.href='/class/list'" >레슨을 예약하기</button>
-            <button onclick="location.href='#'">공지사항</button>
+            <button onclick="location.href='/notice'">공지사항</button>
         </div>
     </div>
 
