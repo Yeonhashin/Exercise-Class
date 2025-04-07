@@ -81,6 +81,11 @@ public class LoginController {
 
         return "redirect:"+toURL;
     }
+
+    @GetMapping("/register")
+    public String registerForm(Model m, HttpServletRequest request) {
+        return "registerForm";
+    }
 }
 
 
