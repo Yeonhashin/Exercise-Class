@@ -30,12 +30,8 @@
         where ClassInfo.id = #{id}
     </select>
 
-    <insert id="insert" parameterType="ClassInfoDto">
-        INSERT INTO class_info
-        (class_type_id, class_time_id, class_point_id, instructor_id, class_date)
-        VALUES
-            (#{class_type_id}, #{class_time_id}, #{class_point_id}, #{instructor_id}, #{class_date})
-    </insert>
+
+
 
     <update id="update" parameterType="ClassInfoDto">
         UPDATE class_info

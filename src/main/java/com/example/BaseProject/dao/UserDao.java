@@ -17,4 +17,9 @@ public class UserDao {
     public UserDto selectUser(Map map) throws Exception {
         return session.selectOne(namespace + "select", map);
     }
+
+    public int insertUser(Map map) throws Exception {
+        return session.insert(namespace + "insert", map);
+    }
+
 }

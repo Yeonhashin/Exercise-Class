@@ -15,4 +15,8 @@ public class LoginService {
     public UserDto selectUser(Map map) throws Exception {
         return userDao.selectUser(map);
     }
+
+    public int insertUser(Map map) throws Exception {
+        return userDao.insertUser(map);
+    }
 }

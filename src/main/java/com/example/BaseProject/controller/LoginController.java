@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -85,6 +86,21 @@ public class LoginController {
     @GetMapping("/register")
     public String registerForm(Model m, HttpServletRequest request) {
         return "registerForm";
+    }
+
+    @PostMapping("/register")
+    public String register(String email, String password, String name, Model m, HttpServletRequest request) throws Exception {
+        Map map = new HashMap();
+        map.put("email", email);
+        map.put("password", password);
+        map.put("name", name);
+        int insertUser = loginService.insertUser(map);
+        if(insertUser == 0){
+            String msg = URLEncoder.encode("회원가입에 실패하였습니다.", "utf-8");
+            return "redirect:/login/register?msg="+msg;
+        }
+
+        return "redirect:/";
     }
 }
 

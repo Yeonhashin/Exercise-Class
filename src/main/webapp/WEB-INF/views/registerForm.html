@@ -6,21 +6,71 @@
     <title>Pilates K :: Home</title>
     <!-- Bootstrap 5 CSS -->
     <link rel="stylesheet" href="/resources/css/common.css">
-    <link rel="stylesheet" href="/resources/css/login.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .form-floating > label {
+            left: 1rem;
+        }
+
+        .form-check-input:checked {
+            background-color: #3b71ca;
+            border-color: #3b71ca;
+        }
+
+        .btn-primary {
+            background-color: #3b71ca;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #2f5db8;
+        }
+
+        .social-icons i {
+            font-size: 24px;
+            margin: 0 10px;
+            color: #333;
+        }
+
+        .social-icons i:hover {
+            color: #3b71ca;
+        }
+    </style>
 </head>
 
 <body>
-<form action="/login/register" method="post" onsubmit="return formCheck(this);">
-<h3 id="title">Register</h3>
-<div id="msg"></div>
-<input type="text" name="email"  value="" placeholder="Email" autofocus>
-<input type="password" name="password" placeholder="Password" value="">
-<button>회원가입</button>
-    <div>
-        <a href="/login">로그인 화면으로 돌아가기</a>
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="col-md-4">
+        <h3 class="text-center mb-4">Sign Up</h3>
+        <div id="msg"></div>
+        <form th:action="@{/login/register}" method="post" onsubmit="return formCheck(this);">
+            <div class="form-floating mb-3">
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email address" value="" required>
+                <label for="email">Email address</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" id="name" name="name" placeholder="name" value="" required>
+                <label for="name">Name</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password" value="" required>
+                <label for="password">Password</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="confirm_password" value="" required>
+                <label for="confirm_password">Password</label>
+            </div>
+
+            <div class="d-grid mb-3">
+                <button type="submit" class="btn btn-primary btn-block">SIGN IN</button>
+            </div>
+
+        </form>
     </div>
-</form>
+</div>
 
 <!-- Bootstrap 5 JS 및 Popper.js -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
@@ -34,6 +84,11 @@
         }
         if (frm.password.value.length == 0) {
             setMessage('패스워드를 입력해주세요.', frm.password);
+            return false;
+        }
+
+        if (frm.password.value.length != frm.confirm_password.value.length) {
+            setMessage('패스워드가 일치하지 않습니다.', frm.confirm_password);
             return false;
         }
         return true;

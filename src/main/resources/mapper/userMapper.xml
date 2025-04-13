@@ -8,4 +8,12 @@
         from user
         where email = #{email} and password = #{password}
     </select>
+
+    <insert id="insert" parameterType="map">
+        INSERT INTO user
+        (email, name, password)
+        VALUES
+            (#{email}, #{name}, #{password})
+    </insert>
+
 </mapper>
