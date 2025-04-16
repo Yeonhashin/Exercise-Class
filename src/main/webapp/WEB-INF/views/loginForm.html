@@ -39,26 +39,27 @@
 </head>
 
 <body>
-
 <div class="container d-flex justify-content-center align-items-center min-vh-100">
     <div class="col-md-4">
         <h3 class="text-center mb-4">Sign in</h3>
+        <div class="alert alert-danger mt-3" th:if="${msg != null}">
+            <i class="fa fa-exclamation-circle me-1"></i>
+            <span th:text="${msg}"></span>
+        </div>
         <form th:action="@{/login/login}" method="post" onsubmit="return formCheck(this);">
             <div class="form-floating mb-3">
-                <input type="email" class="form-control" id="email" name="email" placeholder="Email address" value="h-shin@admin.com" required>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email address" th:value="${email != null ? email : rememberEmail}" th:classappend="${error} ? ' is-invalid'"  required>
                 <label for="email">Email address</label>
             </div>
 
             <div class="form-floating mb-3">
-                <input type="password" class="form-control" id="password" name="password" placeholder="Password" value="1234" required>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password" value="" th:classappend="${error} ? ' is-invalid'"  required>
                 <label for="password">Password</label>
             </div>
 
-            <input type="hidden" name="toURL" value="${param.toURL}">
-
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="rememberMe" name="rememberId">
+                    <input class="form-check-input" type="checkbox" value="on" id="rememberMe" name="rememberId" th:checked="${rememberEmail != ''}">
                     <label class="form-check-label" for="rememberMe">Remember me</label>
                 </div>
                 <a href="#" class="text-decoration-none">Forgot password?</a>
@@ -78,6 +79,7 @@
                     <i class="fab fa-github"></i>
                 </div>
             </div>
+            <input type="hidden" name="toURL" value="${param.toURL}">
         </form>
     </div>
 </div>

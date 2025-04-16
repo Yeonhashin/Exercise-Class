@@ -42,8 +42,7 @@
 <div class="container d-flex justify-content-center align-items-center min-vh-100">
     <div class="col-md-4">
         <h3 class="text-center mb-4">Sign Up</h3>
-        <div id="msg"></div>
-        <form th:action="@{/login/register}" method="post" onsubmit="return formCheck(this);">
+\        <form th:action="@{/login/register}" method="post" onsubmit="return formCheck(this);">
             <div class="form-floating mb-3">
                 <input type="email" class="form-control" id="email" name="email" placeholder="Email address" value="" required>
                 <label for="email">Email address</label>

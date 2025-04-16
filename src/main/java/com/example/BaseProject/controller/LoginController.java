@@ -5,10 +5,7 @@ import com.example.BaseProject.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.Cookie;
@@ -27,7 +24,20 @@ public class LoginController {
 
     @GetMapping("/login")
     public String loginForm(Model m, HttpServletRequest request) {
-        m.addAttribute("rememberEmail", request.getCookies());
+
+        Cookie[] cookies = request.getCookies();
+        String rememberEmail = "";
+
+        if (cookies != null) {
+            for (Cookie c : cookies) {
+                if ("rememberEmail".equals(c.getName())) {
+                    rememberEmail = c.getValue();
+                }
+            }
+        }
+
+        m.addAttribute("rememberEmail", rememberEmail);
+
         return "loginForm";
     }
 
@@ -38,7 +48,7 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(String email, String password, String toURL, boolean rememberId, Model m,
+    public String login(String email, String password, String toURL, @RequestParam(defaultValue = "false") boolean rememberId, Model m,
                         HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         Map map = new HashMap();
@@ -46,35 +56,30 @@ public class LoginController {
         map.put("password", password);
         UserDto user = loginService.selectUser(map);
         if(user == null){
-            String msg = URLEncoder.encode("이메일 혹은 패스워드가 일치하지 않습니다.", "utf-8");
-            return "redirect:/login/login?msg="+msg;
+            m.addAttribute("msg", "이메일 또는 비밀번호가 올바르지 않습니다.");
+            m.addAttribute("email", email);
+            m.addAttribute("error", true);
+            return "loginForm";
         }
         HttpSession session = request.getSession();
         session.setAttribute("email", user.getEmail());
         session.setAttribute("name", user.getName());
         session.setAttribute("user_id", user.getId());
 
+        System.out.println("rememberId : " + rememberId);
 
-        if(rememberId) {
-            Cookie cookie = new Cookie("email", String.valueOf(user.getEmail()));
+        if (rememberId) {
+            Cookie cookie = new Cookie("rememberEmail", email);
+            cookie.setMaxAge(60 * 60 * 24 * 7); // 7일 유지
+            cookie.setPath("/");
             response.addCookie(cookie);
         } else {
-            Cookie cookie = new Cookie("email", String.valueOf(user.getEmail()));
+            // 체크 안 했으면 삭제
+            Cookie cookie = new Cookie("rememberEmail", "");
             cookie.setMaxAge(0);
+            cookie.setPath("/");
             response.addCookie(cookie);
         }
-
-        // 쿠키에서 이메일을 추출하여 Model에 추가
-        Cookie[] cookies = request.getCookies();
-        String rememberEmail = null;
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("email".equals(cookie.getName())) {
-                    rememberEmail = cookie.getValue();
-                }
-            }
-        }
-        m.addAttribute("rememberEmail", rememberEmail);  // Model에 저장
 
         if (toURL == null || toURL.isEmpty() || !toURL.startsWith("/")) {
             toURL = "/";
