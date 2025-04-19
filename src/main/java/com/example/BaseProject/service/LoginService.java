@@ -13,6 +13,9 @@ public class LoginService {
     UserDao userDao;
 
     public UserDto selectUser(Map map) throws Exception {
+        if(userDao.selectUser(map) != null) {
+            userDao.updateLoginInfo(map);
+        }
         return userDao.selectUser(map);
     }
 

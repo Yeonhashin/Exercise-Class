@@ -1,7 +1,9 @@
 package com.example.BaseProject.controller;
 
+import com.example.BaseProject.dao.ClassTypeDao;
 import com.example.BaseProject.dao.UserReservationDao;
 import com.example.BaseProject.domain.ClassInfoDto;
+import com.example.BaseProject.domain.ClassTypeDto;
 import com.example.BaseProject.domain.UserReservationDto;
 import com.example.BaseProject.service.UserClassService;
 import com.example.BaseProject.service.UserReservationService;
@@ -43,10 +45,14 @@ public class UserClassController {
     @Autowired
     private UserReservationDao userReservationDao;
 
+    @Autowired
+    private ClassTypeDao classTypeDao;
+
     @GetMapping("/list")
-    public String classList(@RequestParam(value = "startDate", required = false)
-                                String startDateStr, Model m, HttpSession session,
-                                RedirectAttributes rattr) {
+    public String classList(@RequestParam(value = "startDate", required = false) String startDateStr,
+                            @RequestParam(value = "searchDate", required = false) String searchDate,
+                            @RequestParam(value = "searchClassName", required = false) String searchClassName,
+                            Model m, HttpSession session, RedirectAttributes rattr) {
         try {
             // 메시지를 flashAttributes로 전달
             if (rattr.getFlashAttributes().get("msg") != null) {
@@ -91,6 +97,22 @@ public class UserClassController {
                     scheduleMap.get(time).put(formattedDate, userClassService.getClassByDateAndTime(date, time));
                 }
             }
+
+                List<ClassInfoDto> filteredClasses = userClassService.search(searchDate, searchClassName);
+//                List<ClassTypeDto> allClassNames = classTypeDto.getClass_name();
+                List<ClassTypeDto> list = classTypeDao.selectAll();
+
+                List<String> allClassNames = list.stream()
+                        .map(ClassTypeDto::getClass_name)
+                        .collect(Collectors.toList());
+
+                m.addAttribute("classList", filteredClasses); // 결과 리스트
+                m.addAttribute("selectedDate", searchDate);
+                m.addAttribute("selectedClassName", searchClassName);
+                m.addAttribute("classNames", allClassNames);
+
+            System.out.println("classList = " + filteredClasses);
+                
             m.addAttribute("scheduleMap", scheduleMap); // 변환된 시간-날짜 맵을 전달
             m.addAttribute("formattedDates", formattedDates);
             m.addAttribute("startDate", startDate);

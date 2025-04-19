@@ -29,4 +29,8 @@ public class UserClassService {
     public List<ClassInfoDto> getClassByDateAndTime(LocalDate class_date, String class_start_time) throws Exception {
         return classInfoDao.getClassByDateAndTime(class_date, class_start_time);
     }
+
+    public List<ClassInfoDto> search(String searchDate, String className) throws Exception {
+        return classInfoDao.getClassBySearch(searchDate, className);
+    }
 }

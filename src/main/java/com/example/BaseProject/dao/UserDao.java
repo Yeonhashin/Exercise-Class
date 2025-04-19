@@ -18,8 +18,11 @@ public class UserDao {
         return session.selectOne(namespace + "select", map);
     }
 
+    public int updateLoginInfo(Map map) throws Exception {
+        return session.update(namespace + "updateLoginInfo", map);
+    }
+
     public int insertUser(Map map) throws Exception {
         return session.insert(namespace + "insert", map);
     }
-
 }

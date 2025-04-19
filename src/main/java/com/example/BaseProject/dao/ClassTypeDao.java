@@ -17,4 +17,5 @@ public class ClassTypeDao {
     public List<ClassTypeDto> selectAll() {
         return session.selectList(namespace + "selectAll");
     }
+
 }

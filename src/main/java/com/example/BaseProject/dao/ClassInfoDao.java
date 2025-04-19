@@ -16,16 +16,16 @@ public class ClassInfoDao {
     private SqlSession session;
     private static String namespace="com.example.BaseProject.dao.ClassInfoMapper.";
 
-    public List<ClassInfoDto> selectAll() throws Exception {
-        return session.selectList(namespace+"selectAll");
-    }
+//    public List<ClassInfoDto> selectAll() throws Exception {
+//        return session.selectList(namespace+"selectAll");
+//    }
 
-    public List<ClassInfoDto> getWeeklySchedule(LocalDate startDate, LocalDate endDate) throws Exception {
-        Map map = new HashMap();
-        map.put("startDate", startDate);
-        map.put("endDate", endDate);
-        return session.selectList(namespace+"getWeeklySchedule", map);
-    }
+//    public List<ClassInfoDto> getWeeklySchedule(LocalDate startDate, LocalDate endDate) throws Exception {
+//        Map map = new HashMap();
+//        map.put("startDate", startDate);
+//        map.put("endDate", endDate);
+//        return session.selectList(namespace+"getWeeklySchedule", map);
+//    }
 
     public List<ClassInfoDto> getClassByDateAndTime(LocalDate class_date, String class_start_time) throws Exception {
         Map map = new HashMap();
@@ -38,22 +38,29 @@ public class ClassInfoDao {
         return session.selectOne(namespace + "select", id);
     }
 
-    public List<ClassInfoDto> selectPage(Map map) throws Exception {
-        return session.selectList(namespace+"selectPage", map);
-    }
+//    public List<ClassInfoDto> selectPage(Map map) throws Exception {
+//        return session.selectList(namespace+"selectPage", map);
+//    }
+//
+//    public int update(ClassInfoDto dto) throws Exception {
+//        return session.update(namespace+"update", dto);
+//    }
+//
+//    public int deleteAll(){
+//        return session.delete(namespace + "deleteAll");
+//    }
 
-    public int update(ClassInfoDto dto) throws Exception {
-        return session.update(namespace+"update", dto);
-    }
+//    public int delete(Integer id, int class_point_id) throws Exception {
+//        Map map = new HashMap();
+//        map.put("id", id);
+//        map.put("class_point_id", class_point_id);
+//        return session.delete(namespace+"delete", map);
+//    }
 
-    public int deleteAll(){
-        return session.delete(namespace + "deleteAll");
-    }
-
-    public int delete(Integer id, int class_point_id) throws Exception {
+    public List<ClassInfoDto> getClassBySearch(String searchDate, String className) {
         Map map = new HashMap();
-        map.put("id", id);
-        map.put("class_point_id", class_point_id);
-        return session.delete(namespace+"delete", map);
+        map.put("searchDate", searchDate);
+        map.put("className", className);
+        return session.selectList(namespace+"getSearchData", map);
     }
 }

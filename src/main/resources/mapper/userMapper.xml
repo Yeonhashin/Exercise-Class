@@ -4,10 +4,16 @@
 
 <mapper namespace="com.example.BaseProject.dao.UserMapper">
     <select id="select" parameterType="map" resultType="UserDto">
-        select id, email, name, password
-        from user
-        where email = #{email} and password = #{password}
+        SELECT id, email, name, password
+        FROM user
+        WHERE email = #{email} AND password = #{password}
     </select>
+
+    <update id="updateLoginInfo" parameterType="map">
+        UPDATE user
+        SET last_login_dt = NOW()
+        WHERE email = #{email} AND password = #{password}
+    </update>
 
     <insert id="insert" parameterType="map">
         INSERT INTO user

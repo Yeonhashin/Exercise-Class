@@ -61,12 +61,13 @@ public class LoginController {
             m.addAttribute("error", true);
             return "loginForm";
         }
+
+//        loginService.selectUser(map);
+
         HttpSession session = request.getSession();
         session.setAttribute("email", user.getEmail());
         session.setAttribute("name", user.getName());
         session.setAttribute("user_id", user.getId());
-
-        System.out.println("rememberId : " + rememberId);
 
         if (rememberId) {
             Cookie cookie = new Cookie("rememberEmail", email);
@@ -74,7 +75,6 @@ public class LoginController {
             cookie.setPath("/");
             response.addCookie(cookie);
         } else {
-            // 체크 안 했으면 삭제
             Cookie cookie = new Cookie("rememberEmail", "");
             cookie.setMaxAge(0);
             cookie.setPath("/");

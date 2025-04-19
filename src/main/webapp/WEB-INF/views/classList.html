@@ -7,6 +7,7 @@
     <!-- Bootstrap 5 CSS -->
     <link rel="stylesheet" href="/resources/css/common.css">
     <link rel="stylesheet" href="/resources/css/schedule.css">
+    <link rel="stylesheet" href="/resources/css/home.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- SweetAlert2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
@@ -40,15 +41,11 @@
 <div th:replace="layout/header"></div>
 <div class="container mt-2">
 
-
     <div class="title">레슨 찾기</div>
     <p>예약할 날짜 / 시간대의 레슨을 선택하여 예약해주세요.</p>
     <p>지점 : <strong>Pilates K 고베점</strong></p>
     <p>날짜 : <strong id="current-date" th:text="${startDate}"></strong></p>
 
-    <div class="button-container">
-        <button>해당 조건으로 검색하기</button>
-    </div>
     <div class="table-navigation">
         <button id="previous-btn" onclick="goToPrevious5Days()">&lt; 이전 5일 보기</button>
         <button id="next-btn">다음 5일 보기 &gt;</button>
@@ -114,6 +111,60 @@
         </tr>
         </tbody>
     </table>
+
+    <div class="container mt-2">
+        <form id="searchForm" th:action="@{/class/list}" method="get">
+            <div>
+                <label for="searchDate">수업 날짜</label>
+                <input type="date" id="searchDate" name="searchDate" th:value="${selectedDate}">
+            </div>
+
+            <div th:if="${classNames != null}">
+                <label for="className">수업명</label>
+                <select id="className" name="searchClassName">
+                    <option value="">-- 선택하세요 --</option>
+                    <option th:each="c : ${classNames}"
+                            th:value="${c}"
+                            th:text="${c}"
+                            th:selected="${c == selectedClassName}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="button-container mt-2">
+                <button type="submit">해당 조건으로 검색하기</button>
+            </div>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>수업시간</th>
+                    <th>레슨명</th>
+                    <th>레슨타입</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="reserved : ${classList}">
+                    <td>
+                        <span th:text="${reserved.class_date}"></span> <br>
+                        <span th:text="${reserved.class_start_time}"></span> -
+                        <span th:text="${reserved.class_end_time}"></span> <br>
+                        <span th:text="${reserved.instructor_name}"></span> <br>
+                        <span th:text="${reserved.class_point_name}"></span>
+                    </td>
+                    <td class="lesson-title" th:text="${reserved.class_name}"></td>
+                    <td th:text="${reserved.class_type_name}"></td>
+                    <td>
+
+
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+
 </div>
 <!-- 예약 모달 -->
 <div class="modal fade" id="reserveModal" tabindex="-1" aria-labelledby="reserveModalLabel" aria-hidden="true">
