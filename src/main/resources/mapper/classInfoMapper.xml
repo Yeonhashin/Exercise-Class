@@ -139,8 +139,10 @@
                  inner join class_time as ClassTime on ClassInfo.class_time_id = ClassTime.id
                  inner join instructor_info as InstInfo on ClassInfo.instructor_id = InstInfo.id
         <where>
+            STR_TO_DATE(CONCAT(class_date, ' ', class_start_time), '%Y-%m-%d %H:%i') > NOW()
+
             <if test="searchDate != null and searchDate != ''">
-                class_date = #{searchDate}
+                AND class_date = #{searchDate}
             </if>
             <if test="className != null and className != ''">
                 <if test="searchDate != null and searchDate != ''">
@@ -149,7 +151,7 @@
                 class_name = #{className}
             </if>
         </where>
-        ORDER BY class_date desc;
+        ORDER BY class_date asc;
     </select>
 
 </mapper>

@@ -111,8 +111,6 @@ public class UserClassController {
                 m.addAttribute("selectedClassName", searchClassName);
                 m.addAttribute("classNames", allClassNames);
 
-            System.out.println("classList = " + filteredClasses);
-                
             m.addAttribute("scheduleMap", scheduleMap); // 변환된 시간-날짜 맵을 전달
             m.addAttribute("formattedDates", formattedDates);
             m.addAttribute("startDate", startDate);
