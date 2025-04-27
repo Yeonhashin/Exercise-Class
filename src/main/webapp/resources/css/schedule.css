@@ -54,6 +54,27 @@ h1 {
     background-color: #f0f0f0;
 }
 
+/* 표 테이블 기본 스타일 조금 깔끔하게 */
+.search-table {
+    table-layout: fixed; /* 컬럼 넓이 고정 */
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 24px;
+}
+
+.search-table td, .search-table th {
+    border: 1px solid #e5e7eb;
+    padding: 10px;
+    word-wrap: break-word; /* 긴 텍스트 줄바꿈 */
+}
+
+.entry-header {
+    background-color: #f3f4f6; /* 연한 회색 배경 */
+    width: 100%;               /* 전체 가로 길이 채우기 */
+    font-weight: bold;
+    padding: 10px;             /* 안쪽 여백 */
+    font-size: 16px;           /* 글자 크기 (선택사항) */
+}
 .lesson {
     font-weight: bold;
     display: block;
@@ -97,4 +118,11 @@ h1 {
 .reserved {
     background-color: #6c757d;
     color: white;
+}
+
+.table-date-header {
+    background-color: #f0f0f0;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
 }

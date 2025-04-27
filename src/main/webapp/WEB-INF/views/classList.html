@@ -13,6 +13,14 @@
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <!-- SweetAlert2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+
+    <!-- Flatpickr 스타일 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <!-- Flatpickr 스크립트 -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<!--    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>-->
+
 </head>
 <body>
 
@@ -43,8 +51,9 @@
 
     <div class="title">레슨 찾기</div>
     <p>예약할 날짜 / 시간대의 레슨을 선택하여 예약해주세요.</p>
-    <p>지점 : <strong>Pilates K 고베점</strong></p>
     <p>날짜 : <strong id="current-date" th:text="${startDate}"></strong></p>
+
+    <p><strong>타임테이블로 예약하기</strong></p>
 
     <div class="table-navigation">
         <button id="previous-btn" onclick="goToPrevious5Days()">&lt; 이전 5일 보기</button>
@@ -112,40 +121,61 @@
         </tbody>
     </table>
 
-    <div class="container mt-2">
-        <form id="searchForm" th:action="@{/class/list}" method="get">
-            <div>
-                <label for="searchDate">수업 날짜</label>
-                <input type="date" id="searchDate" name="searchDate" th:value="${selectedDate}">
-            </div>
+    <p><strong>날짜/수업으로 검색하여 예약하기</strong></p>
 
-            <div th:if="${classNames != null}">
-                <label for="className">수업명</label>
+
+    <form id="searchForm" th:action="@{/class/list}" method="get">
+
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label" for="searchDate">수업 날짜</label>
+                <input type="text" id="searchDate" name="searchDate" class="flatpickr-input" placeholder="-- 날짜를 선택하세요 --"
+                       th:value="${selectedDate}">
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="className">수업명</label>
                 <select id="className" name="searchClassName">
-                    <option value="">-- 선택하세요 --</option>
-                    <option th:each="c : ${classNames}"
+                    <option class="placeholder-option_th" value="">-- 수업을 선택하세요 --</option>
+                    <option class="placeholder-option_tk" th:each="c : ${classNames}"
                             th:value="${c}"
                             th:text="${c}"
                             th:selected="${c == selectedClassName}">
                     </option>
                 </select>
             </div>
+        </div>
+
+
+<!--        <div>-->
+<!--                <label for="searchDate">수업 날짜</label>-->
+<!--                <input type="text" id="searchDate" name="searchDate" class="form-control"-->
+<!--                       placeholder="날짜를 선택하세요" th:value="${selectedDate}">-->
+<!--            </div>-->
+<!--            <div>-->
+<!--                <label for="className">수업명</label>-->
+<!--                <select id="className" name="searchClassName">-->
+<!--                    <option value="">&#45;&#45; 선택하세요 &#45;&#45;</option>-->
+<!--                    <option th:each="c : ${classNames}"-->
+<!--                            th:value="${c}"-->
+<!--                            th:text="${c}"-->
+<!--                            th:selected="${c == selectedClassName}">-->
+<!--                    </option>-->
+<!--                </select>-->
+<!--            </div>-->
 
             <div class="button-container mt-2">
                 <button type="submit">해당 조건으로 검색하기</button>
             </div>
 
-            <table>
+        <div th:each="entry : ${groupedClassMap}">
+            <table class="search-table">
                 <thead>
                 <tr>
-                    <th>수업시간</th>
-                    <th>레슨명</th>
-                    <th>레슨타입</th>
-                    <th></th>
+                    <th class="entry-header" colspan="4" th:text="${entry.key}"></th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="class : ${classList}">
+                <tr th:each="class : ${entry.value}">
                     <td>
                         <span th:text="${class.class_date}"></span> <br>
                         <span th:text="${class.class_start_time}"></span> -
@@ -158,7 +188,6 @@
                     <td>
                         <div th:if="${reservedClassIds.contains(class.id)}">
                             <span class="badge bg-success mb-1">예약중</span>
-
                             <button type="button"
                                     class="btn btn-danger btn-sm open-cancel-modal"
                                     data-bs-toggle="modal"
@@ -174,7 +203,6 @@
                             </button>
                         </div>
 
-                        <!-- 예약이 안되어있을 경우 예약 버튼만 표시 -->
                         <button type="button"
                                 th:unless="${reservedClassIds.contains(class.id)}"
                                 class="btn btn-primary btn-sm mt-1 open-reserve-modal"
@@ -189,13 +217,13 @@
                                      data-class-date=${class.class_date}">
                             예약하기
                         </button>
-
                     </td>
                 </tr>
                 </tbody>
             </table>
-        </form>
-    </div>
+        </div>
+
+    </form>
 
 </div>
 <!-- 예약 모달 -->
@@ -237,6 +265,11 @@
 <div th:replace="layout/footer"></div>
 <script src="/resources/js/class-reservate.js"></script>
 <script src="/resources/js/class-date-selecter.js"></script>
-
+<script>
+    flatpickr("#searchDate", {
+        dateFormat: "Y-m-d", // yyyy-mm-dd
+        locale: "ko" // 한글 적용
+    });
+</script>
 </body>
 </html>

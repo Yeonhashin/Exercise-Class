@@ -15,11 +15,11 @@ document.addEventListener('DOMContentLoaded', function() {
         prevBtn.style.display = 'none';
     }
 
-    prevBtn.addEventListener('click', function() {
+    prevBtn.addEventListener('click', function () {
         moveDate(-5); // 5일 전으로 이동
     });
 
-    nextBtn.addEventListener('click', function() {
+    nextBtn.addEventListener('click', function () {
         moveDate(5); // 5일 후로 이동
     });
 

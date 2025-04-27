@@ -98,15 +98,17 @@ public class UserClassController {
                 }
             }
 
-                List<ClassInfoDto> filteredClasses = userClassService.search(searchDate, searchClassName);
-//                List<ClassTypeDto> allClassNames = classTypeDto.getClass_name();
+            List<ClassInfoDto> filteredClasses = userClassService.search(searchDate, searchClassName);
+
+            Map<String, List<ClassInfoDto>> groupedByDate = filteredClasses.stream()
+                    .collect(Collectors.groupingBy(ClassInfoDto::getClass_date, LinkedHashMap::new, Collectors.toList()));
                 List<ClassTypeDto> list = classTypeDao.selectAll();
 
                 List<String> allClassNames = list.stream()
                         .map(ClassTypeDto::getClass_name)
                         .collect(Collectors.toList());
 
-                m.addAttribute("classList", filteredClasses); // 결과 리스트
+                m.addAttribute("groupedClassMap", groupedByDate); // 결과 리스트
                 m.addAttribute("selectedDate", searchDate);
                 m.addAttribute("selectedClassName", searchClassName);
                 m.addAttribute("classNames", allClassNames);
