@@ -141,15 +141,18 @@
         <where>
             STR_TO_DATE(CONCAT(class_date, ' ', class_start_time), '%Y-%m-%d %H:%i') > NOW()
 
-            <if test="searchDate != null and searchDate != ''">
-                AND class_date = #{searchDate}
+            <if test="searchClassDate != null and searchClassDate != ''">
+                AND class_date = #{searchClassDate}
             </if>
-            <if test="className != null and className != ''">
-                <if test="searchDate != null and searchDate != ''">
-                    AND
-                </if>
-                class_name = #{className}
+
+            <if test="searchClassName != null and searchClassName != ''">
+                AND class_name = #{searchClassName}
             </if>
+
+            <if test="searchInstructor != null and searchInstructor != ''">
+                AND instructor_name = #{searchInstructor}
+            </if>
+
         </where>
         ORDER BY class_date asc;
     </select>

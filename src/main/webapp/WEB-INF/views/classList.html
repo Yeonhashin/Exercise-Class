@@ -121,15 +121,17 @@
         </tbody>
     </table>
 
-    <p><strong>날짜/수업으로 검색하여 예약하기</strong></p>
 
+    <form id="searchForm" th:action="@{/class/list}" method="get" >
 
-    <form id="searchForm" th:action="@{/class/list}" method="get">
+        <div>
+            <p><strong>날짜/수업으로 검색하여 예약하기</strong></p>
+        </div>
 
         <div class="form-row">
             <div class="form-group">
-                <label class="form-label" for="searchDate">수업 날짜</label>
-                <input type="text" id="searchDate" name="searchDate" class="flatpickr-input" placeholder="-- 날짜를 선택하세요 --"
+                <label class="form-label" for="searchClassDate">수업 날짜</label>
+                <input type="text" id="searchClassDate" name="searchClassDate" class="flatpickr-input" placeholder="-- 날짜를 선택하세요 --"
                        th:value="${selectedDate}">
             </div>
             <div class="form-group">
@@ -143,25 +145,18 @@
                     </option>
                 </select>
             </div>
+            <div class="form-group">
+                <label class="form-label" for="instructor">강사명</label>
+                <select id="instructor" name="searchInstructor">
+                    <option class="placeholder-option_th" value="">-- 강사를 선택하세요 --</option>
+                    <option class="placeholder-option_tk" th:each="c : ${instructors}"
+                            th:value="${c}"
+                            th:text="${c}"
+                            th:selected="${c == selectedInstructor}">
+                    </option>
+                </select>
+            </div>
         </div>
-
-
-<!--        <div>-->
-<!--                <label for="searchDate">수업 날짜</label>-->
-<!--                <input type="text" id="searchDate" name="searchDate" class="form-control"-->
-<!--                       placeholder="날짜를 선택하세요" th:value="${selectedDate}">-->
-<!--            </div>-->
-<!--            <div>-->
-<!--                <label for="className">수업명</label>-->
-<!--                <select id="className" name="searchClassName">-->
-<!--                    <option value="">&#45;&#45; 선택하세요 &#45;&#45;</option>-->
-<!--                    <option th:each="c : ${classNames}"-->
-<!--                            th:value="${c}"-->
-<!--                            th:text="${c}"-->
-<!--                            th:selected="${c == selectedClassName}">-->
-<!--                    </option>-->
-<!--                </select>-->
-<!--            </div>-->
 
             <div class="button-container mt-2">
                 <button type="submit">해당 조건으로 검색하기</button>
@@ -266,9 +261,18 @@
 <script src="/resources/js/class-reservate.js"></script>
 <script src="/resources/js/class-date-selecter.js"></script>
 <script>
-    flatpickr("#searchDate", {
+    flatpickr("#searchClassDate", {
         dateFormat: "Y-m-d", // yyyy-mm-dd
         locale: "ko" // 한글 적용
+    });
+</script>
+
+<script th:if="${searchExecuted}">
+    window.addEventListener('load', function () {
+        const result = document.getElementById("searchForm");
+        if (result) {
+            result.scrollIntoView({ behavior: "smooth" });
+        }
     });
 </script>
 </body>

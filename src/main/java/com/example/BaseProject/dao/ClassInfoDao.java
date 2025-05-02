@@ -57,10 +57,11 @@ public class ClassInfoDao {
 //        return session.delete(namespace+"delete", map);
 //    }
 
-    public List<ClassInfoDto> getClassBySearch(String searchDate, String className) {
+    public List<ClassInfoDto> getClassBySearch(String searchClassDate, String searchClassName, String searchInstructor) {
         Map map = new HashMap();
-        map.put("searchDate", searchDate);
-        map.put("className", className);
+        map.put("searchClassDate", searchClassDate);
+        map.put("searchClassName", searchClassName);
+        map.put("searchInstructor", searchInstructor);
         return session.selectList(namespace+"getSearchData", map);
     }
 }

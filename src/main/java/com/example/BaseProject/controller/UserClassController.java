@@ -1,9 +1,11 @@
 package com.example.BaseProject.controller;
 
 import com.example.BaseProject.dao.ClassTypeDao;
+import com.example.BaseProject.dao.InstructorDao;
 import com.example.BaseProject.dao.UserReservationDao;
 import com.example.BaseProject.domain.ClassInfoDto;
 import com.example.BaseProject.domain.ClassTypeDto;
+import com.example.BaseProject.domain.InstructorDto;
 import com.example.BaseProject.domain.UserReservationDto;
 import com.example.BaseProject.service.UserClassService;
 import com.example.BaseProject.service.UserReservationService;
@@ -30,6 +32,8 @@ public class UserClassController {
     UserClassService userClassService;
 
     private final UserReservationService userReservationService;
+    @Autowired
+    private InstructorDao instructorDao;
 
     public UserClassController(UserReservationService userReservationService) {
         this.userReservationService = userReservationService;
@@ -50,8 +54,9 @@ public class UserClassController {
 
     @GetMapping("/list")
     public String classList(@RequestParam(value = "startDate", required = false) String startDateStr,
-                            @RequestParam(value = "searchDate", required = false) String searchDate,
+                            @RequestParam(value = "searchClassDate", required = false) String searchClassDate,
                             @RequestParam(value = "searchClassName", required = false) String searchClassName,
+                            @RequestParam(value = "searchInstructor", required = false) String searchInstructor,
                             Model m, HttpSession session, RedirectAttributes rattr) {
         try {
             // 메시지를 flashAttributes로 전달
@@ -98,26 +103,46 @@ public class UserClassController {
                 }
             }
 
-            List<ClassInfoDto> filteredClasses = userClassService.search(searchDate, searchClassName);
+            List<ClassInfoDto> filteredClasses = userClassService.search(searchClassDate, searchClassName, searchInstructor);
 
             Map<String, List<ClassInfoDto>> groupedByDate = filteredClasses.stream()
                     .collect(Collectors.groupingBy(ClassInfoDto::getClass_date, LinkedHashMap::new, Collectors.toList()));
-                List<ClassTypeDto> list = classTypeDao.selectAll();
 
-                List<String> allClassNames = list.stream()
-                        .map(ClassTypeDto::getClass_name)
-                        .collect(Collectors.toList());
+
+            List<String> allClassNames = classTypeDao.selectAll().stream()
+                    .map(ClassTypeDto::getClass_name)
+                    .collect(Collectors.toList());
+
+            List<String> allInstructors = instructorDao.selectAll().stream()
+                    .map(InstructorDto::getInstructor_name)
+                    .collect(Collectors.toList());
+
 
                 m.addAttribute("groupedClassMap", groupedByDate); // 결과 리스트
-                m.addAttribute("selectedDate", searchDate);
+                m.addAttribute("selectedDate", searchClassDate);
                 m.addAttribute("selectedClassName", searchClassName);
-                m.addAttribute("classNames", allClassNames);
+                m.addAttribute("selectedInstructor", searchInstructor);
+
+// 검색 조건이 하나라도 존재할 때만 검색 수행
+            boolean isSearchExecuted =
+                    (searchClassDate != null && !searchClassDate.isEmpty()) ||
+                            (searchClassName != null && !searchClassName.isEmpty()) ||
+                            (searchInstructor != null && !searchInstructor.isEmpty());
+
+            if (isSearchExecuted) {
+                m.addAttribute("searchExecuted", true);  // ✅ 검색 조건 있을 때만 플래그 설정
+            }
+
+            m.addAttribute("classNames", allClassNames);
+            m.addAttribute("instructors", allInstructors);
+
 
             m.addAttribute("scheduleMap", scheduleMap); // 변환된 시간-날짜 맵을 전달
             m.addAttribute("formattedDates", formattedDates);
             m.addAttribute("startDate", startDate);
             m.addAttribute("times", times);
             m.addAttribute("reservedClassIds", reservedClassIds);  // 추가!
+
         } catch (Exception e) {
             e.printStackTrace();
         }

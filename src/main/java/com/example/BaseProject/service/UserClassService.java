@@ -30,7 +30,7 @@ public class UserClassService {
         return classInfoDao.getClassByDateAndTime(class_date, class_start_time);
     }
 
-    public List<ClassInfoDto> search(String searchDate, String className) throws Exception {
-        return classInfoDao.getClassBySearch(searchDate, className);
+    public List<ClassInfoDto> search(String searchClassDate, String searchClassName, String searchInstructor) throws Exception {
+        return classInfoDao.getClassBySearch(searchClassDate, searchClassName, searchInstructor);
     }
 }
