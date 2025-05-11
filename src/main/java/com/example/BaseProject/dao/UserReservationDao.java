@@ -14,6 +14,7 @@ public class UserReservationDao {
 
     @Autowired
     private SqlSession session;
+
     private static String namespace="com.example.BaseProject.dao.UserReservationMapper.";
 
     public int insert(UserReservationDto dto) throws Exception {
@@ -35,10 +36,21 @@ public class UserReservationDao {
         return session.selectList(namespace+"selectReservedClassByUser", userId);
     }
 
-    public List<UserReservationDto> reservedAllClassByUser(int userId) throws Exception {
-        return session.selectList(namespace+"selectAllReservedClassByUser", userId);
+    public List<UserReservationDto> reservedAllClassByUser(int userId, int offset, int size) throws Exception {
+        Map<String, Object> map = new HashMap<>();
+        map.put("userId", userId);
+        map.put("offset", offset);
+        map.put("size", size);
+        return session.selectList(namespace+"selectAllReservedClassByUser", map);
     }
 
+    public boolean hasMore(int userId, int offset) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("userId", userId);
+        map.put("offset", offset);
 
+        Integer result = session.selectOne(namespace + "hasMore", map);
+        return result != null && result > 0;
+    }
 
 }

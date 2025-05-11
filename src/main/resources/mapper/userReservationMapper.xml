@@ -28,7 +28,7 @@
         WHERE user_id = #{userId} and cancel_flag = 0
     </select>
 
-    <select id="selectAllReservedClassByUser" parameterType="int" resultType="UserReservationDto">
+    <select id="selectAllReservedClassByUser" parameterType="map" resultType="UserReservationDto">
         SELECT UR.*, CTY.class_type_name, CTY.class_name, CP.class_point_name, II.instructor_name, CT.class_start_time, CT.class_end_time, CI.class_date
         FROM user_reservation AS UR
                  INNER JOIN post.class_info AS CI ON UR.class_id = CI.id
@@ -37,7 +37,15 @@
                  INNER JOIN post.class_time AS CT ON CI.class_time_id = CT.id
                  INNER JOIN post.instructor_info AS II ON CI.instructor_id = II.id
         WHERE UR.user_id = #{userId}
-        ORDER BY UR.create_dt desc
+        ORDER BY CI.class_date desc, CT.class_start_time desc
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <select id="hasMore" parameterType="map" resultType="int">
+        SELECT 1
+        FROM user_reservation
+        WHERE user_id = #{userId}
+        LIMIT 1 OFFSET #{offset}
     </select>
 
     <select id="selectReservedClassByUser" parameterType="int" resultType="UserReservationDto">

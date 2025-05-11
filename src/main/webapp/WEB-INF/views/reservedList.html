@@ -63,7 +63,7 @@
                 <th></th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="reservationList">
             <tr th:each="reserved : ${reservedClass}">
                 <td>
                     <span th:text="${reserved.class_date}"></span> <br>
@@ -101,6 +101,9 @@
             </tr>
             </tbody>
         </table>
+            <div class="text-center mt-3" th:if="${hasMore}">
+                <button id="loadMoreBtn" class="btn btn-primary">더보기</button>
+            </div>
         </div>
 
         <div class="button-container">
@@ -145,6 +148,42 @@
         </div>
     </div>
     <div th:replace="layout/footer"></div>
+<script>
+    let offset = 5;
+
+    document.getElementById('loadMoreBtn')?.addEventListener('click', function () {
+        fetch(`/reservation/list/more?offset=${offset}`)
+            .then(response => response.json())
+            .then(data => {
+                const list = data.reservedClass;
+                const hasMore = data.hasMore;
+                const tbody = document.getElementById('reservationList');
+
+                list.forEach(reserved => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>
+                            ${reserved.class_date}<br>
+                            ${reserved.class_start_time} - ${reserved.class_end_time}<br>
+                            ${reserved.instructor_name}<br>
+                            ${reserved.class_point_name}
+                        </td>
+                        <td class="lesson-title">${reserved.class_name}</td>
+                        <td>${reserved.class_type_name}</td>
+                        <td>${reserved.cancel_flag === 1 ? '취소된 예약' :
+                        (reserved.canCancel ? '<button class="btn btn-danger btn-sm">예약 취소</button>' :
+                            '<span class="text-muted">취소 기한 초과</span>')}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+                offset += list.length;
+                if (!hasMore) {
+                    document.getElementById('loadMoreBtn').style.display = 'none';
+                }
+            });
+    });
+</script>
     <script src="/resources/js/class-reservate.js"></script>
 </body>
 </html>

@@ -107,11 +107,28 @@ public class UserReservationController {
     public String reservedList(HttpSession session, Model m) {
         try {
             int userId = (int) session.getAttribute("user_id");
-            List<UserReservationDto> reservedClass  = userReservationService.reservedAllClassByUser(userId);
+            List<UserReservationDto> reservedClass = userReservationService.reservedAllClassByUser(userId, 0, 5);
+            boolean hasMore = userReservationService.hasMore(userId, 5);
             m.addAttribute("reservedClass", reservedClass);
+            m.addAttribute("hasMore", hasMore);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return "reservedList";
+    }
+
+    @GetMapping("/list/more")
+    @ResponseBody
+    public Map<String, Object> loadMoreReserved(@RequestParam int offset,
+                                                @RequestParam(defaultValue = "5") int size,
+                                                HttpSession session) throws Exception {
+        int userId = (int) session.getAttribute("user_id");
+        List<UserReservationDto> moreReservations = userReservationService.reservedAllClassByUser(userId, offset, size);
+        boolean hasMore = userReservationService.hasMore(userId, offset + size);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("reservedClass", moreReservations);
+        response.put("hasMore", hasMore);
+        return response;
     }
 }
