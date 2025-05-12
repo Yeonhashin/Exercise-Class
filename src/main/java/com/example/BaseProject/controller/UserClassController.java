@@ -103,7 +103,11 @@ public class UserClassController {
                 }
             }
 
-            List<ClassInfoDto> filteredClasses = userClassService.search(searchClassDate, searchClassName, searchInstructor);
+
+            List<ClassInfoDto> filteredClasses = userClassService.search(searchClassDate, searchClassName, searchInstructor, 0, 5);
+
+            boolean hasMore = userClassService.hasMore(5);
+
 
             Map<String, List<ClassInfoDto>> groupedByDate = filteredClasses.stream()
                     .collect(Collectors.groupingBy(ClassInfoDto::getClass_date, LinkedHashMap::new, Collectors.toList()));
@@ -117,8 +121,9 @@ public class UserClassController {
                     .map(InstructorDto::getInstructor_name)
                     .collect(Collectors.toList());
 
-
                 m.addAttribute("groupedClassMap", groupedByDate); // 결과 리스트
+                m.addAttribute("hasMore", hasMore);
+
                 m.addAttribute("selectedDate", searchClassDate);
                 m.addAttribute("selectedClassName", searchClassName);
                 m.addAttribute("selectedInstructor", searchInstructor);
@@ -147,6 +152,42 @@ public class UserClassController {
             e.printStackTrace();
         }
         return "classList"; // 화면으로 이동
+    }
+
+    @GetMapping("/list/more")
+    @ResponseBody
+    public Map<String, Object> loadMoreReserved(@RequestParam(value = "startDate", required = false) String startDateStr,
+                                                @RequestParam(value = "searchClassDate", required = false) String searchClassDate,
+                                                @RequestParam(value = "searchClassName", required = false) String searchClassName,
+                                                @RequestParam(value = "searchInstructor", required = false) String searchInstructor,
+                                                @RequestParam int offset,
+                                                @RequestParam(defaultValue = "5") int size,
+                                                HttpSession session) throws Exception {
+
+        List<ClassInfoDto> filteredClasses = userClassService.search(searchClassDate, searchClassName, searchInstructor, offset, size);
+
+        boolean hasMore = userClassService.hasMore(offset + size);
+
+
+        Map<String, List<ClassInfoDto>> groupedByDate = filteredClasses.stream()
+                .collect(Collectors.groupingBy(ClassInfoDto::getClass_date, LinkedHashMap::new, Collectors.toList()));
+
+
+        Map<String, Object> response = new HashMap<>();
+
+        // 검색 조건이 하나라도 존재할 때만 검색 수행
+        boolean isSearchExecuted =
+                (searchClassDate != null && !searchClassDate.isEmpty()) ||
+                        (searchClassName != null && !searchClassName.isEmpty()) ||
+                        (searchInstructor != null && !searchInstructor.isEmpty());
+
+        if (isSearchExecuted) {
+            response.put("searchExecuted", true); // ✅ 검색 조건 있을 때만 플래그 설정
+        }
+
+        response.put("reservedClass", groupedByDate);
+        response.put("hasMore", hasMore);
+        return response;
     }
 
     private List<LocalDate> getDatesInRange(LocalDate startDate) {

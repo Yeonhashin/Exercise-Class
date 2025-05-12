@@ -154,7 +154,14 @@
             </if>
 
         </where>
-        ORDER BY class_date asc;
+        ORDER BY class_date asc
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <select id="hasMore" parameterType="int" resultType="int">
+        SELECT 1
+        FROM class_info
+        LIMIT 1 OFFSET #{offset}
     </select>
 
 </mapper>

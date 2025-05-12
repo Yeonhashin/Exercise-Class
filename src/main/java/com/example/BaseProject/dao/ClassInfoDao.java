@@ -57,11 +57,18 @@ public class ClassInfoDao {
 //        return session.delete(namespace+"delete", map);
 //    }
 
-    public List<ClassInfoDto> getClassBySearch(String searchClassDate, String searchClassName, String searchInstructor) {
+    public List<ClassInfoDto> getClassBySearch(String searchClassDate, String searchClassName, String searchInstructor, int offset, int size) {
         Map map = new HashMap();
         map.put("searchClassDate", searchClassDate);
         map.put("searchClassName", searchClassName);
         map.put("searchInstructor", searchInstructor);
+        map.put("offset", offset);
+        map.put("size", size);
         return session.selectList(namespace+"getSearchData", map);
+    }
+
+    public boolean hasMore(int offset) {
+        Integer result = session.selectOne(namespace + "hasMore", offset);
+        return result != null && result > 0;
     }
 }

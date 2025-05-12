@@ -102,7 +102,7 @@
             </tbody>
         </table>
             <div class="text-center mt-3" th:if="${hasMore}">
-                <button id="loadMoreBtn" class="btn btn-primary">더보기</button>
+                <button id="loadMoreBtn" class="btn btn-primary">레슨이력 더보기</button>
             </div>
         </div>
 
@@ -161,22 +161,41 @@
 
                 list.forEach(reserved => {
                     const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>
-                            ${reserved.class_date}<br>
-                            ${reserved.class_start_time} - ${reserved.class_end_time}<br>
-                            ${reserved.instructor_name}<br>
-                            ${reserved.class_point_name}
-                        </td>
-                        <td class="lesson-title">${reserved.class_name}</td>
-                        <td>${reserved.class_type_name}</td>
-                        <td>${reserved.cancel_flag === 1 ? '취소된 예약' :
-                        (reserved.canCancel ? '<button class="btn btn-danger btn-sm">예약 취소</button>' :
-                            '<span class="text-muted">취소 기한 초과</span>')}</td>
-                    `;
+
+                    let actionHtml = '';
+                    if (reserved.cancel_flag === 1) {
+                        actionHtml = '<span class="text-muted">취소된 예약</span>';
+                    } else if (reserved.canCancel) {
+                        actionHtml = `<button class="btn btn-danger btn-sm open-cancel-modal"
+                        data-class-id="${reserved.class_id}"
+                        data-class-type-name="${reserved.class_type_name}"
+                        data-class-name="${reserved.class_name}"
+                        data-class-instructor-name="${reserved.instructor_name}"
+                        data-class-start-time="${reserved.class_start_time}"
+                        data-class-end-time="${reserved.class_end_time}"
+                        data-class-date="${reserved.class_date}"
+                        data-bs-toggle="modal"
+                        data-bs-target="#reserveModal"
+                    >예약 취소</button>`;
+                                } else {
+                                    actionHtml = '<span class="text-muted">취소 기한 초과</span>';
+                                }
+
+                                row.innerHTML = `
+                    <td>
+                        ${reserved.class_date}<br>
+                        ${reserved.class_start_time} - ${reserved.class_end_time}<br>
+                        ${reserved.instructor_name}<br>
+                        ${reserved.class_point_name}
+                    </td>
+                    <td class="lesson-title">${reserved.class_name}</td>
+                    <td>${reserved.class_type_name}</td>
+                    <td>${actionHtml}</td>
+
+                `;
+                    console.log("reserved:", reserved);
                     tbody.appendChild(row);
                 });
-
                 offset += list.length;
                 if (!hasMore) {
                     document.getElementById('loadMoreBtn').style.display = 'none';

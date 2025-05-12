@@ -163,7 +163,7 @@
             </div>
 
         <div th:each="entry : ${groupedClassMap}">
-            <table class="search-table">
+            <table class="search-table" id="reservationList">
                 <thead>
                 <tr>
                     <th class="entry-header" colspan="4" th:text="${entry.key}"></th>
@@ -216,6 +216,10 @@
                 </tr>
                 </tbody>
             </table>
+        </div>
+
+        <div class="text-center mt-3" th:if="${hasMore}">
+            <button id="loadMoreBtn" class="btn btn-primary" type="button">레슨이력 더보기</button>
         </div>
 
     </form>
@@ -274,6 +278,63 @@
             result.scrollIntoView({ behavior: "smooth" });
         }
     });
+</script>
+
+<script>
+    let offset = 5;
+
+    document.getElementById('loadMoreBtn')?.addEventListener('click', function () {
+        const params = new URLSearchParams({
+            offset: offset,
+            size: 5,
+            searchClassDate: document.getElementById('searchClassDate')?.value || '',
+            searchClassName: document.getElementById('className')?.value || '',
+            searchInstructor: document.getElementById('instructor')?.value || ''
+        });
+
+        fetch(`/class/list/more?${params.toString()}`)
+            .then(response => {
+                if (!response.ok) throw new Error("Network response was not ok");
+                return response.json();
+            })
+            .then(data => {
+                const list = data.reservedClass;
+                const hasMore = data.hasMore;
+                const tbody = document.getElementById('reservationList');
+
+                if (!list || list.length === 0) return;
+
+                Object.entries(list).forEach(([date, classList]) => {
+                    classList.forEach(reserved => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                        <td>
+                            ${reserved.class_date}<br>
+                            ${reserved.class_start_time} - ${reserved.class_end_time}<br>
+                            ${reserved.instructor_name}<br>
+                            ${reserved.class_point_name}
+                        </td>
+                        <td class="lesson-title">${reserved.class_name}</td>
+                        <td>${reserved.class_type_name}</td>
+                        <td>
+                            <button class="btn btn-primary btn-sm">예약하기</button>
+                        </td>
+                    `;
+                        tbody.appendChild(row);
+                    });
+                });
+
+                offset += 5;
+                if (!hasMore) {
+                    document.getElementById('loadMoreBtn').style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error("더보기 요청 중 에러 발생:", error);
+                alert("수업 더보기 중 오류가 발생했습니다. 콘솔을 확인해주세요.");
+            });
+    });
+
 </script>
 </body>
 </html>

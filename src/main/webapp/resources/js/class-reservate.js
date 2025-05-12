@@ -6,48 +6,34 @@ document.addEventListener('DOMContentLoaded', function() {
     const confirmReserveBtn = document.getElementById('confirmReserveBtn');
     const confirmCancelBtn = document.getElementById('confirmCancelBtn');
 
-    // 예약하기 버튼 클릭 시 모달 오픈
-    reserveButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            openModal(this, 'reserve');
-        });
-    });
+    document.getElementById('reservationList').addEventListener('click', function (e) {
+        const btn = e.target.closest('.open-cancel-modal');
+        if (btn) {
+            const classId = btn.getAttribute('data-class-id');
+            const classTypeName = btn.getAttribute('data-class-type-name');
+            const className = btn.getAttribute('data-class-name');
+            const instructor = btn.getAttribute('data-class-instructor-name');
+            const startTime = btn.getAttribute('data-class-start-time');
+            const endTime = btn.getAttribute('data-class-end-time');
+            const date = btn.getAttribute('data-class-date');
 
-    // 예약취소 버튼 클릭 시 모달 오픈
-    cancelButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            openModal(this, 'cancel');
-        });
-    });
+            // 모달에 데이터 넣기
+            document.getElementById('modalClassId').value = classId;
+            document.getElementById('modalClassDate').innerText = date;
+            document.getElementById('modalClassStartTime').innerText = startTime;
+            document.getElementById('modalClassEndTime').innerText = endTime;
+            document.getElementById('modalClassTypeName').innerText = classTypeName;
+            document.getElementById('modalClassName').innerText = className;
+            document.getElementById('modalClassInstructor').innerText = instructor;
 
-    function openModal(button, actionType) {
-        const classId = button.getAttribute('data-class-id');
-        const classTypeName = button.getAttribute('data-class-type-name');
-        const className = button.getAttribute('data-class-name');
-        const classInstructorName = button.getAttribute('data-class-instructor-name');
-        const classDate = button.getAttribute('data-class-date');
-        const classStartTime = button.getAttribute('data-class-start-time');
-        const classEndTime = button.getAttribute('data-class-end-time');
+            // 버튼 표시 제어
+            document.getElementById('confirmReserveBtn').style.display = 'none';
+            document.getElementById('confirmCancelBtn').style.display = 'inline-block';
 
-        // 모달에 값 세팅
-        modalClassId.value = classId;
-        document.getElementById('modalClassTypeName').textContent = classTypeName;
-        document.getElementById('modalClassName').textContent = className;
-        document.getElementById('modalClassInstructor').textContent = classInstructorName;
-        document.getElementById('modalClassDate').textContent = classDate;
-        document.getElementById('modalClassStartTime').textContent = classStartTime;
-        document.getElementById('modalClassEndTime').textContent = classEndTime;
-
-        // 액션 타입에 따라 버튼 보여주기
-        if (actionType === 'reserve') {
-            confirmReserveBtn.style.display = 'inline-block';
-            confirmCancelBtn.style.display = 'none';
-        } else if (actionType === 'cancel') {
-            confirmReserveBtn.style.display = 'none';
-            confirmCancelBtn.style.display = 'inline-block';
+            const modal = new bootstrap.Modal(document.getElementById('reserveModal'));
+            modal.show();
         }
-    }
-
+    });
     // 예약 확정 버튼 클릭 시 폼 제출
     confirmReserveBtn.addEventListener('click', function() {
         document.getElementById('reserveForm').submit();
