@@ -34,16 +34,12 @@ public class UserReservationService {
         return userReservationDao.update(userId, classId);
     }
 
-    public List<UserReservationDto> reservedAllClassByUser(int userId, int offset, int size) throws Exception {
-        List<UserReservationDto> reservedList = userReservationDao.reservedAllClassByUser(userId, offset, size);
+    public List<UserReservationDto> reservedAllClassByUser(int userId) throws Exception {
+        List<UserReservationDto> reservedList = userReservationDao.reservedAllClassByUser(userId);
         for (UserReservationDto dto : reservedList) {
             boolean canCancel = ReservationUtils.canCancel(dto.getClass_date(), dto.getClass_start_time());
             dto.setCanCancel(canCancel);
         }
         return reservedList;
-    }
-
-    public boolean hasMore(int userId, int offset) throws Exception {
-        return userReservationDao.hasMore(userId, offset);
     }
 }
