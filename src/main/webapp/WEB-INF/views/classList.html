@@ -162,54 +162,55 @@
                 <button type="submit">해당 조건으로 검색하기</button>
             </div>
 
-        <div th:each="entry : ${groupedClassMap}">
-            <table class="search-table" id="reservationList">
+        <div id="searchResultTables">
+        <div th:each="entry : ${groupedClassMap}" >
+            <table class="search-table" th:attr="data-date=${entry.key}">
                 <thead>
                 <tr>
                     <th class="entry-header" colspan="4" th:text="${entry.key}"></th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="class : ${entry.value}">
+                <tr th:each="classmap : ${entry.value}">
                     <td>
-                        <span th:text="${class.class_date}"></span> <br>
-                        <span th:text="${class.class_start_time}"></span> -
-                        <span th:text="${class.class_end_time}"></span> <br>
-                        <span th:text="${class.instructor_name}"></span> <br>
-                        <span th:text="${class.class_point_name}"></span>
+                        <span th:text="${classmap.class_date}"></span> <br>
+                        <span th:text="${classmap.class_start_time}"></span> -
+                        <span th:text="${classmap.class_end_time}"></span> <br>
+                        <span th:text="${classmap.instructor_name}"></span> <br>
+                        <span th:text="${classmap.class_point_name}"></span>
                     </td>
-                    <td class="lesson-title" th:text="${class.class_name}"></td>
-                    <td th:text="${class.class_type_name}"></td>
+                    <td class="lesson-title" th:text="${classmap.class_name}"></td>
+                    <td th:text="${classmap.class_type_name}"></td>
                     <td>
-                        <div th:if="${reservedClassIds.contains(class.id)}">
+                        <div th:if="${reservedClassIds.contains(classmap.id)}">
                             <span class="badge bg-success mb-1">예약중</span>
                             <button type="button"
                                     class="btn btn-danger btn-sm open-cancel-modal"
                                     data-bs-toggle="modal"
                                     data-bs-target="#reserveModal"
-                                    th:attr="data-class-id=${class.id},
-                                         data-class-type-name=${class.class_type_name},
-                                         data-class-name=${class.class_name},
-                                         data-class-instructor-name=${class.instructor_name},
-                                         data-class-start-time=${class.class_start_time},
-                                         data-class-end-time=${class.class_end_time},
-                                         data-class-date=${class.class_date}">
+                                    th:attr="data-class-id=${classmap.id},
+                                         data-class-type-name=${classmap.class_type_name},
+                                         data-class-name=${classmap.class_name},
+                                         data-class-instructor-name=${classmap.instructor_name},
+                                         data-class-start-time=${classmap.class_start_time},
+                                         data-class-end-time=${classmap.class_end_time},
+                                         data-class-date=${classmap.class_date}">
                                 예약 취소
                             </button>
                         </div>
 
                         <button type="button"
-                                th:unless="${reservedClassIds.contains(class.id)}"
+                                th:unless="${reservedClassIds.contains(classmap.id)}"
                                 class="btn btn-primary btn-sm mt-1 open-reserve-modal"
                                 data-bs-toggle="modal"
                                 data-bs-target="#reserveModal"
-                                th:attr="data-class-id=${class.id},
-                                     data-class-type-name=${class.class_type_name},
-                                     data-class-name=${class.class_name},
-                                     data-class-instructor-name=${class.instructor_name},
-                                     data-class-start-time=${class.class_start_time},
-                                     data-class-end-time=${class.class_end_time},
-                                     data-class-date=${class.class_date}">
+                                th:attr="data-class-id=${classmap.id},
+                                     data-class-type-name=${classmap.class_type_name},
+                                     data-class-name=${classmap.class_name},
+                                     data-class-instructor-name=${classmap.instructor_name},
+                                     data-class-start-time=${classmap.class_start_time},
+                                     data-class-end-time=${classmap.class_end_time},
+                                     data-class-date=${classmap.class_date}">
                             예약하기
                         </button>
                     </td>
@@ -217,12 +218,12 @@
                 </tbody>
             </table>
         </div>
-
-        <div class="text-center mt-3" th:if="${hasMore}">
-            <button id="loadMoreBtn" class="btn btn-primary" type="button">레슨이력 더보기</button>
         </div>
-
     </form>
+
+    <div class="text-center mt-3" th:if="${hasMore}">
+        <button id="loadMoreBtn" class="btn btn-primary" type="button">레슨이력 더보기</button>
+    </div>
 
 </div>
 <!-- 예약 모달 -->
@@ -281,12 +282,12 @@
 </script>
 
 <script>
-    let offset = 5;
+    let offset = 10;
 
     document.getElementById('loadMoreBtn')?.addEventListener('click', function () {
         const params = new URLSearchParams({
             offset: offset,
-            size: 5,
+            size: 10,
             searchClassDate: document.getElementById('searchClassDate')?.value || '',
             searchClassName: document.getElementById('className')?.value || '',
             searchInstructor: document.getElementById('instructor')?.value || ''
@@ -299,32 +300,89 @@
             })
             .then(data => {
                 const list = data.reservedClass;
+                const reservedClassIds = data.reservedClassIds;
                 const hasMore = data.hasMore;
-                const tbody = document.getElementById('reservationList');
 
-                if (!list || list.length === 0) return;
+                if (!list || Object.keys(list).length === 0) return;
 
                 Object.entries(list).forEach(([date, classList]) => {
-                    classList.forEach(reserved => {
+                    const tableSelector = `table[data-date="${CSS.escape(date)}"]`;
+                    const container = document.getElementById('searchResultTables');
+
+                    let existingTable = document.querySelector(tableSelector);
+                    let tbody;
+
+                    if (!existingTable) {
+                        // 새 날짜 테이블 생성
+                        const newTable = document.createElement('table');
+                        newTable.className = 'search-table';
+                        newTable.setAttribute('data-date', date);
+
+                        newTable.innerHTML = `
+                        <thead>
+                            <tr>
+                                <th class="entry-header" colspan="4">${date}</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    `;
+
+                        container.appendChild(newTable);
+                        existingTable = newTable;
+                    }
+
+                    tbody = existingTable.querySelector('tbody');
+
+                    classList.forEach(classmap => {
+                        const isReserved = reservedClassIds.includes(classmap.id);
                         const row = document.createElement('tr');
                         row.innerHTML = `
                         <td>
-                            ${reserved.class_date}<br>
-                            ${reserved.class_start_time} - ${reserved.class_end_time}<br>
-                            ${reserved.instructor_name}<br>
-                            ${reserved.class_point_name}
+                            ${classmap.class_date}<br>
+                            ${classmap.class_start_time} - ${classmap.class_end_time}<br>
+                            ${classmap.instructor_name}<br>
+                            ${classmap.class_point_name}
                         </td>
-                        <td class="lesson-title">${reserved.class_name}</td>
-                        <td>${reserved.class_type_name}</td>
+                        <td class="lesson-title">${classmap.class_name}</td>
+                        <td>${classmap.class_type_name}</td>
                         <td>
-                            <button class="btn btn-primary btn-sm">예약하기</button>
+                            ${isReserved ? `
+                                <span class="badge bg-success mb-1">예약중</span>
+                                <button type="button"
+                                    class="btn btn-danger btn-sm open-cancel-modal"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#reserveModal"
+                                    data-class-id="${classmap.id}"
+                                    data-class-type-name="${classmap.class_type_name}"
+                                    data-class-name="${classmap.class_name}"
+                                    data-class-instructor-name="${classmap.instructor_name}"
+                                    data-class-start-time="${classmap.class_start_time}"
+                                    data-class-end-time="${classmap.class_end_time}"
+                                    data-class-date="${classmap.class_date}">
+                                    예약 취소
+                                </button>
+                            ` : `
+                                <button type="button"
+                                    class="btn btn-primary btn-sm mt-1 open-reserve-modal"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#reserveModal"
+                                    data-class-id="${classmap.id}"
+                                    data-class-type-name="${classmap.class_type_name}"
+                                    data-class-name="${classmap.class_name}"
+                                    data-class-instructor-name="${classmap.instructor_name}"
+                                    data-class-start-time="${classmap.class_start_time}"
+                                    data-class-end-time="${classmap.class_end_time}"
+                                    data-class-date="${classmap.class_date}">
+                                    예약하기
+                                </button>
+                            `}
                         </td>
                     `;
-                        tbody.appendChild(row);
+                        tbody.appendChild(row); // ✅ 제대로 된 위치에 추가
                     });
                 });
 
-                offset += 5;
+                offset += 10;
                 if (!hasMore) {
                     document.getElementById('loadMoreBtn').style.display = 'none';
                 }

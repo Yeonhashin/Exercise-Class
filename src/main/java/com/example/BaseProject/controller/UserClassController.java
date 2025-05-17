@@ -104,9 +104,9 @@ public class UserClassController {
             }
 
 
-            List<ClassInfoDto> filteredClasses = userClassService.search(searchClassDate, searchClassName, searchInstructor, 0, 5);
+            List<ClassInfoDto> filteredClasses = userClassService.search(searchClassDate, searchClassName, searchInstructor, 0, 10);
 
-            boolean hasMore = userClassService.hasMore(5);
+            boolean hasMore = userClassService.hasMore(10);
 
 
             Map<String, List<ClassInfoDto>> groupedByDate = filteredClasses.stream()
@@ -161,7 +161,7 @@ public class UserClassController {
                                                 @RequestParam(value = "searchClassName", required = false) String searchClassName,
                                                 @RequestParam(value = "searchInstructor", required = false) String searchInstructor,
                                                 @RequestParam int offset,
-                                                @RequestParam(defaultValue = "5") int size,
+                                                @RequestParam(defaultValue = "10") int size,
                                                 HttpSession session) throws Exception {
 
         List<ClassInfoDto> filteredClasses = userClassService.search(searchClassDate, searchClassName, searchInstructor, offset, size);
@@ -185,8 +185,13 @@ public class UserClassController {
             response.put("searchExecuted", true); // ✅ 검색 조건 있을 때만 플래그 설정
         }
 
+        int userId = (int) session.getAttribute("user_id");
+
+        List<Integer> reservedClassIds = userReservationDao.findReservedClassIdsByUser(userId);
+
         response.put("reservedClass", groupedByDate);
         response.put("hasMore", hasMore);
+        response.put("reservedClassIds", reservedClassIds);
         return response;
     }
 

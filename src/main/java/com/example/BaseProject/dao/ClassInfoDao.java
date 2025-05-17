@@ -16,17 +16,6 @@ public class ClassInfoDao {
     private SqlSession session;
     private static String namespace="com.example.BaseProject.dao.ClassInfoMapper.";
 
-//    public List<ClassInfoDto> selectAll() throws Exception {
-//        return session.selectList(namespace+"selectAll");
-//    }
-
-//    public List<ClassInfoDto> getWeeklySchedule(LocalDate startDate, LocalDate endDate) throws Exception {
-//        Map map = new HashMap();
-//        map.put("startDate", startDate);
-//        map.put("endDate", endDate);
-//        return session.selectList(namespace+"getWeeklySchedule", map);
-//    }
-
     public List<ClassInfoDto> getClassByDateAndTime(LocalDate class_date, String class_start_time) throws Exception {
         Map map = new HashMap();
         map.put("class_date", class_date);
@@ -37,25 +26,6 @@ public class ClassInfoDao {
     public ClassInfoDto select(Integer id) throws Exception {
         return session.selectOne(namespace + "select", id);
     }
-
-//    public List<ClassInfoDto> selectPage(Map map) throws Exception {
-//        return session.selectList(namespace+"selectPage", map);
-//    }
-//
-//    public int update(ClassInfoDto dto) throws Exception {
-//        return session.update(namespace+"update", dto);
-//    }
-//
-//    public int deleteAll(){
-//        return session.delete(namespace + "deleteAll");
-//    }
-
-//    public int delete(Integer id, int class_point_id) throws Exception {
-//        Map map = new HashMap();
-//        map.put("id", id);
-//        map.put("class_point_id", class_point_id);
-//        return session.delete(namespace+"delete", map);
-//    }
 
     public List<ClassInfoDto> getClassBySearch(String searchClassDate, String searchClassName, String searchInstructor, int offset, int size) {
         Map map = new HashMap();
