@@ -6,18 +6,19 @@ import com.example.BaseProject.dao.UserReservationDao;
 import com.example.BaseProject.domain.ClassInfoDto;
 import com.example.BaseProject.domain.ClassTypeDto;
 import com.example.BaseProject.domain.InstructorDto;
-import com.example.BaseProject.domain.UserReservationDto;
 import com.example.BaseProject.service.UserClassService;
 import com.example.BaseProject.service.UserReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -53,11 +54,7 @@ public class UserClassController {
     private ClassTypeDao classTypeDao;
 
     @GetMapping("/list")
-    public String classList(@RequestParam(value = "startDate", required = false) String startDateStr,
-                            @RequestParam(value = "searchClassDate", required = false) String searchClassDate,
-                            @RequestParam(value = "searchClassName", required = false) String searchClassName,
-                            @RequestParam(value = "searchInstructor", required = false) String searchInstructor,
-                            Model m, HttpSession session, RedirectAttributes rattr) {
+    public String classList(@RequestParam(value = "startDate", required = false) String startDateStr, @RequestParam(value = "searchClassDate", required = false) String searchClassDate, @RequestParam(value = "searchClassName", required = false) String searchClassName, @RequestParam(value = "searchInstructor", required = false) String searchInstructor, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset, Model m, HttpSession session, RedirectAttributes rattr) {
         try {
             // 메시지를 flashAttributes로 전달
             if (rattr.getFlashAttributes().get("msg") != null) {
@@ -78,8 +75,7 @@ public class UserClassController {
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d(E)");
 
-            List<String> formattedDates = IntStream.range(0, 5)
-                    .mapToObj(i -> startDate.plusDays(i).format(formatter)) // 포맷 적용
+            List<String> formattedDates = IntStream.range(0, 5).mapToObj(i -> startDate.plusDays(i).format(formatter)) // 포맷 적용
                     .collect(Collectors.toList());
 
             // 날짜 목록을 생성 (예시: 3일 범위로 날짜 표시)
@@ -103,36 +99,27 @@ public class UserClassController {
                 }
             }
 
+            int size = 10;
+            List<ClassInfoDto> filteredClasses = userClassService.search(searchClassDate, searchClassName, searchInstructor, offset, size);
 
-            List<ClassInfoDto> filteredClasses = userClassService.search(searchClassDate, searchClassName, searchInstructor, 0, 10);
+            boolean hasMore = userClassService.hasMore(offset + size, searchClassDate, searchClassName, searchInstructor);
 
-            boolean hasMore = userClassService.hasMore(10);
-
-
-            Map<String, List<ClassInfoDto>> groupedByDate = filteredClasses.stream()
-                    .collect(Collectors.groupingBy(ClassInfoDto::getClass_date, LinkedHashMap::new, Collectors.toList()));
+            Map<String, List<ClassInfoDto>> groupedByDate = filteredClasses.stream().collect(Collectors.groupingBy(ClassInfoDto::getClass_date, LinkedHashMap::new, Collectors.toList()));
 
 
-            List<String> allClassNames = classTypeDao.selectAll().stream()
-                    .map(ClassTypeDto::getClass_name)
-                    .collect(Collectors.toList());
+            List<String> allClassNames = classTypeDao.selectAll().stream().map(ClassTypeDto::getClass_name).collect(Collectors.toList());
 
-            List<String> allInstructors = instructorDao.selectAll().stream()
-                    .map(InstructorDto::getInstructor_name)
-                    .collect(Collectors.toList());
+            List<String> allInstructors = instructorDao.selectAll().stream().map(InstructorDto::getInstructor_name).collect(Collectors.toList());
 
-                m.addAttribute("groupedClassMap", groupedByDate); // 결과 리스트
-                m.addAttribute("hasMore", hasMore);
+            m.addAttribute("groupedClassMap", groupedByDate); // 결과 리스트
+            m.addAttribute("hasMore", hasMore);
 
-                m.addAttribute("selectedDate", searchClassDate);
-                m.addAttribute("selectedClassName", searchClassName);
-                m.addAttribute("selectedInstructor", searchInstructor);
+            m.addAttribute("selectedDate", searchClassDate);
+            m.addAttribute("selectedClassName", searchClassName);
+            m.addAttribute("selectedInstructor", searchInstructor);
 
 // 검색 조건이 하나라도 존재할 때만 검색 수행
-            boolean isSearchExecuted =
-                    (searchClassDate != null && !searchClassDate.isEmpty()) ||
-                            (searchClassName != null && !searchClassName.isEmpty()) ||
-                            (searchInstructor != null && !searchInstructor.isEmpty());
+            boolean isSearchExecuted = (searchClassDate != null && !searchClassDate.isEmpty()) || (searchClassName != null && !searchClassName.isEmpty()) || (searchInstructor != null && !searchInstructor.isEmpty());
 
             if (isSearchExecuted) {
                 m.addAttribute("searchExecuted", true);  // ✅ 검색 조건 있을 때만 플래그 설정
@@ -141,7 +128,7 @@ public class UserClassController {
             m.addAttribute("classNames", allClassNames);
             m.addAttribute("instructors", allInstructors);
 
-
+            m.addAttribute("hasMore", hasMore);
             m.addAttribute("scheduleMap", scheduleMap); // 변환된 시간-날짜 맵을 전달
             m.addAttribute("formattedDates", formattedDates);
             m.addAttribute("startDate", startDate);
@@ -156,30 +143,20 @@ public class UserClassController {
 
     @GetMapping("/list/more")
     @ResponseBody
-    public Map<String, Object> loadMoreReserved(@RequestParam(value = "startDate", required = false) String startDateStr,
-                                                @RequestParam(value = "searchClassDate", required = false) String searchClassDate,
-                                                @RequestParam(value = "searchClassName", required = false) String searchClassName,
-                                                @RequestParam(value = "searchInstructor", required = false) String searchInstructor,
-                                                @RequestParam int offset,
-                                                @RequestParam(defaultValue = "10") int size,
-                                                HttpSession session) throws Exception {
+    public Map<String, Object> loadMoreReserved(@RequestParam(value = "startDate", required = false) String startDateStr, @RequestParam(value = "searchClassDate", required = false) String searchClassDate, @RequestParam(value = "searchClassName", required = false) String searchClassName, @RequestParam(value = "searchInstructor", required = false) String searchInstructor, @RequestParam int offset, @RequestParam(defaultValue = "10") int size, HttpSession session) throws Exception {
 
         List<ClassInfoDto> filteredClasses = userClassService.search(searchClassDate, searchClassName, searchInstructor, offset, size);
 
-        boolean hasMore = userClassService.hasMore(offset + size);
+        boolean hasMore = userClassService.hasMore(offset + size, searchClassDate, searchClassName, searchInstructor);
 
 
-        Map<String, List<ClassInfoDto>> groupedByDate = filteredClasses.stream()
-                .collect(Collectors.groupingBy(ClassInfoDto::getClass_date, LinkedHashMap::new, Collectors.toList()));
+        Map<String, List<ClassInfoDto>> groupedByDate = filteredClasses.stream().collect(Collectors.groupingBy(ClassInfoDto::getClass_date, LinkedHashMap::new, Collectors.toList()));
 
 
         Map<String, Object> response = new HashMap<>();
 
         // 검색 조건이 하나라도 존재할 때만 검색 수행
-        boolean isSearchExecuted =
-                (searchClassDate != null && !searchClassDate.isEmpty()) ||
-                        (searchClassName != null && !searchClassName.isEmpty()) ||
-                        (searchInstructor != null && !searchInstructor.isEmpty());
+        boolean isSearchExecuted = (searchClassDate != null && !searchClassDate.isEmpty()) || (searchClassName != null && !searchClassName.isEmpty()) || (searchInstructor != null && !searchInstructor.isEmpty());
 
         if (isSearchExecuted) {
             response.put("searchExecuted", true); // ✅ 검색 조건 있을 때만 플래그 설정
@@ -207,6 +184,6 @@ public class UserClassController {
         // 1. 세션을 얻어서
         HttpSession session = request.getSession();
         // 2. 세션에 id가 있는지 확인, 있으면 true를 반환
-        return session.getAttribute("email")!=null;
+        return session.getAttribute("email") != null;
     }
 }

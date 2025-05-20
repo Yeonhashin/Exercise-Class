@@ -34,7 +34,7 @@ public class UserClassService {
         return classInfoDao.getClassBySearch(searchClassDate, searchClassName, searchInstructor, offset, size);
     }
 
-    public boolean hasMore(int offset) throws Exception {
-        return classInfoDao.hasMore(offset);
+    public boolean hasMore(int offset, String searchClassDate, String searchClassName, String searchInstructor) throws Exception {
+        return classInfoDao.hasMore(offset, searchClassDate, searchClassName, searchInstructor);
     }
 }
