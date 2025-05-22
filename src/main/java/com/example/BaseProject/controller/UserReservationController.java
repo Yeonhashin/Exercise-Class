@@ -1,7 +1,6 @@
 package com.example.BaseProject.controller;
 
 import com.example.BaseProject.dao.UserReservationDao;
-import com.example.BaseProject.domain.ClassInfoDto;
 import com.example.BaseProject.domain.UserReservationDto;
 import com.example.BaseProject.service.UserClassService;
 import com.example.BaseProject.service.UserReservationService;
@@ -15,11 +14,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/reservation")
@@ -47,7 +44,7 @@ public class UserReservationController {
         // 1. 세션을 얻어서
         HttpSession session = request.getSession();
         // 2. 세션에 id가 있는지 확인, 있으면 true를 반환
-        return session.getAttribute("email")!=null;
+        return session.getAttribute("email") != null;
     }
 
     @PostMapping("/add")
@@ -62,7 +59,7 @@ public class UserReservationController {
             Dto.setClass_id(class_id);
 
             int result = userReservationService.reserveClass(Dto);
-            if(result != 1) {
+            if (result != 1) {
                 throw new Exception("Modify failed");
             }
 
@@ -104,14 +101,37 @@ public class UserReservationController {
     }
 
     @GetMapping("/list")
-    public String reservedList(HttpSession session, Model m) {
+    public String reservedList(HttpSession session, Model m, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset) {
         try {
             int userId = (int) session.getAttribute("user_id");
-            List<UserReservationDto> reservedClass  = userReservationService.reservedAllClassByUser(userId);
+            int size = 5;
+            List<UserReservationDto> reservedClass = userReservationService.reservedAllClassByUser(userId, offset, size);
+            boolean hasMore = userReservationService.hasMore(offset + size, userId);
+
+            m.addAttribute("hasMore", hasMore);
             m.addAttribute("reservedClass", reservedClass);
+            System.out.println("hasMore = " + hasMore);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return "reservedList";
+    }
+
+    @GetMapping("/list/more")
+    @ResponseBody
+    public Map<String, Object> loadMoreReserved(@RequestParam int offset, @RequestParam(defaultValue = "5") int size, HttpSession session) throws Exception {
+
+        int userId = (int) session.getAttribute("user_id");
+
+        List<UserReservationDto> reservedClass = userReservationService.reservedAllClassByUser(userId, offset, size);
+
+        boolean hasMore = userReservationService.hasMore(offset + size, userId);
+
+
+        Map<String, Object> response = new HashMap<>();
+
+        response.put("reservedClass", reservedClass);
+        response.put("hasMore", hasMore);
+        return response;
     }
 }
