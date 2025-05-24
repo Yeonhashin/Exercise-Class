@@ -24,8 +24,8 @@ public class UserReservationService {
     @Autowired
     UserReservationDao userReservationDao;
 
-    public int reserveClass(UserReservationDto userReservationDto) throws Exception {
-        return userReservationDao.insert(userReservationDto);
+    public int reserveClass(int userId, int classId) throws Exception {
+        return userReservationDao.insert(userId, classId);
     }
 
     public int cancelReservation(int userId, int classId) throws Exception {

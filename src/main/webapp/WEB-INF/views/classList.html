@@ -9,39 +9,14 @@
     <link rel="stylesheet" href="/resources/css/schedule.css">
     <link rel="stylesheet" href="/resources/css/home.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- SweetAlert2 CSS -->
+    <!-- SweetAlert2 -->
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-    <!-- SweetAlert2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
-
-    <!-- Flatpickr 스타일 -->
+    <!-- Flatpickr -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
-    <!-- Flatpickr 스크립트 -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <!--    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>-->
-
 </head>
 <body>
-
-<script th:inline="javascript">
-    /*<![CDATA[*/
-    var msg = /*[[${msg}]]*/ '';  // 서버에서 전달된 메시지
-    var status = /*[[${status}]]*/ '';  // 서버에서 전달된 상태(success, error)
-
-    if (msg && msg.trim() !== '') {
-        // 상태에 따른 아이콘 설정
-        var iconType = status === 'success' ? 'success' : (status === 'error' ? 'error' : 'info');
-
-        Swal.fire({
-            title: '알림',
-            text: msg,
-            icon: iconType,
-            confirmButtonText: '확인'
-        });
-    }
-    /*]]>*/
-</script>
 <!-- Bootstrap 5 JS 및 Popper.js -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
@@ -65,54 +40,26 @@
         <thead>
         <tr>
             <th>시작시간</th>
-            <!-- 날짜별 헤더 생성 -->
             <th th:each="date : ${formattedDates}" th:text="${date}"></th>
         </tr>
         </thead>
         <tbody>
-        <!-- 시간 기준으로 행을 만듦 -->
         <tr th:each="time : ${times}">
             <td th:text="${time}"></td>
-            <!-- 날짜별로 해당 시간의 수업 정보 표시 -->
             <td th:each="date : ${formattedDates}">
                 <span th:each="class : ${scheduleMap.get(time).get(date)}">
                     <div th:text="${class.class_name}" class="fw-bold"></div>
-                    <div th:if="${reservedClassIds.contains(class.id)}">
-                        <span class="badge bg-success mb-1">예약중</span>
-
-                        <button type="button"
-                                class="btn btn-danger btn-sm open-cancel-modal"
-                                data-bs-toggle="modal"
-                                data-bs-target="#reserveModal"
-                                th:attr="data-class-id=${class.id},
-                                         data-class-type-name=${class.class_type_name},
-                                         data-class-name=${class.class_name},
-                                         data-class-instructor-name=${class.instructor_name},
-                                         data-class-start-time=${class.class_start_time},
-                                         data-class-end-time=${class.class_end_time},
-                                         data-class-date=${class.class_date}">
-                            예약 취소
-                        </button>
-                    </div>
-
-                    <!-- 예약이 안되어있을 경우 예약 버튼만 표시 -->
-                    <button type="button"
-                            th:unless="${reservedClassIds.contains(class.id)}"
-                            class="btn btn-primary btn-sm mt-1 open-reserve-modal"
-                            data-bs-toggle="modal"
-                            data-bs-target="#reserveModal"
-                            th:attr="data-class-id=${class.id},
-                                     data-class-type-name=${class.class_type_name},
-                                     data-class-name=${class.class_name},
-                                     data-class-instructor-name=${class.instructor_name},
-                                     data-class-start-time=${class.class_start_time},
-                                     data-class-end-time=${class.class_end_time},
-                                     data-class-date=${class.class_date}">
-                        예약하기
-                    </button>
-
+                    <div th:replace="layout/reservationButtons :: reservationButtons(
+                        ${class.id},
+                        ${class.class_type_name},
+                        ${class.class_name},
+                        ${class.instructor_name},
+                        ${class.class_start_time},
+                        ${class.class_end_time},
+                        ${class.class_date},
+                        ${reservedClassIds.contains(class.id)}
+                    )"></div>
                 </span>
-
                 <span th:if="${scheduleMap.get(time) == null or scheduleMap.get(time).get(date) == null or #lists.isEmpty(scheduleMap.get(time).get(date))}">
                     수업 없음
                 </span>
@@ -123,7 +70,6 @@
 
 
     <form id="searchForm" th:action="@{/class/list}" method="get">
-
         <div>
             <p><strong>날짜/수업으로 검색하여 예약하기</strong></p>
         </div>
@@ -184,37 +130,17 @@
                         <td class="lesson-title" th:text="${classmap.class_name}"></td>
                         <td th:text="${classmap.class_type_name}"></td>
                         <td>
-                            <div th:if="${reservedClassIds.contains(classmap.id)}">
-                                <span class="badge bg-success mb-1">예약중</span>
-                                <button type="button"
-                                        class="btn btn-danger btn-sm open-cancel-modal"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#reserveModal"
-                                        th:attr="data-class-id=${classmap.id},
-                                         data-class-type-name=${classmap.class_type_name},
-                                         data-class-name=${classmap.class_name},
-                                         data-class-instructor-name=${classmap.instructor_name},
-                                         data-class-start-time=${classmap.class_start_time},
-                                         data-class-end-time=${classmap.class_end_time},
-                                         data-class-date=${classmap.class_date}">
-                                    예약 취소
-                                </button>
+                            <div th:replace="layout/reservationButtons :: reservationButtons(
+                                ${classmap.id},
+                                ${classmap.class_type_name},
+                                ${classmap.class_name},
+                                ${classmap.instructor_name},
+                                ${classmap.class_start_time},
+                                ${classmap.class_end_time},
+                                ${classmap.class_date},
+                                ${reservedClassIds.contains(classmap.id)}
+                            )">
                             </div>
-
-                            <button type="button"
-                                    th:unless="${reservedClassIds.contains(classmap.id)}"
-                                    class="btn btn-primary btn-sm mt-1 open-reserve-modal"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#reserveModal"
-                                    th:attr="data-class-id=${classmap.id},
-                                     data-class-type-name=${classmap.class_type_name},
-                                     data-class-name=${classmap.class_name},
-                                     data-class-instructor-name=${classmap.instructor_name},
-                                     data-class-start-time=${classmap.class_start_time},
-                                     data-class-end-time=${classmap.class_end_time},
-                                     data-class-date=${classmap.class_date}">
-                                예약하기
-                            </button>
                         </td>
                     </tr>
                     </tbody>
@@ -222,49 +148,12 @@
             </div>
         </div>
     </form>
-
     <div class="text-center mt-3" th:if="${hasMore}">
         <button id="loadMoreBtn" class="btn btn-primary" type="button">레슨이력 더보기</button>
     </div>
-
 </div>
-<!-- 예약 모달 -->
-<div class="modal fade" id="reserveModal" tabindex="-1" aria-labelledby="reserveModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
+<div th:replace="layout/reservationModal :: reservationModal"></div>
 
-            <div class="modal-header">
-                <h5 class="modal-title" id="reserveModalLabel">수업 예약하기</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <div class="modal-body">
-                <p><strong>Date : </strong> <span id="modalClassDate"></span></p>
-                <p><strong>Time : </strong>
-                    <span id="modalClassStartTime"></span> - <span id="modalClassEndTime"></span>
-                </p>
-                <p><strong>Class Type : </strong> <span id="modalClassTypeName"></span></p>
-                <p><strong>Class Name : </strong> <span id="modalClassName"></span></p>
-                <p><strong>Instructor : </strong> <span id="modalClassInstructor"></span></p>
-            </div>
-
-            <form id="reserveForm" action="/reservation/add" method="post">
-                <input type="hidden" name="class_id" id="modalClassId"/>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-
-                    <!-- 예약 확정 버튼 -->
-                    <button type="submit" id="confirmReserveBtn" class="btn btn-primary">예약 확정</button>
-
-                    <!-- 취소 확정 버튼 (초기에는 숨겨둠) -->
-                    <button type="button" id="confirmCancelBtn" class="btn btn-danger" style="display: none;">예약 취소 확정
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 <div th:replace="layout/footer"></div>
 <script src="/resources/js/class-reservate.js"></script>
 <script src="/resources/js/class-date-selecter.js"></script>

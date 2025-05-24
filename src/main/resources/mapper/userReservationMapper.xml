@@ -10,7 +10,7 @@
           and class_id = #{class_id}
     </select>
 
-    <insert id="insert" parameterType="UserReservationDto">
+    <insert id="insert" parameterType="map">
         INSERT INTO user_reservation
             (user_id, class_id)
         VALUES (#{user_id}, #{class_id})

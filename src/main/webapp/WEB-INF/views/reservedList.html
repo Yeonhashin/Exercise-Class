@@ -17,24 +17,6 @@
 </head>
 
 <body>
-<script th:inline="javascript">
-    /*<![CDATA[*/
-    var msg = /*[[${msg}]]*/ '';  // 서버에서 전달된 메시지
-    var status = /*[[${status}]]*/ '';  // 서버에서 전달된 상태(success, error)
-
-    if (msg && msg.trim() !== '') {
-        // 상태에 따른 아이콘 설정
-        var iconType = status === 'success' ? 'success' : (status === 'error' ? 'error' : 'info');
-
-        Swal.fire({
-            title: '알림',
-            text: msg,
-            icon: iconType,
-            confirmButtonText: '확인'
-        });
-    }
-    /*]]>*/
-</script>
 <!-- Bootstrap 5 JS 및 Popper.js -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
@@ -75,7 +57,6 @@
                 <td class="lesson-title" th:text="${reserved.class_name}"></td>
                 <td th:text="${reserved.class_type_name}"></td>
                 <td>
-                    <!-- 예약이 취소되지 않은 경우(cancel_flag == 0) -->
                     <button type="button"
                             th:if="${reserved.canCancel and reserved.cancel_flag == 0}"
                             class="btn btn-danger btn-sm open-cancel-modal"
@@ -112,42 +93,8 @@
     </div>
 </div>
 
-<!-- 예약 모달 -->
-<div class="modal fade" id="reserveModal" tabindex="-1" aria-labelledby="reserveModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
+<div th:replace="layout/reservationModal :: reservationModal"></div>
 
-            <div class="modal-header">
-                <h5 class="modal-title" id="reserveModalLabel">수업 예약하기</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <div class="modal-body">
-                <p><strong>Date : </strong> <span id="modalClassDate"></span></p>
-                <p><strong>Time : </strong>
-                    <span id="modalClassStartTime"></span> - <span id="modalClassEndTime"></span>
-                </p>
-                <p><strong>Class Type : </strong> <span id="modalClassTypeName"></span></p>
-                <p><strong>Class Name : </strong> <span id="modalClassName"></span></p>
-                <p><strong>Instructor : </strong> <span id="modalClassInstructor"></span></p>
-            </div>
-
-            <form id="reserveForm" action="/reservation/add" method="post">
-                <input type="hidden" name="class_id" id="modalClassId"/>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-
-                    <!-- 예약 확정 버튼 -->
-                    <button type="submit" id="confirmReserveBtn" class="btn btn-primary">예약 확정</button>
-
-                    <!-- 취소 확정 버튼 (초기에는 숨겨둠) -->
-                    <button type="button" id="confirmCancelBtn" class="btn btn-danger" style="display: none;">예약 취소 확정
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 <div th:replace="layout/footer"></div>
 <script>
     let offset = 5;

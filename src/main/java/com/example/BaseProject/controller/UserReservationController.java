@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,33 +46,63 @@ public class UserReservationController {
         return session.getAttribute("email") != null;
     }
 
-    @PostMapping("/add")
-    public String reserveClass(
-            @RequestParam("class_id") int class_id,
-            UserReservationDto Dto, Model m, HttpSession session,
-            RedirectAttributes rattr) {
+//    @RequestMapping(value = "/add", method = RequestMethod.POST)
+//    public void reserveClass(
+//            @RequestParam("class_id") int class_id,
+//            UserReservationDto Dto, Model m, HttpSession session,
+//            RedirectAttributes rattr) {
+//
+//        try {
+//            int userId = (int) session.getAttribute("user_id");
+//            Dto.setUser_id(userId);
+//            Dto.setClass_id(class_id);
+//
+//            int result = userReservationService.reserveClass(Dto);
+//            if (result != 1) {
+//                throw new Exception("Modify failed");
+//            }
+//
+//            // 예약 성공 메시지 추가
+//            rattr.addFlashAttribute("msg", "예약이 완료되었습니다!");
+//            rattr.addFlashAttribute("status", "success"); // 성공
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            rattr.addFlashAttribute("msg", "예약에 실패했습니다. 다시 시도해주세요.");
+//            rattr.addFlashAttribute("status", "error"); // 실패
+//        }
+//
+//        return "redirect:/class/list"; // 리다이렉트 후 flash 메시지 표시
+//    }
 
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public void reserveClass(@RequestParam("classId") int classId, HttpSession session, HttpServletResponse response) {
         try {
-            int userId = (int) session.getAttribute("user_id");
-            Dto.setUser_id(userId);
-            Dto.setClass_id(class_id);
+            Integer userId = (Integer) session.getAttribute("user_id");
+            System.out.println("classId = " + classId);
 
-            int result = userReservationService.reserveClass(Dto);
-            if (result != 1) {
-                throw new Exception("Modify failed");
+            int result = userReservationService.reserveClass(userId, classId);
+            System.out.println("result = " + result);
+
+
+            if (result > 0) {
+                response.setStatus(HttpServletResponse.SC_OK);
+                System.out.println("response = " + response);
+                response.getWriter().write("{\"result\":\"success\"}");
+            } else {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().write("{\"result\":\"fail\", \"message\":\"예약 실패\"}");
             }
-
-            // 예약 성공 메시지 추가
-            rattr.addFlashAttribute("msg", "예약이 완료되었습니다!");
-            rattr.addFlashAttribute("status", "success"); // 성공
         } catch (Exception e) {
             e.printStackTrace();
-            rattr.addFlashAttribute("msg", "예약에 실패했습니다. 다시 시도해주세요.");
-            rattr.addFlashAttribute("status", "error"); // 실패
+            try {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                response.getWriter().write("{\"result\":\"fail\", \"message\":\"서버 오류\"}");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
-
-        return "redirect:/class/list"; // 리다이렉트 후 flash 메시지 표시
     }
+
 
     @RequestMapping(value = "/cancel", method = RequestMethod.POST)
     public void cancelReservation(@RequestParam("classId") int classId, HttpSession session, HttpServletResponse response) {

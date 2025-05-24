@@ -1,0 +1,33 @@
+<div th:fragment="reservationButtons(classId, classTypeName, className, instructorName, startTime, endTime, date, isReserved)">
+    <div th:if="${isReserved}">
+        <span class="badge bg-success mb-1">예약중</span>
+        <button type="button"
+                class="btn btn-danger btn-sm open-cancel-modal"
+                data-bs-toggle="modal"
+                data-bs-target="#reserveModal"
+                th:attr="data-class-id=${classId},
+                         data-class-type-name=${classTypeName},
+                         data-class-name=${className},
+                         data-class-instructor-name=${instructorName},
+                         data-class-start-time=${startTime},
+                         data-class-end-time=${endTime},
+                         data-class-date=${date}">
+            예약 취소
+        </button>
+    </div>
+
+    <button type="button"
+            th:unless="${isReserved}"
+            class="btn btn-primary btn-sm mt-1 open-reserve-modal"
+            data-bs-toggle="modal"
+            data-bs-target="#reserveModal"
+            th:attr="data-class-id=${classId},
+                     data-class-type-name=${classTypeName},
+                     data-class-name=${className},
+                     data-class-instructor-name=${instructorName},
+                     data-class-start-time=${startTime},
+                     data-class-end-time=${endTime},
+                     data-class-date=${date}">
+        예약하기
+    </button>
+</div>

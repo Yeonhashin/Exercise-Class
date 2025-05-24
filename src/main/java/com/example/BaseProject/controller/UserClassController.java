@@ -56,7 +56,6 @@ public class UserClassController {
     @GetMapping("/list")
     public String classList(@RequestParam(value = "startDate", required = false) String startDateStr, @RequestParam(value = "searchClassDate", required = false) String searchClassDate, @RequestParam(value = "searchClassName", required = false) String searchClassName, @RequestParam(value = "searchInstructor", required = false) String searchInstructor, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset, Model m, HttpSession session, RedirectAttributes rattr) {
         try {
-            // 메시지를 flashAttributes로 전달
             if (rattr.getFlashAttributes().get("msg") != null) {
                 m.addAttribute("msg", rattr.getFlashAttributes().get("msg"));
             }
@@ -118,7 +117,6 @@ public class UserClassController {
             m.addAttribute("selectedClassName", searchClassName);
             m.addAttribute("selectedInstructor", searchInstructor);
 
-// 검색 조건이 하나라도 존재할 때만 검색 수행
             boolean isSearchExecuted = (searchClassDate != null && !searchClassDate.isEmpty()) || (searchClassName != null && !searchClassName.isEmpty()) || (searchInstructor != null && !searchInstructor.isEmpty());
 
             if (isSearchExecuted) {

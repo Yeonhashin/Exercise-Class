@@ -16,8 +16,11 @@ public class UserReservationDao {
     private SqlSession session;
     private static String namespace = "com.example.BaseProject.dao.UserReservationMapper.";
 
-    public int insert(UserReservationDto dto) throws Exception {
-        return session.insert(namespace + "insert", dto);
+    public int insert(int userId, int classId) throws Exception {
+        Map<String, Object> map = new HashMap<>();
+        map.put("user_id", userId);
+        map.put("class_id", classId);
+        return session.insert(namespace + "insert", map);
     }
 
     public int update(int userId, int classId) throws Exception {

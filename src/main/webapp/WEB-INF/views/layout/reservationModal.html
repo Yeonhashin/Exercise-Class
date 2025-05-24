@@ -1,0 +1,36 @@
+<div th:fragment="reservationModal">
+    <div class="modal fade" id="reserveModal" tabindex="-1" aria-labelledby="reserveModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reserveModalLabel">수업 예약</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p><strong>Date:</strong> <span id="modalClassDate"></span></p>
+                    <p><strong>Time:</strong> <span id="modalClassStartTime"></span> - <span
+                            id="modalClassEndTime"></span></p>
+                    <p><strong>Class Type:</strong> <span id="modalClassTypeName"></span></p>
+                    <p><strong>Class Name:</strong> <span id="modalClassName"></span></p>
+                    <p><strong>Instructor:</strong> <span id="modalClassInstructor"></span></p>
+                </div>
+
+                <input type="hidden" name="class_id" id="modalClassId"/>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+
+                    <!-- 예약 확정 버튼 -->
+                    <button type="button" id="confirmReserveBtn" class="btn btn-primary">예약 확정</button>
+
+                    <!-- 예약 취소 버튼 -->
+                    <button type="button" id="confirmCancelBtn" class="btn btn-danger" style="display: none;">예약 취소 확정
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

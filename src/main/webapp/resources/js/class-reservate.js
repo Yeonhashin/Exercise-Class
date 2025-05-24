@@ -16,8 +16,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function openModal(button, actionType) {
-        const classId = button.getAttribute('data-class-id');
         const classTypeName = button.getAttribute('data-class-type-name');
+        const classId = button.getAttribute('data-class-id');
+
         const className = button.getAttribute('data-class-name');
         const classInstructorName = button.getAttribute('data-class-instructor-name');
         const classDate = button.getAttribute('data-class-date');
@@ -43,9 +44,46 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // 예약 확정 버튼 클릭 시 폼 제출
+    // // 예약 확정 버튼 클릭 시 폼 제출
+    // confirmReserveBtn.addEventListener('click', function () {
+    //     document.getElementById('reserveForm').submit();
+    // });
+
+    // 예약 확정 버튼 클릭 시 AJAX 호출
     confirmReserveBtn.addEventListener('click', function () {
-        document.getElementById('reserveForm').submit();
+        const classId = modalClassId.value;
+        fetch(`/reservation/add?classId=${classId}`, {
+            method: 'POST'
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.result === 'success') {
+                    Swal.fire({
+                        title: '예약 완료',
+                        text: '예약이 확정되었습니다!',
+                        icon: 'success',
+                        confirmButtonText: '확인'
+                    }).then(() => {
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        title: '예약 실패',
+                        text: '예약에 실패했습니다. 다시 시도해주세요.',
+                        icon: 'error',
+                        confirmButtonText: '확인'
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('에러 발생:', error);
+                Swal.fire({
+                    title: '서버 오류',
+                    text: '서버 오류가 발생했습니다.',
+                    icon: 'error',
+                    confirmButtonText: '확인'
+                });
+            });
     });
 
     // 취소 확정 버튼 클릭 시 AJAX 호출
