@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -24,7 +23,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @Controller
 @RequestMapping("/class")
@@ -54,74 +53,52 @@ public class UserClassController {
     private ClassTypeDao classTypeDao;
 
     @GetMapping("/list")
-    public String classList(@RequestParam(value = "startDate", required = false) String startDateStr, @RequestParam(value = "searchClassDate", required = false) String searchClassDate, @RequestParam(value = "searchClassName", required = false) String searchClassName, @RequestParam(value = "searchInstructor", required = false) String searchInstructor, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset, Model m, HttpSession session, RedirectAttributes rattr) {
+    public String classList(@RequestParam(value = "startDate", required = false) String startDateStr, @RequestParam(value = "searchClassDate", required = false) String searchClassDate, @RequestParam(value = "searchClassName", required = false) String searchClassName, @RequestParam(value = "searchInstructor", required = false) String searchInstructor, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset, Model m, HttpSession session) {
         try {
-            if (rattr.getFlashAttributes().get("msg") != null) {
-                m.addAttribute("msg", rattr.getFlashAttributes().get("msg"));
-            }
-
-            // 1. 현재 로그인한 유저 정보 가져오기
             int userId = (int) session.getAttribute("user_id");
-
             List<Integer> reservedClassIds = userReservationDao.findReservedClassIdsByUser(userId);
 
-            LocalDate startDate;
-            if (startDateStr != null && !startDateStr.isEmpty()) {
-                startDate = LocalDate.parse(startDateStr); // yyyy-MM-dd 형식이어야 함
-            } else {
-                startDate = LocalDate.now(); // 기본값: 오늘 날짜
-            }
+            LocalDate startDate = Optional.ofNullable(startDateStr)
+                    .filter(s -> !s.isEmpty())
+                    .map(LocalDate::parse)
+                    .orElse(LocalDate.now());
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d(E)");
 
-            List<String> formattedDates = IntStream.range(0, 5).mapToObj(i -> startDate.plusDays(i).format(formatter)) // 포맷 적용
-                    .collect(Collectors.toList());
+            int days = 5;
 
-            // 날짜 목록을 생성 (예시: 3일 범위로 날짜 표시)
+            Map<String, Map<String, List<ClassInfoDto>>> scheduleMap = userClassService.getScheduleMap(startDate, days);
+            List<String> formattedDates = userClassService.getFormattedDates(startDate, days);
+            List<String> times = userClassService.getClassTimes();
+
+            // 날짜 목록을 생성
             List<LocalDate> dateList = getDatesInRange(startDate);
             Collections.sort(dateList);
 
-            // 시간별 -> 날짜별 수업 정보 저장을 위한 Map
-            Map<String, Map<String, List<ClassInfoDto>>> scheduleMap = new TreeMap<>();
-
-            List<String> times = List.of("10:00", "11:30", "13:00", "15:30", "17:00", "19:30", "21:00");
-
-            for (String time : times) {
-                for (LocalDate date : dateList) {
-                    String formattedDate = date.format(formatter); // 날짜 포맷
-
-                    // 시간 키가 없으면 초기화
-                    scheduleMap.computeIfAbsent(time, k -> new TreeMap<>());
-
-                    // 날짜별 해당 시간의 수업 정보 저장
-                    scheduleMap.get(time).put(formattedDate, userClassService.getClassByDateAndTime(date, time));
-                }
-            }
 
             int size = 10;
-            List<ClassInfoDto> filteredClasses = userClassService.search(searchClassDate, searchClassName, searchInstructor, offset, size);
+            List<ClassInfoDto> searchedClasses = userClassService.search(searchClassDate, searchClassName, searchInstructor, offset, size);
 
             boolean hasMore = userClassService.hasMore(offset + size, searchClassDate, searchClassName, searchInstructor);
 
-            Map<String, List<ClassInfoDto>> groupedByDate = filteredClasses.stream().collect(Collectors.groupingBy(ClassInfoDto::getClass_date, LinkedHashMap::new, Collectors.toList()));
+            Map<String, List<ClassInfoDto>> classesGroupedByDate = searchedClasses.stream().collect(Collectors.groupingBy(ClassInfoDto::getClass_date, LinkedHashMap::new, Collectors.toList()));
 
 
             List<String> allClassNames = classTypeDao.selectAll().stream().map(ClassTypeDto::getClass_name).collect(Collectors.toList());
 
             List<String> allInstructors = instructorDao.selectAll().stream().map(InstructorDto::getInstructor_name).collect(Collectors.toList());
 
-            m.addAttribute("groupedClassMap", groupedByDate); // 결과 리스트
-            m.addAttribute("hasMore", hasMore);
-
-            m.addAttribute("selectedDate", searchClassDate);
-            m.addAttribute("selectedClassName", searchClassName);
-            m.addAttribute("selectedInstructor", searchInstructor);
-
-            boolean isSearchExecuted = (searchClassDate != null && !searchClassDate.isEmpty()) || (searchClassName != null && !searchClassName.isEmpty()) || (searchInstructor != null && !searchInstructor.isEmpty());
+            boolean isSearchExecuted = Stream.of(searchClassDate, searchClassName, searchInstructor)
+                    .anyMatch(s -> s != null && !s.isEmpty());
 
             if (isSearchExecuted) {
                 m.addAttribute("searchExecuted", true);  // ✅ 검색 조건 있을 때만 플래그 설정
             }
+
+            m.addAttribute("groupedClassMap", classesGroupedByDate); // 결과 리스트
+            m.addAttribute("selectedDate", searchClassDate);
+            m.addAttribute("selectedClassName", searchClassName);
+            m.addAttribute("selectedInstructor", searchInstructor);
 
             m.addAttribute("classNames", allClassNames);
             m.addAttribute("instructors", allInstructors);

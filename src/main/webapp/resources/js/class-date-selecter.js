@@ -1,4 +1,10 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
+    
+    flatpickr("#searchClassDate", {
+        dateFormat: "Y-m-d", // yyyy-mm-dd
+        locale: "ko" // 한글 적용
+    });
+
     const prevBtn = document.getElementById('previous-btn');
     const nextBtn = document.getElementById('next-btn');
     const currentStartDate = document.getElementById('currentStartDate').value; // 예: 2024-03-15
