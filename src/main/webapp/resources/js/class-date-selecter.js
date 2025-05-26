@@ -1,22 +1,11 @@
 document.addEventListener('DOMContentLoaded', function () {
-    
-    flatpickr("#searchClassDate", {
-        dateFormat: "Y-m-d", // yyyy-mm-dd
-        locale: "ko" // 한글 적용
-    });
-
     const prevBtn = document.getElementById('previous-btn');
     const nextBtn = document.getElementById('next-btn');
     const currentStartDate = document.getElementById('currentStartDate').value; // 예: 2024-03-15
-
-    // 서버에서 넘긴 startDate 값을 가져와야 함!
-    const startDateStr = document.getElementById('current-date').textContent.trim();
-
-    // startDate가 "2024-03-15" 같은 형식이면
+    const startDateStr = document.getElementById('current-date').value.trim();
     const today = new Date();
     const startDate = new Date(startDateStr);
 
-    // 날짜 비교해서 오늘보다 이전 or 같으면 숨김
     if (startDate <= today) {
         prevBtn.style.display = 'none';
     }

@@ -24,6 +24,8 @@ public class ClassInfoDto {
     private Date update_dt;
     private String updated;
 
+    private boolean past;
+
     public ClassInfoDto() {
     }
 
@@ -199,6 +201,14 @@ public class ClassInfoDto {
 
     public void setUpdated(String updated) {
         this.updated = updated;
+    }
+
+    public boolean isPast() {
+        return past;
+    }
+
+    public void setPast(boolean past) {
+        this.past = past;
     }
 
     @Override

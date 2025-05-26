@@ -13,8 +13,9 @@
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
     <!-- Flatpickr -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
 </head>
 <body>
 <!-- Bootstrap 5 JS 및 Popper.js -->
@@ -46,9 +47,11 @@
         <tr th:each="time : ${times}">
             <td th:text="${time}"></td>
             <td th:each="date : ${formattedDates}">
-                <span th:each="class : ${scheduleMap.get(time).get(date)}">
-                    <div th:text="${class.class_name}" class="fw-bold"></div>
-                    <div th:replace="layout/reservationButtons :: reservationButtons(
+            <span th:each="class : ${scheduleMap.get(time).get(date)}">
+                <div th:text="${class.class_name}" class="fw-bold"></div>
+
+                <div th:if="${class.past}" class="text-danger">예약 불가</div>
+                <div th:if="${!class.past}" th:replace="layout/reservationButtons :: reservationButtons(
                         ${class.id},
                         ${class.class_type_name},
                         ${class.class_name},
@@ -56,9 +59,10 @@
                         ${class.class_start_time},
                         ${class.class_end_time},
                         ${class.class_date},
-                        ${reservedClassIds.contains(class.id)}
-                    )"></div>
-                </span>
+                        ${reservedClassIds.contains(class.id)},
+                         ${class.past}
+                     )"></div>
+            </span>
                 <span th:if="${scheduleMap.get(time) == null or scheduleMap.get(time).get(date) == null or #lists.isEmpty(scheduleMap.get(time).get(date))}">
                     수업 없음
                 </span>
@@ -137,7 +141,8 @@
                                 ${classmap.class_start_time},
                                 ${classmap.class_end_time},
                                 ${classmap.class_date},
-                                ${reservedClassIds.contains(classmap.id)}
+                                ${reservedClassIds.contains(classmap.id)},
+                                false
                             )">
                             </div>
                         </td>
@@ -156,6 +161,11 @@
 <div th:replace="layout/footer"></div>
 <script src="/resources/js/class-reservate.js"></script>
 <script src="/resources/js/class-date-selecter.js"></script>
+<script>
+    flatpickr("#searchClassDate", {
+        dateFormat: "Y-m-d", // yyyy-mm-dd
+    });
+</script>
 
 <script th:if="${searchExecuted}">
     window.addEventListener('load', function () {

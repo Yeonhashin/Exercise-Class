@@ -1,7 +1,8 @@
-<div th:fragment="reservationButtons(classId, classTypeName, className, instructorName, startTime, endTime, date, isReserved)">
+<div th:fragment="reservationButtons(classId, classTypeName, className, instructorName, startTime, endTime, date, isReserved, past)">
     <div th:if="${isReserved}">
         <span class="badge bg-success mb-1">예약중</span>
         <button type="button"
+                th:if="${!past}"
                 class="btn btn-danger btn-sm open-cancel-modal"
                 data-bs-toggle="modal"
                 data-bs-target="#reserveModal"
@@ -17,7 +18,7 @@
     </div>
 
     <button type="button"
-            th:unless="${isReserved}"
+            th:if="${!isReserved} and ${!past}"
             class="btn btn-primary btn-sm mt-1 open-reserve-modal"
             data-bs-toggle="modal"
             data-bs-target="#reserveModal"

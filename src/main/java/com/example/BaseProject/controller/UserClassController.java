@@ -75,17 +75,13 @@ public class UserClassController {
             List<LocalDate> dateList = getDatesInRange(startDate);
             Collections.sort(dateList);
 
-
             int size = 10;
             List<ClassInfoDto> searchedClasses = userClassService.search(searchClassDate, searchClassName, searchInstructor, offset, size);
 
             boolean hasMore = userClassService.hasMore(offset + size, searchClassDate, searchClassName, searchInstructor);
 
             Map<String, List<ClassInfoDto>> classesGroupedByDate = searchedClasses.stream().collect(Collectors.groupingBy(ClassInfoDto::getClass_date, LinkedHashMap::new, Collectors.toList()));
-
-
             List<String> allClassNames = classTypeDao.selectAll().stream().map(ClassTypeDto::getClass_name).collect(Collectors.toList());
-
             List<String> allInstructors = instructorDao.selectAll().stream().map(InstructorDto::getInstructor_name).collect(Collectors.toList());
 
             boolean isSearchExecuted = Stream.of(searchClassDate, searchClassName, searchInstructor)

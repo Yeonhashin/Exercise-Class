@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +48,7 @@ public class UserClassService {
 
     public Map<String, Map<String, List<ClassInfoDto>>> getScheduleMap(LocalDate startDate, int numberOfDays) throws Exception {
         Map<String, Map<String, List<ClassInfoDto>>> scheduleMap = new TreeMap<>();
+        LocalDateTime now = LocalDateTime.now();
 
         for (String time : CLASS_TIMES) {
             Map<String, List<ClassInfoDto>> dailyMap = new TreeMap<>();
@@ -55,6 +58,21 @@ public class UserClassService {
                 String formattedDate = date.format(FORMATTER);
 
                 List<ClassInfoDto> classList = getClassByDateAndTime(date, time);
+
+                // ⏰ 수업 종료 시간이 현재 시간보다 이전인지 체크
+                for (ClassInfoDto c : classList) {
+                    try {
+                        LocalDate classDate = LocalDate.parse(c.getClass_date());         // 예: "2025-06-15"
+                        LocalTime classEndTime = LocalTime.parse(c.getClass_end_time()); // 예: "11:30"
+
+                        LocalDateTime classEndDateTime = LocalDateTime.of(classDate, classEndTime);
+                        c.setPast(classEndDateTime.isBefore(now)); // 종료시간이 현재보다 전이면 true
+
+                    } catch (Exception e) {
+                        c.setPast(false); // 파싱 실패 시 기본값
+                    }
+                }
+
                 dailyMap.put(formattedDate, classList);
             }
 
