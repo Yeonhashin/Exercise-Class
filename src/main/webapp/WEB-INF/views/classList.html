@@ -26,14 +26,11 @@
 <div class="container mt-2">
 
     <div class="title">레슨 찾기</div>
-    <input type="hidden" id="current-date" th:value="${startDate}">
-
     <p><strong>타임테이블로 예약하기</strong></p>
 
     <div class="table-navigation">
-        <button id="previous-btn" onclick="goToPrevious5Days()">&lt; 이전 5일 보기</button>
+        <button id="prev-btn">&lt; 이전 5일 보기</button>
         <button id="next-btn">다음 5일 보기 &gt;</button>
-        <input type="hidden" id="currentStartDate" th:value="${startDate}">
     </div>
 
     <table class="schedule-table" id="schedule-table">

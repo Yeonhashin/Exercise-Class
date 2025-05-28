@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -53,7 +52,7 @@ public class UserClassController {
     private ClassTypeDao classTypeDao;
 
     @GetMapping("/list")
-    public String classList(@RequestParam(value = "startDate", required = false) String startDateStr, @RequestParam(value = "searchClassDate", required = false) String searchClassDate, @RequestParam(value = "searchClassName", required = false) String searchClassName, @RequestParam(value = "searchInstructor", required = false) String searchInstructor, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset, Model m, HttpSession session) {
+    public String classList(@RequestParam(value = "startDate", required = false) String startDateStr, @RequestParam(value = "searchClassDate", required = false) String searchClassDate, @RequestParam(value = "searchClassName", required = false) String searchClassName, @RequestParam(value = "searchInstructor", required = false) String searchInstructor, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset, @RequestParam(defaultValue = "10") int size, Model m, HttpSession session) {
         try {
             int userId = (int) session.getAttribute("user_id");
             List<Integer> reservedClassIds = userReservationDao.findReservedClassIdsByUser(userId);
@@ -63,19 +62,15 @@ public class UserClassController {
                     .map(LocalDate::parse)
                     .orElse(LocalDate.now());
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d(E)");
 
             int days = 5;
-
             Map<String, Map<String, List<ClassInfoDto>>> scheduleMap = userClassService.getScheduleMap(startDate, days);
             List<String> formattedDates = userClassService.getFormattedDates(startDate, days);
             List<String> times = userClassService.getClassTimes();
 
-            // 날짜 목록을 생성
             List<LocalDate> dateList = getDatesInRange(startDate);
             Collections.sort(dateList);
 
-            int size = 10;
             List<ClassInfoDto> searchedClasses = userClassService.search(searchClassDate, searchClassName, searchInstructor, offset, size);
 
             boolean hasMore = userClassService.hasMore(offset + size, searchClassDate, searchClassName, searchInstructor);
@@ -88,23 +83,29 @@ public class UserClassController {
                     .anyMatch(s -> s != null && !s.isEmpty());
 
             if (isSearchExecuted) {
-                m.addAttribute("searchExecuted", true);  // ✅ 검색 조건 있을 때만 플래그 설정
+                m.addAttribute("searchExecuted", true);
             }
 
-            m.addAttribute("groupedClassMap", classesGroupedByDate); // 결과 리스트
+            // 수업 스케줄
+            m.addAttribute("scheduleMap", scheduleMap);
+
+            // 검색 결과
+            m.addAttribute("groupedClassMap", classesGroupedByDate);
+
+            // 검색어 (수업시간/수업명/강사명)
             m.addAttribute("selectedDate", searchClassDate);
             m.addAttribute("selectedClassName", searchClassName);
             m.addAttribute("selectedInstructor", searchInstructor);
 
+            // 검색 셀렉트박스
             m.addAttribute("classNames", allClassNames);
             m.addAttribute("instructors", allInstructors);
 
+            // 그외
             m.addAttribute("hasMore", hasMore);
-            m.addAttribute("scheduleMap", scheduleMap); // 변환된 시간-날짜 맵을 전달
             m.addAttribute("formattedDates", formattedDates);
-            m.addAttribute("startDate", startDate);
             m.addAttribute("times", times);
-            m.addAttribute("reservedClassIds", reservedClassIds);  // 추가!
+            m.addAttribute("reservedClassIds", reservedClassIds);
 
         } catch (Exception e) {
             e.printStackTrace();
