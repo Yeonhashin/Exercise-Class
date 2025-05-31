@@ -28,15 +28,15 @@ html, body, form {
 /* 컨텐츠 섹션 */
 
 .container.mt-2 {
-    padding: 100px;  /* 헤더와 콘텐츠의 간격을 확보 */
+    padding: 100px; /* 헤더와 콘텐츠의 간격을 확보 */
 }
 
 /* 타이틀 */
 .title {
     background: linear-gradient(to right, #fce4d6, white); /* 왼쪽에서 오른쪽으로 흐려지는 그라데이션 */
     padding: 10px 20px; /* 상하 10px, 좌우 20px 여백 */
-    margin-top: 10px ;
-    margin-bottom: 50px ;
+    margin-top: 10px;
+    margin-bottom: 50px;
     font-size: 16px; /* 글자 크기 */
     font-weight: bold; /* 글자 두껍게 */
     color: #333; /* 글자 색 (짙은 회색) */
@@ -58,6 +58,62 @@ html, body, form {
     background-color: #f8f9fa;
     text-align: center;
     line-height: 60px;
+}
+
+.text-reserved {
+    color: #27ae60; /* 진초록 */
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.btn-reserve {
+    background-color: #3498db; /* 파란색 */
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-reserve:hover {
+    background-color: #2980b9;
+}
+
+.btn-cancel {
+    background-color: #e74c3c;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-cancel:hover {
+    background-color: #c0392b;
+}
+
+.no-class {
+    font-size: 13px;
+    padding: 4px 0;
+    display: block;
+}
+
+.unavailable {
+    background-color: #f8d7da; /* 연한 빨간 배경 */
+    color: #842029; /* Bootstrap의 danger 텍스트 색 */
+    border: 1px solid #f5c2c7;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    display: inline-block;
+    margin-top: 4px;
 }
 
 

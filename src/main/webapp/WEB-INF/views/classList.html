@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="/resources/css/schedule.css">
     <link rel="stylesheet" href="/resources/css/home.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
     <!-- SweetAlert2 -->
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
@@ -47,7 +49,7 @@
             <span th:each="class : ${scheduleMap.get(time).get(date)}">
                 <div th:text="${class.class_name}" class="fw-bold"></div>
 
-                <div th:if="${class.past}" class="text-danger">예약 불가</div>
+                <div th:if="${class.past}" class="unavailable"><i class="bi bi-exclamation-circle me-1"></i> 예약 불가</div>
                 <div th:if="${!class.past}" th:replace="layout/reservationButtons :: reservationButtons(
                         ${class.id},
                         ${class.class_type_name},
@@ -60,7 +62,8 @@
                          ${class.past}
                      )"></div>
             </span>
-                <span th:if="${scheduleMap.get(time) == null or scheduleMap.get(time).get(date) == null or #lists.isEmpty(scheduleMap.get(time).get(date))}">
+                <span class="no-class"
+                      th:if="${scheduleMap.get(time) == null or scheduleMap.get(time).get(date) == null or #lists.isEmpty(scheduleMap.get(time).get(date))}">
                     수업 없음
                 </span>
             </td>

@@ -1,9 +1,13 @@
 <div th:fragment="reservationButtons(classId, classTypeName, className, instructorName, startTime, endTime, date, isReserved, past)">
     <div th:if="${isReserved}">
-        <span class="badge bg-success mb-1">예약중</span>
+        <!-- 예약중 뱃지 -->
+        <span class="text-reserved">
+            <i class="bi bi-check-circle-fill me-1"></i> 예약중
+        </span>
+        <!-- 예약 취소 버튼 -->
         <button type="button"
                 th:if="${!past}"
-                class="btn btn-danger btn-sm open-cancel-modal"
+                class="btn-cancel open-cancel-modal"
                 data-bs-toggle="modal"
                 data-bs-target="#reserveModal"
                 th:attr="data-class-id=${classId},
@@ -17,9 +21,10 @@
         </button>
     </div>
 
+    <!-- 예약하기 버튼 -->
     <button type="button"
             th:if="${!isReserved} and ${!past}"
-            class="btn btn-primary btn-sm mt-1 open-reserve-modal"
+            class="btn-reserve mt-1 open-reserve-modal"
             data-bs-toggle="modal"
             data-bs-target="#reserveModal"
             th:attr="data-class-id=${classId},
