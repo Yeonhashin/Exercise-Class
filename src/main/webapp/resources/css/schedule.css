@@ -48,6 +48,11 @@ h1 {
     border: 1px solid #ddd;
     padding: 15px;
     text-align: center;
+
+    height: 90px; /* 원하는 높이 지정 */
+    position: relative;
+    vertical-align: middle;
+    overflow: hidden; /* 내용 넘치면 숨김 */
 }
 
 .schedule-table th {
@@ -75,6 +80,7 @@ h1 {
     padding: 10px;
     font-size: 16px;
 }
+
 .lesson {
     font-weight: bold;
     display: block;

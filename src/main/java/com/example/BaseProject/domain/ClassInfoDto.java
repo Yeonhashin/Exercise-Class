@@ -25,6 +25,7 @@ public class ClassInfoDto {
     private String updated;
 
     private boolean past;
+    private Integer isReserved;
 
     public ClassInfoDto() {
     }
@@ -211,6 +212,14 @@ public class ClassInfoDto {
         this.past = past;
     }
 
+    public Integer getIsReserved() {
+        return isReserved;
+    }
+
+    public void setIsReserved(Integer isReserved) {
+        this.isReserved = isReserved;
+    }
+
     @Override
     public String toString() {
         return "ClassInfoDto{" +
@@ -233,6 +242,8 @@ public class ClassInfoDto {
                 ", create_dt=" + create_dt +
                 ", update_dt=" + update_dt +
                 ", updated='" + updated + '\'' +
+                ", past=" + past +
+                ", isReserved=" + isReserved +
                 '}';
     }
 

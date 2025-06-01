@@ -59,7 +59,7 @@
                 <td>
                     <button type="button"
                             th:if="${reserved.canCancel and reserved.cancel_flag == 0}"
-                            class="btn btn-danger btn-sm open-cancel-modal"
+                            class="btn-cancel open-cancel-modal"
                             data-bs-toggle="modal"
                             data-bs-target="#reserveModal"
                             th:attr="data-class-id=${reserved.class_id},
@@ -114,7 +114,7 @@
                     if (reserved.cancel_flag === 1) {
                         actionHtml = '<span class="text-muted">취소된 예약</span>';
                     } else if (reserved.canCancel) {
-                        actionHtml = `<button class="btn btn-danger btn-sm open-cancel-modal"
+                        actionHtml = `<button class="btn-cancel open-cancel-modal"
                         data-class-id="${reserved.class_id}"
                         data-class-type-name="${reserved.class_type_name}"
                         data-class-name="${reserved.class_name}"

@@ -16,10 +16,11 @@ public class ClassInfoDao {
     private SqlSession session;
     private static String namespace = "com.example.BaseProject.dao.ClassInfoMapper.";
 
-    public List<ClassInfoDto> getClassByDateAndTime(LocalDate class_date, String class_start_time) throws Exception {
+    public List<ClassInfoDto> getClassByDateAndTime(LocalDate class_date, String class_start_time, int userId) throws Exception {
         Map map = new HashMap();
         map.put("class_date", class_date);
         map.put("class_start_time", class_start_time);
+        map.put("userId", userId);
         return session.selectList(namespace + "getClassByDateAndTime", map);
     }
 
@@ -27,13 +28,14 @@ public class ClassInfoDao {
         return session.selectOne(namespace + "select", id);
     }
 
-    public List<ClassInfoDto> getClassBySearch(String searchClassDate, String searchClassName, String searchInstructor, int offset, int size) {
+    public List<ClassInfoDto> getClassBySearch(String searchClassDate, String searchClassName, String searchInstructor, int offset, int size, int userId) {
         Map map = new HashMap();
         map.put("searchClassDate", searchClassDate);
         map.put("searchClassName", searchClassName);
         map.put("searchInstructor", searchInstructor);
         map.put("offset", offset);
         map.put("size", size);
+        map.put("userId", userId);
         return session.selectList(namespace + "getSearchData", map);
     }
 

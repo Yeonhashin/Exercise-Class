@@ -64,6 +64,7 @@ html, body, form {
     color: #27ae60; /* 진초록 */
     font-weight: 600;
     font-size: 14px;
+    margin-left: 5px;
 }
 
 .btn-reserve {
@@ -92,6 +93,7 @@ html, body, form {
     font-size: 14px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    margin-top: 5px;
 }
 
 .btn-cancel:hover {

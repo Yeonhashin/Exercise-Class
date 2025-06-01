@@ -3,13 +3,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.BaseProject.dao.UserReservationMapper">
-    <select id="select" parameterType="map" resultType="UserReservationDto">
-        select *
-        from user_reservation
-        where user_id = #{user_id}
-          and class_id = #{class_id}
-    </select>
-
     <insert id="insert" parameterType="map">
         INSERT INTO user_reservation
             (user_id, class_id)
@@ -22,13 +15,6 @@
         WHERE user_id = #{user_id}
           and class_id = #{class_id}
     </update>
-
-    <select id="selectReservedClassIdsByUser" parameterType="int" resultType="int">
-        SELECT class_id
-        FROM user_reservation
-        WHERE user_id = #{userId}
-          and cancel_flag = 0
-    </select>
 
     <select id="selectAllReservedClassByUser" parameterType="int" resultType="UserReservationDto">
         SELECT UR.*,

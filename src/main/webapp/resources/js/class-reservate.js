@@ -10,8 +10,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (reserveBtn) {
             openModal(reserveBtn, 'reserve');
+            console.log('reserveBtn');
         } else if (cancelBtn) {
             openModal(cancelBtn, 'cancel');
+            console.log('cancelBtn');
         }
     });
 
@@ -33,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('modalClassDate').textContent = classDate;
         document.getElementById('modalClassStartTime').textContent = classStartTime;
         document.getElementById('modalClassEndTime').textContent = classEndTime;
-
+        console.log(actionType);
         // 액션 타입에 따라 버튼 보여주기
         if (actionType === 'reserve') {
             confirmReserveBtn.style.display = 'inline-block';
@@ -126,9 +128,8 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-let offset = 10;
-
 document.getElementById('loadMoreBtn')?.addEventListener('click', function () {
+    let offset = offset + 10;
     const params = new URLSearchParams({
         offset: offset,
         size: 10,
@@ -143,8 +144,7 @@ document.getElementById('loadMoreBtn')?.addEventListener('click', function () {
             return response.json();
         })
         .then(data => {
-            const list = data.reservedClass;
-            const reservedClassIds = data.reservedClassIds;
+            const list = data.moreClasses;
             const hasMore = data.hasMore;
 
             if (!list || Object.keys(list).length === 0) return;
@@ -157,7 +157,6 @@ document.getElementById('loadMoreBtn')?.addEventListener('click', function () {
                 let tbody;
 
                 if (!existingTable) {
-                    // 새 날짜 테이블 생성
                     const newTable = document.createElement('table');
                     newTable.className = 'search-table';
                     newTable.setAttribute('data-date', date);
@@ -178,7 +177,7 @@ document.getElementById('loadMoreBtn')?.addEventListener('click', function () {
                 tbody = existingTable.querySelector('tbody');
 
                 classList.forEach(classmap => {
-                    const isReserved = reservedClassIds.includes(classmap.id);
+                    const isReserved = classmap.isReserved == 1;
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>
@@ -191,9 +190,11 @@ document.getElementById('loadMoreBtn')?.addEventListener('click', function () {
                         <td>${classmap.class_type_name}</td>
                         <td>
                             ${isReserved ? `
-                                <span class="badge bg-success mb-1">예약중</span>
+                            <span class="text-reserved">
+                                <i class="bi bi-check-circle-fill me-1"></i> 예약중
+                            </span>
                                 <button type="button"
-                                    class="btn btn-danger btn-sm open-cancel-modal"
+                                    class="btn-cancel open-cancel-modal"
                                     data-bs-toggle="modal"
                                     data-bs-target="#reserveModal"
                                     data-class-id="${classmap.id}"
@@ -207,7 +208,7 @@ document.getElementById('loadMoreBtn')?.addEventListener('click', function () {
                                 </button>
                             ` : `
                                 <button type="button"
-                                    class="btn btn-primary btn-sm mt-1 open-reserve-modal"
+                                    class="btn-reserve mt-1 open-reserve-modal"
                                     data-bs-toggle="modal"
                                     data-bs-target="#reserveModal"
                                     data-class-id="${classmap.id}"
@@ -222,11 +223,10 @@ document.getElementById('loadMoreBtn')?.addEventListener('click', function () {
                             `}
                         </td>
                     `;
-                    tbody.appendChild(row); // ✅ 제대로 된 위치에 추가
+                    tbody.appendChild(row);
                 });
             });
 
-            offset += 10;
             if (!hasMore) {
                 document.getElementById('loadMoreBtn').style.display = 'none';
             }
@@ -239,11 +239,8 @@ document.getElementById('loadMoreBtn')?.addEventListener('click', function () {
 
 
 document.getElementById('resetSearchBtn')?.addEventListener('click', function () {
-    // 입력 필드 초기화
     document.getElementById('searchClassDate').value = '';
     document.getElementById('className').value = '';
     document.getElementById('instructor').value = '';
-
-    // 또는 자동으로 검색 폼을 제출해서 초기 조건으로 검색
     document.getElementById('searchForm').submit();
 });

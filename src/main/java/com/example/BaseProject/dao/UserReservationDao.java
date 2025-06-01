@@ -30,10 +30,6 @@ public class UserReservationDao {
         return session.update(namespace + "update", map);
     }
 
-    public List<Integer> findReservedClassIdsByUser(int userId) {
-        return session.selectList(namespace + "selectReservedClassIdsByUser", userId);
-    }
-
     public List<UserReservationDto> reservedClassByUser(int userId) throws Exception {
         return session.selectList(namespace + "selectReservedClassByUser", userId);
     }
