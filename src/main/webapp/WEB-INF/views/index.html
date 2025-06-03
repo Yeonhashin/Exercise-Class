@@ -75,18 +75,25 @@
                 <td class="lesson-title" th:text="${reserved.class_name}"></td>
                 <td th:text="${reserved.class_type_name}"></td>
                 <td>
-                    <div th:replace="layout/reservationButtons :: reservationButtons(
-                         ${reserved.class_id},
-                         ${reserved.class_type_name},
-                         ${reserved.class_name},
-                         ${reserved.instructor_name},
-                         ${reserved.class_start_time},
-                         ${reserved.class_end_time},
-                         ${reserved.class_date},
-                         1
-                         ,false
-                         )">
-                    </div>
+                    <span th:if="${not reserved.canCancel and reserved.cancel_flag == 0}" class="text-muted">
+                        취소 기한 초과
+                    </span>
+
+                    <button type="button"
+                            th:if="${reserved.canCancel and reserved.cancel_flag == 0}"
+                            class="btn-cancel open-cancel-modal"
+                            data-bs-toggle="modal"
+                            data-bs-target="#reserveModal"
+                            th:attr="data-class-id=${reserved.class_id},
+                             data-class-type-name=${reserved.class_type_name},
+                             data-class-name=${reserved.class_name},
+                             data-class-instructor-name=${reserved.instructor_name},
+                             data-class-start-time=${reserved.class_start_time},
+                             data-class-end-time=${reserved.class_end_time},
+                             data-class-date=${reserved.class_date}">
+                        예약 취소
+                    </button>
+
                 </td>
             </tr>
             </tbody>

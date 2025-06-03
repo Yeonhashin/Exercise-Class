@@ -4,6 +4,7 @@ import com.example.BaseProject.dao.NoticeDao;
 import com.example.BaseProject.dao.UserReservationDao;
 import com.example.BaseProject.domain.NoticeDto;
 import com.example.BaseProject.domain.UserReservationDto;
+import com.example.BaseProject.service.UserReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,17 +22,17 @@ public class HomeController {
     @Autowired
     private NoticeDao noticeDao;
 
+    @Autowired
+    UserReservationService userReservationService;
+
     @RequestMapping("/")
-    public String home(Model m,HttpSession session) throws Exception {
+    public String home(Model m, HttpSession session) throws Exception {
         // "index"는 templates/index.html을 렌더링합니다.
         int userId = (int) session.getAttribute("user_id");
 
-        List<UserReservationDto> reservedClass = userReservationDao.reservedClassByUser(userId);
+        List<UserReservationDto> reservedClass = userReservationService.reservedClassByUser(userId);
         m.addAttribute("reservedClass", reservedClass);
-
-        System.out.println("reservedClass = " + reservedClass);
-
-
+        
         return "index";  // index.html 파일을 반환
     }
 

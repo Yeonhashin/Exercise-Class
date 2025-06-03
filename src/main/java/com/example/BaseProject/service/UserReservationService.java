@@ -32,6 +32,15 @@ public class UserReservationService {
         return userReservationDao.update(userId, classId);
     }
 
+    public List<UserReservationDto> reservedClassByUser(int userId) throws Exception {
+        List<UserReservationDto> reservedList = userReservationDao.reservedClassByUser(userId);
+        for (UserReservationDto dto : reservedList) {
+            boolean canCancel = ReservationUtils.canCancel(dto.getClass_date(), dto.getClass_start_time());
+            dto.setCanCancel(canCancel);
+        }
+        return reservedList;
+    }
+
     public List<UserReservationDto> reservedAllClassByUser(int userId, int offset, int size) throws Exception {
         List<UserReservationDto> reservedList = userReservationDao.reservedAllClassByUser(userId, offset, size);
         for (UserReservationDto dto : reservedList) {

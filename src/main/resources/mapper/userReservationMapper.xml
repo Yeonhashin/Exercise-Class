@@ -32,7 +32,7 @@
                  INNER JOIN post.class_time AS CT ON CI.class_time_id = CT.id
                  INNER JOIN post.instructor_info AS II ON CI.instructor_id = II.id
         WHERE UR.user_id = #{userId}
-        ORDER BY UR.create_dt desc
+        ORDER BY UR.create_dt desc, CI.class_date desc, CT.class_start_time
             LIMIT #{size}
         OFFSET #{offset}
     </select>
@@ -61,6 +61,6 @@
                  INNER JOIN post.instructor_info AS II ON CI.instructor_id = II.id
         WHERE UR.user_id = #{userId}
           and UR.cancel_flag = 0
-        ORDER BY CI.class_date, CT.class_start_time LIMIT 3
+        ORDER BY CI.class_date desc, CT.class_start_time desc LIMIT 3
     </select>
 </mapper>
