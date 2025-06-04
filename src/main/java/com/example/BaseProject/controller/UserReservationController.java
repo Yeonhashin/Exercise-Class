@@ -1,6 +1,7 @@
 package com.example.BaseProject.controller;
 
 import com.example.BaseProject.domain.UserReservationDto;
+import com.example.BaseProject.service.EmailService;
 import com.example.BaseProject.service.UserClassService;
 import com.example.BaseProject.service.UserReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ import java.util.Map;
 public class UserReservationController {
     @Autowired
     UserClassService userClassService;
+
+    @Autowired
+    EmailService emailService;
 
     private final UserReservationService userReservationService;
 
@@ -66,6 +70,8 @@ public class UserReservationController {
             int result = userReservationService.reserveClass(userId, classId);
             if (result > 0) {
                 response.setStatus(HttpServletResponse.SC_OK);
+                emailService.sendHtmlEmailWithTemplate("carbeau@naver.com", "Hayeon Shin", "Basic", "2025-06-04");
+
                 response.getWriter().write("{\"result\":\"success\"}");
             } else {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

@@ -11,32 +11,32 @@
             http://www.springframework.org/schema/context
             http://www.springframework.org/schema/context/spring-context.xsd">
     <!-- Spring MVC 활성화 -->
-    <mvc:annotation-driven />
+    <mvc:annotation-driven/>
 
     <!-- 1. Thymeleaf 템플릿 파일 위치를 설정하는 TemplateResolver -->
     <bean id="templateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
         <constructor-arg ref="servletContext"/>
-        <property name="prefix" value="/WEB-INF/views/" />  <!-- HTML 파일이 위치하는 폴더 -->
-        <property name="suffix" value=".html" />  <!-- 템플릿 파일 확장자 -->
-        <property name="templateMode" value="HTML" />  <!-- 템플릿 모드 (HTML, XML 등) -->
-        <property name="characterEncoding" value="UTF-8" />  <!-- 인코딩 설정 -->
+        <property name="prefix" value="/WEB-INF/views/"/>  <!-- HTML 파일이 위치하는 폴더 -->
+        <property name="suffix" value=".html"/>  <!-- 템플릿 파일 확장자 -->
+        <property name="templateMode" value="HTML"/>  <!-- 템플릿 모드 (HTML, XML 등) -->
+        <property name="characterEncoding" value="UTF-8"/>  <!-- 인코딩 설정 -->
     </bean>
 
     <!-- 2. Thymeleaf 템플릿 엔진 설정 -->
     <bean id="templateEngine" class="org.thymeleaf.spring5.SpringTemplateEngine">
-        <property name="templateResolver" ref="templateResolver" />
+        <property name="templateResolver" ref="templateResolver"/>
     </bean>
 
     <!-- 3. Thymeleaf View Resolver 등록 -->
     <bean class="org.thymeleaf.spring5.view.ThymeleafViewResolver">
-        <property name="templateEngine" ref="templateEngine" />
-        <property name="characterEncoding" value="UTF-8" />
+        <property name="templateEngine" ref="templateEngine"/>
+        <property name="characterEncoding" value="UTF-8"/>
     </bean>
 
     <!-- 4. 정적 자원(css, js 등) 사용 설정 -->
-    <mvc:resources mapping="/resources/**" location="/resources/" />
+    <mvc:resources mapping="/resources/**" location="/resources/"/>
 
     <!-- 5. 컨트롤러가 있는 패키지 스캔 -->
     <context:component-scan base-package="com.example.BaseProject"/>
-
+    
 </beans>
