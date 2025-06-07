@@ -32,7 +32,7 @@ public class HomeController {
 
         List<UserReservationDto> reservedClass = userReservationService.reservedClassByUser(userId);
         m.addAttribute("reservedClass", reservedClass);
-        
+
         return "index";  // index.html 파일을 반환
     }
 

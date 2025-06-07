@@ -46,11 +46,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // // 예약 확정 버튼 클릭 시 폼 제출
-    // confirmReserveBtn.addEventListener('click', function () {
-    //     document.getElementById('reserveForm').submit();
-    // });
-
     // 예약 확정 버튼 클릭 시 AJAX 호출
     confirmReserveBtn.addEventListener('click', function () {
         const classId = modalClassId.value;
@@ -91,6 +86,8 @@ document.addEventListener('DOMContentLoaded', function () {
     // 취소 확정 버튼 클릭 시 AJAX 호출
     confirmCancelBtn.addEventListener('click', function () {
         const classId = modalClassId.value;
+        const classId = modalClassId.value;
+
 
         fetch(`/reservation/cancel?classId=${classId}`, {
             method: 'POST'

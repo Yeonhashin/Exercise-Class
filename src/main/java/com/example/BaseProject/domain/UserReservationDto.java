@@ -23,9 +23,13 @@ public class UserReservationDto {
 
     private boolean canCancel;
 
-    public UserReservationDto() {}
+    private String name;
+    private String email;
 
-    public UserReservationDto(Integer id, Integer user_id, Integer class_id, int cancel_flag, Date create_dt, Date update_dt, String class_type_name, String class_name, String class_point_name, String instructor_name, int class_time_id, String class_date, String class_start_time, String class_end_time, boolean canCancel) {
+    public UserReservationDto() {
+    }
+
+    public UserReservationDto(Integer id, Integer user_id, Integer class_id, int cancel_flag, Date create_dt, Date update_dt, String class_type_name, String class_name, String class_point_name, String instructor_name, int class_time_id, String class_date, String class_start_time, String class_end_time, boolean canCancel, String name, String email) {
         this.id = id;
         this.user_id = user_id;
         this.class_id = class_id;
@@ -41,6 +45,8 @@ public class UserReservationDto {
         this.class_start_time = class_start_time;
         this.class_end_time = class_end_time;
         this.canCancel = canCancel;
+        this.name = name;
+        this.email = email;
     }
 
     public Integer getId() {
@@ -161,6 +167,22 @@ public class UserReservationDto {
 
     public void setCanCancel(boolean canCancel) {
         this.canCancel = canCancel;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override

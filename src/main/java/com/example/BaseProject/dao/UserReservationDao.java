@@ -16,11 +16,8 @@ public class UserReservationDao {
     private SqlSession session;
     private static String namespace = "com.example.BaseProject.dao.UserReservationMapper.";
 
-    public int insert(int userId, int classId) throws Exception {
-        Map<String, Object> map = new HashMap<>();
-        map.put("user_id", userId);
-        map.put("class_id", classId);
-        return session.insert(namespace + "insert", map);
+    public int insert(UserReservationDto reservation) throws Exception {
+        return session.insert(namespace + "insert", reservation);
     }
 
     public int update(int userId, int classId) throws Exception {
@@ -28,6 +25,10 @@ public class UserReservationDao {
         map.put("user_id", userId);
         map.put("class_id", classId);
         return session.update(namespace + "update", map);
+    }
+
+    public UserReservationDto selectClassById(int reservationId) throws Exception {
+        return session.selectOne(namespace + "selectClassById", reservationId);
     }
 
     public List<UserReservationDto> reservedClassByUser(int userId) throws Exception {

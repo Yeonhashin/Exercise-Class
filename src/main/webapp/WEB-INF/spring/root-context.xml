@@ -3,16 +3,19 @@
         xmlns="http://www.springframework.org/schema/beans"
         xmlns:context="http://www.springframework.org/schema/context"
         xmlns:tx="http://www.springframework.org/schema/tx"
-        xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+        xmlns:task="http://www.springframework.org/schema/task"
+        xsi:schemaLocation="
+        http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx https://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/task https://www.springframework.org/schema/task/spring-task.xsd">
 
     <!-- Root Context: defines shared resources visible to all other web components -->
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
-        <property name="url"
-                  value="jdbc:mysql://localhost:3305/post?useUnicode=true&amp;characterEncoding=utf8"></property>
-        <property name="username" value="root"></property>
-        <property name="password" value="8699"></property>
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3305/post?useUnicode=true&amp;characterEncoding=utf8"/>
+        <property name="username" value="root"/>
+        <property name="password" value="8699"/>
     </bean>
 
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -28,6 +31,7 @@
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"/>
     </bean>
+
     <tx:annotation-driven/>
     <context:component-scan base-package="com.example.BaseProject"/>
 
@@ -43,11 +47,13 @@
         <property name="templateResolver" ref="templateResolver"/>
     </bean>
 
+    <context:property-placeholder location="classpath:mail.properties"/>
+
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
         <property name="host" value="smtp.gmail.com"/>
         <property name="port" value="587"/>
-        <property name="username" value="ravenloud77@gmail.com"/>
-        <property name="password" value="olzkphfuvlmgrmpv"/>
+        <property name="username" value="${mail.username}"/>
+        <property name="password" value="${mail.password}"/>
         <property name="javaMailProperties">
             <props>
                 <prop key="mail.transport.protocol">smtp</prop>
@@ -57,4 +63,8 @@
             </props>
         </property>
     </bean>
+
+    <!-- Async 활성화 -->
+    <task:annotation-driven executor="taskExecutor"/>
+    <task:executor id="taskExecutor" pool-size="5"/>
 </beans>
