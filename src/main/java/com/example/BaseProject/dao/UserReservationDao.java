@@ -20,10 +20,10 @@ public class UserReservationDao {
         return session.insert(namespace + "insert", reservation);
     }
 
-    public int update(int userId, int classId) throws Exception {
+    public int update(int userId, int reservationId) throws Exception {
         Map<String, Object> map = new HashMap<>();
         map.put("user_id", userId);
-        map.put("class_id", classId);
+        map.put("id", reservationId);
         return session.update(namespace + "update", map);
     }
 

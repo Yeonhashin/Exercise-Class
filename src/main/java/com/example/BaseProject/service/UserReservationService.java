@@ -48,16 +48,22 @@ public class UserReservationService {
             int reservationId = reservation.getId();
             System.out.println("main thread - " + Thread.currentThread().getName());
             String status = "reservate";
-            //emailServiceImpl.sendHtmlEmailWithTemplate(reservationId, status);
-
-            // emailAsyncService.triggerEmailAsync(reservationId, status);
             context.getBean(EmailAsyncService.class).triggerEmailAsync(reservationId, status);
         }
         return result;
     }
 
-    public int cancelReservation(int userId, int classId) throws Exception {
-        return userReservationDao.update(userId, classId);
+    public int cancelReservation(int userId, int reservationId) throws Exception {
+        UserReservationDto reservation = new UserReservationDto();
+        reservation.setUser_id(userId);
+        reservation.setClass_id(reservationId);
+
+        int result = userReservationDao.update(userId, reservationId);
+        if (result > 0) {
+            String status = "cancel";
+            context.getBean(EmailAsyncService.class).triggerEmailAsync(reservationId, status);
+        }
+        return result;
     }
 
     public List<UserReservationDto> reservedClassByUser(int userId) throws Exception {

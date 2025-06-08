@@ -13,11 +13,12 @@
         UPDATE user_reservation
         SET cancel_flag = '1'
         WHERE user_id = #{user_id}
-          and class_id = #{class_id}
+          and id = #{id}
     </update>
 
     <select id="selectAllReservedClassByUser" parameterType="int" resultType="UserReservationDto">
-        SELECT UR.*,
+        SELECT UR.id as reservation_id,
+               UR.*,
                CTY.class_type_name,
                CTY.class_name,
                CP.class_point_name,
@@ -45,7 +46,8 @@
     </select>
 
     <select id="selectReservedClassByUser" parameterType="int" resultType="UserReservationDto">
-        SELECT UR.*,
+        SELECT UR.id       as reservation_id,
+               UR.class_id as class_id,
                CTY.class_type_name,
                CTY.class_name,
                CP.class_point_name,

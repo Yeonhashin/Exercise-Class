@@ -26,6 +26,7 @@ public class ClassInfoDto {
 
     private boolean past;
     private Integer isReserved;
+    private int reservation_id;
 
     public ClassInfoDto() {
     }
@@ -218,6 +219,14 @@ public class ClassInfoDto {
 
     public void setIsReserved(Integer isReserved) {
         this.isReserved = isReserved;
+    }
+
+    public int getReservation_id() {
+        return reservation_id;
+    }
+
+    public void setReservation_id(int reservation_id) {
+        this.reservation_id = reservation_id;
     }
 
     @Override

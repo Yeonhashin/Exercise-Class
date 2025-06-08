@@ -26,6 +26,9 @@ public class UserReservationDto {
     private String name;
     private String email;
 
+    private Integer reservation_id;
+
+
     public UserReservationDto() {
     }
 
@@ -185,6 +188,14 @@ public class UserReservationDto {
         this.email = email;
     }
 
+    public Integer getReservation_id() {
+        return reservation_id;
+    }
+
+    public void setReservation_id(Integer reservation_id) {
+        this.reservation_id = reservation_id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -216,6 +227,9 @@ public class UserReservationDto {
                 ", class_start_time='" + class_start_time + '\'' +
                 ", class_end_time='" + class_end_time + '\'' +
                 ", canCancel=" + canCancel +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", reservation_id=" + reservation_id +
                 '}';
     }
 }

@@ -68,7 +68,8 @@
                              data-class-instructor-name=${reserved.instructor_name},
                              data-class-start-time=${reserved.class_start_time},
                              data-class-end-time=${reserved.class_end_time},
-                             data-class-date=${reserved.class_date}">
+                             data-class-date=${reserved.class_date},
+                            data-reservate-id=${reserved.reservation_id}">
                         예약 취소
                     </button>
 
@@ -122,6 +123,7 @@
                         data-class-start-time="${reserved.class_start_time}"
                         data-class-end-time="${reserved.class_end_time}"
                         data-class-date="${reserved.class_date}"
+                        data-class-date=${reserved.reservation_id}"
                         data-bs-toggle="modal"
                         data-bs-target="#reserveModal"
                     >예약 취소</button>`;

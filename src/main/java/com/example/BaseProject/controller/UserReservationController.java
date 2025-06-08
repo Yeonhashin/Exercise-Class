@@ -83,13 +83,12 @@ public class UserReservationController {
     }
 
     @RequestMapping(value = "/cancel", method = RequestMethod.POST)
-    public void cancelReservation(@RequestParam("classId") int classId,
+    public void cancelReservation(@RequestParam("reservationId") int reservationId,
                                   HttpSession session,
                                   HttpServletResponse response) {
         try {
             int userId = getUserIdFromSession(session);
-
-            int result = userReservationService.cancelReservation(userId, classId);
+            int result = userReservationService.cancelReservation(userId, reservationId);
             if (result > 0) {
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.getWriter().write("{\"result\":\"success\"}");

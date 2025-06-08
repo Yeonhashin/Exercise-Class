@@ -45,6 +45,7 @@
                ClassInfo.create_dt,
                ClassInfo.update_dt,
                ClassInfo.updated,
+               ReservationInfo.id                                              as reservation_id,
                CASE WHEN ReservationInfo.user_id IS NOT NULL THEN 1 ELSE 0 END as isReserved
         from class_info as ClassInfo
                  inner join class_type as ClassType on ClassInfo.class_type_id = ClassType.id
@@ -72,6 +73,7 @@
         ClassInfo.create_dt,
         ClassInfo.update_dt,
         ClassInfo.updated,
+        ReservationInfo.id as reservation_id,
         CASE WHEN ReservationInfo.user_id IS NOT NULL THEN 1 ELSE 0 END as isReserved
         from class_info as ClassInfo
         inner join class_type as ClassType on ClassInfo.class_type_id = ClassType.id

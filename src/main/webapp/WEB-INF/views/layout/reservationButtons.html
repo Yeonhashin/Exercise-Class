@@ -1,4 +1,4 @@
-<div th:fragment="reservationButtons(classId, classTypeName, className, instructorName, startTime, endTime, date, isReserved, past)">
+<div th:fragment="reservationButtons(classId, classTypeName, className, instructorName, startTime, endTime, date, reservation_id, isReserved, past)">
     <!-- 예약된 경우 -->
     <div th:if="${isReserved == 1}">
         <span class="text-reserved">
@@ -15,7 +15,8 @@
                          data-class-instructor-name=${instructorName},
                          data-class-start-time=${startTime},
                          data-class-end-time=${endTime},
-                         data-class-date=${date}">
+                         data-class-date=${date},
+                         data-reservate-id=${reservation_id}">
             예약취소
         </button>
     </div>

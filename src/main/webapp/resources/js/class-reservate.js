@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const modalClassId = document.getElementById('modalClassId');
+    const modalReservationId = document.getElementById('modalReservationId');
+    console.log(modalReservationId);
     const confirmReserveBtn = document.getElementById('confirmReserveBtn');
     const confirmCancelBtn = document.getElementById('confirmCancelBtn');
 
@@ -20,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function openModal(button, actionType) {
         const classTypeName = button.getAttribute('data-class-type-name');
         const classId = button.getAttribute('data-class-id');
+        const reservationId = button.getAttribute('data-reservate-id');
 
         const className = button.getAttribute('data-class-name');
         const classInstructorName = button.getAttribute('data-class-instructor-name');
@@ -29,13 +32,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // 모달에 값 세팅
         modalClassId.value = classId;
+        modalReservationId.value = reservationId;
+
         document.getElementById('modalClassTypeName').textContent = classTypeName;
         document.getElementById('modalClassName').textContent = className;
         document.getElementById('modalClassInstructor').textContent = classInstructorName;
         document.getElementById('modalClassDate').textContent = classDate;
         document.getElementById('modalClassStartTime').textContent = classStartTime;
         document.getElementById('modalClassEndTime').textContent = classEndTime;
-        console.log(actionType);
         // 액션 타입에 따라 버튼 보여주기
         if (actionType === 'reserve') {
             confirmReserveBtn.style.display = 'inline-block';
@@ -85,11 +89,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 취소 확정 버튼 클릭 시 AJAX 호출
     confirmCancelBtn.addEventListener('click', function () {
-        const classId = modalClassId.value;
-        const classId = modalClassId.value;
+        const reservationId = modalReservationId.value;
 
-
-        fetch(`/reservation/cancel?classId=${classId}`, {
+        fetch(`/reservation/cancel?reservationId=${reservationId}`, {
             method: 'POST'
         })
             .then(response => response.json())
@@ -200,7 +202,8 @@ document.getElementById('loadMoreBtn')?.addEventListener('click', function () {
                                     data-class-instructor-name="${classmap.instructor_name}"
                                     data-class-start-time="${classmap.class_start_time}"
                                     data-class-end-time="${classmap.class_end_time}"
-                                    data-class-date="${classmap.class_date}">
+                                    data-class-date="${classmap.class_date}"
+                                    data-reservate-id="${classmap.reservation_id}">
                                     예약 취소
                                 </button>
                             ` : `
