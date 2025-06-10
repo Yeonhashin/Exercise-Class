@@ -84,8 +84,8 @@ public class UserClassService {
         for (ClassInfoDto dto : classList) {
             try {
                 LocalDate classDate = LocalDate.parse(dto.getClass_date());
-                LocalTime classEndTime = LocalTime.parse(dto.getClass_end_time());
-                dto.setPast(LocalDateTime.of(classDate, classEndTime).isBefore(now));
+                LocalTime classStartTime = LocalTime.parse(dto.getClass_start_time());
+                dto.setPast(LocalDateTime.of(classDate, classStartTime).isBefore(now));
             } catch (Exception e) {
                 dto.setPast(false);
             }
