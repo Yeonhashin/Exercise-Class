@@ -19,7 +19,6 @@ public class ClassInfoDto {
     private String class_end_time;
     private String class_time;
     private String class_memo;
-    private int reservation_cnt;
     private Date create_dt;
     private Date update_dt;
     private String updated;
@@ -28,10 +27,17 @@ public class ClassInfoDto {
     private Integer isReserved;
     private int reservation_id;
 
+    private int maximum;
+    private int reservation_cnt;
+
+    private int vacancy;
+    private boolean has_waiting;
+
+
     public ClassInfoDto() {
     }
 
-    public ClassInfoDto(Integer id, int class_type_id, String class_type_name, String class_name, int class_point_id, String class_point_name, int class_point_maximum, int instructor_id, String instructor_name, int class_time_id, String class_date, String class_start_time, String class_end_time, String class_time, String class_memo, int reservation_cnt, Date create_dt, Date update_dt, String updated) {
+    public ClassInfoDto(Integer id, int class_type_id, String class_type_name, String class_name, int class_point_id, String class_point_name, int class_point_maximum, int instructor_id, String instructor_name, int class_time_id, String class_date, String class_start_time, String class_end_time, String class_time, String class_memo, Date create_dt, Date update_dt, String updated, boolean past, Integer isReserved, int reservation_id, int maximum, int reservation_cnt) {
         this.id = id;
         this.class_type_id = class_type_id;
         this.class_type_name = class_type_name;
@@ -47,18 +53,14 @@ public class ClassInfoDto {
         this.class_end_time = class_end_time;
         this.class_time = class_time;
         this.class_memo = class_memo;
-        this.reservation_cnt = reservation_cnt;
         this.create_dt = create_dt;
         this.update_dt = update_dt;
         this.updated = updated;
-    }
-
-    public String getClass_time() {
-        return class_time;
-    }
-
-    public void setClass_time(String class_time) {
-        this.class_time = class_time;
+        this.past = past;
+        this.isReserved = isReserved;
+        this.reservation_id = reservation_id;
+        this.maximum = maximum;
+        this.reservation_cnt = reservation_cnt;
     }
 
     public Integer getId() {
@@ -165,20 +167,20 @@ public class ClassInfoDto {
         this.class_end_time = class_end_time;
     }
 
+    public String getClass_time() {
+        return class_time;
+    }
+
+    public void setClass_time(String class_time) {
+        this.class_time = class_time;
+    }
+
     public String getClass_memo() {
         return class_memo;
     }
 
     public void setClass_memo(String class_memo) {
         this.class_memo = class_memo;
-    }
-
-    public int getReservation_cnt() {
-        return reservation_cnt;
-    }
-
-    public void setReservation_cnt(int reservation_cnt) {
-        this.reservation_cnt = reservation_cnt;
     }
 
     public Date getCreate_dt() {
@@ -229,6 +231,38 @@ public class ClassInfoDto {
         this.reservation_id = reservation_id;
     }
 
+    public int getMaximum() {
+        return maximum;
+    }
+
+    public void setMaximum(int maximum) {
+        this.maximum = maximum;
+    }
+
+    public int getReservation_cnt() {
+        return reservation_cnt;
+    }
+
+    public void setReservation_cnt(int reservation_cnt) {
+        this.reservation_cnt = reservation_cnt;
+    }
+
+    public int getVacancy() {
+        return vacancy;
+    }
+
+    public void setVacancy(int vacancy) {
+        this.vacancy = vacancy;
+    }
+
+    public boolean isHas_waiting() {
+        return has_waiting;
+    }
+
+    public void setHas_waiting(boolean has_waiting) {
+        this.has_waiting = has_waiting;
+    }
+
     @Override
     public String toString() {
         return "ClassInfoDto{" +
@@ -247,12 +281,14 @@ public class ClassInfoDto {
                 ", class_end_time='" + class_end_time + '\'' +
                 ", class_time='" + class_time + '\'' +
                 ", class_memo='" + class_memo + '\'' +
-                ", reservation_cnt=" + reservation_cnt +
                 ", create_dt=" + create_dt +
                 ", update_dt=" + update_dt +
                 ", updated='" + updated + '\'' +
                 ", past=" + past +
                 ", isReserved=" + isReserved +
+                ", reservation_id=" + reservation_id +
+                ", maximum=" + maximum +
+                ", reservation_cnt=" + reservation_cnt +
                 '}';
     }
 

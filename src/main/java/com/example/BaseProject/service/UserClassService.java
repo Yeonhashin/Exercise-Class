@@ -40,7 +40,19 @@ public class UserClassService {
 
     // search :: 검색내용에 대해 수업 일람 출력
     public List<ClassInfoDto> search(String searchClassDate, String searchClassName, String searchInstructor, int offset, int size, int userId) throws Exception {
-        return classInfoDao.getClassBySearch(searchClassDate, searchClassName, searchInstructor, offset, size, userId);
+        List<ClassInfoDto> classList = classInfoDao.getClassBySearch(searchClassDate, searchClassName, searchInstructor, offset, size, userId);
+        for (ClassInfoDto dto : classList) {
+            try {
+                if (dto.getVacancy() <= 0) {
+                    dto.setHas_waiting(true);
+                } else {
+                    dto.setHas_waiting(false);
+                }
+            } catch (Exception e) {
+                dto.setPast(false);
+            }
+        }
+        return classList;
     }
 
     // hasMore :: 더보기 버튼 표시용
@@ -86,6 +98,13 @@ public class UserClassService {
                 LocalDate classDate = LocalDate.parse(dto.getClass_date());
                 LocalTime classStartTime = LocalTime.parse(dto.getClass_start_time());
                 dto.setPast(LocalDateTime.of(classDate, classStartTime).isBefore(now));
+
+                if (dto.getVacancy() <= 0) {
+                    dto.setHas_waiting(true);
+                } else {
+                    dto.setHas_waiting(false);
+                }
+
             } catch (Exception e) {
                 dto.setPast(false);
             }

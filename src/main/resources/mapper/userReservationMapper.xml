@@ -66,26 +66,26 @@
         ORDER BY CI.class_date desc, CT.class_start_time desc LIMIT 3
     </select>
 
-    <!--    <select id="selectClassById" parameterType="int" resultType="UserReservationDto">-->
-    <!--        SELECT UR.*,-->
-    <!--               US.email,-->
-    <!--               US.name,-->
-    <!--               CTY.class_type_name,-->
-    <!--               CTY.class_name,-->
-    <!--               CP.class_point_name,-->
-    <!--               II.instructor_name,-->
-    <!--               CT.class_start_time,-->
-    <!--               CT.class_end_time,-->
-    <!--               CI.class_date-->
-    <!--        FROM user_reservation AS UR-->
-    <!--                 INNER JOIN post.class_info AS CI ON UR.class_id = CI.id-->
-    <!--                 INNER JOIN post.class_type AS CTY ON CI.class_type_id = CTY.id-->
-    <!--                 INNER JOIN post.class_point AS CP ON CI.class_point_id = CP.id-->
-    <!--                 INNER JOIN post.class_time AS CT ON CI.class_time_id = CT.id-->
-    <!--                 INNER JOIN post.instructor_info AS II ON CI.instructor_id = II.id-->
-    <!--                 INNER JOIN post.user AS US ON UR.user_id = US.id-->
-    <!--        WHERE UR.id = #{reservation_id}-->
-    <!--    </select>-->
+    <select id="selectClassById" parameterType="int" resultType="UserReservationDto">
+        SELECT UR.*,
+               US.email,
+               US.name,
+               CTY.class_type_name,
+               CTY.class_name,
+               CP.class_point_name,
+               II.instructor_name,
+               CT.class_start_time,
+               CT.class_end_time,
+               CI.class_date
+        FROM user_reservation AS UR
+                 INNER JOIN post.class_info AS CI ON UR.class_id = CI.id
+                 INNER JOIN post.class_type AS CTY ON CI.class_type_id = CTY.id
+                 INNER JOIN post.class_point AS CP ON CI.class_point_id = CP.id
+                 INNER JOIN post.class_time AS CT ON CI.class_time_id = CT.id
+                 INNER JOIN post.instructor_info AS II ON CI.instructor_id = II.id
+                 INNER JOIN post.user AS US ON UR.user_id = US.id
+        WHERE UR.id = #{reservation_id}
+    </select>
 
     <select id="selectReservationByUserIdAndClassId" resultType="int" parameterType="UserReservationDto">
         SELECT id

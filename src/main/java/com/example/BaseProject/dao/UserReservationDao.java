@@ -27,9 +27,9 @@ public class UserReservationDao {
         return session.update(namespace + "update", map);
     }
 
-//    public UserReservationDto selectClassById(int reservationId) throws Exception {
-//        return session.selectOne(namespace + "selectClassById", reservationId);
-//    }
+    public UserReservationDto selectClassById(int reservationId) throws Exception {
+        return session.selectOne(namespace + "selectClassById", reservationId);
+    }
 
     public List<UserReservationDto> reservedClassByUser(int userId) throws Exception {
         return session.selectList(namespace + "selectReservedClassByUser", userId);

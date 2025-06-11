@@ -48,8 +48,9 @@
             <td th:each="date : ${formattedDates}">
             <span th:each="class : ${scheduleMap.get(time).get(date)}">
                 <div th:text="${class.class_name}" class="fw-bold"></div>
-
-                <div th:if="${class.past}" class="unavailable"><i class="bi bi-exclamation-circle me-1"></i> 예약 불가</div>
+                <div th:text="'잔여 : ' + ${class.vacancy} + '명'"></div>
+                <div th:if="${class.past}" class="unavailable"><i
+                        class="bi bi-exclamation-circle me-1"></i> 예약 불가</div>
                 <div th:if="${!class.past}" th:replace="layout/reservationButtons :: reservationButtons(
                         ${class.id},
                         ${class.class_type_name},
@@ -60,7 +61,8 @@
                         ${class.class_date},
                         ${class.reservation_id},
                         ${class.isReserved},
-                        ${class.past}
+                        ${class.past},
+                        ${class.has_waiting}
                      )"></div>
             </span>
                 <span class="no-class"
@@ -143,9 +145,11 @@
                                 ${classmap.class_date},
                                 ${classmap.reservation_id},
                                 ${classmap.isReserved},
-                                false
+                                false,
+                                ${classmap.has_waiting}
                             )">
                             </div>
+                            <div th:text="'잔여 : ' + ${classmap.vacancy} + '명'"></div>
                         </td>
                     </tr>
                     </tbody>
