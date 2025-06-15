@@ -43,10 +43,11 @@ public class UserReservationService {
         reservation.setClass_id(classId);
 
         int result = userReservationDao.insert(reservation);
+//        int classInfoUpdate = classInfoDao.updateVacancy(classId);
+
 
         if (result > 0) {
             int reservationId = reservation.getId();
-            System.out.println("main thread - " + Thread.currentThread().getName());
             String status = "reservate";
             context.getBean(EmailAsyncService.class).triggerEmailAsync(reservationId, status);
         }

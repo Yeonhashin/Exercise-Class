@@ -49,4 +49,12 @@ public class ClassInfoDao {
         Integer result = session.selectOne(namespace + "hasMore", map);
         return result != null && result > 0;
     }
+
+    public int updateVacancyPlus(Integer classId) throws Exception {
+        return session.update(namespace + "updateVacancyPlus", classId);
+    }
+
+    public int updateVacancyMinus(Integer classId) throws Exception {
+        return session.update(namespace + "updateVacancyMinus", classId);
+    }
 }

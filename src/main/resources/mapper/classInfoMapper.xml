@@ -9,7 +9,6 @@
                ClassInfo.instructor_id,
                ClassInfo.class_type_id,
                ClassInfo.class_time_id,
-               ClassInfo.reservation_cnt,
                ClassType.class_type_name,
                ClassType.class_name,
                ClassPoint.class_point_name,
@@ -32,8 +31,8 @@
 
     <!--캘린더용 수업 일람 쿼리-->
     <select id="getClassByDateAndTime" parameterType="map" resultType="ClassInfoDto">
-        select ClassInfo.id,
-               ClassInfo.reservation_cnt,
+        SELECT ClassInfo.id,
+               ClassInfo.maximum - IFNULL(ReserveSummary.reserved_count, 0)    AS vacancy, -- 남은 인원 수 계산
                ClassType.class_type_name,
                ClassType.class_name,
                ClassPoint.class_point_name,
@@ -46,25 +45,42 @@
                ClassInfo.create_dt,
                ClassInfo.update_dt,
                ClassInfo.updated,
-               ReservationInfo.id                                              as reservation_id,
-               CASE WHEN ReservationInfo.user_id IS NOT NULL THEN 1 ELSE 0 END as isReserved,
-               ClassInfo.maximum - ClassInfo.reservation_cnt                   as vacancy
-        from class_info as ClassInfo
-                 inner join class_type as ClassType
-                            on ClassInfo.class_type_id = ClassType.id
-                 inner join class_point as ClassPoint on ClassInfo.class_point_id = ClassPoint.id
-                 inner join class_time as ClassTime on ClassInfo.class_time_id = ClassTime.id
-                 inner join instructor_info as InstInfo on ClassInfo.instructor_id = InstInfo.id
-                 left join user_reservation as ReservationInfo on ClassInfo.id = ReservationInfo.class_id
-            and ReservationInfo.user_id = #{userId} and ReservationInfo.cancel_flag != 1
-        WHERE class_date = #{class_date}
-          AND class_start_time = #{class_start_time}
+               ReservationInfo.id                                              AS reservation_id,
+               CASE WHEN ReservationInfo.user_id IS NOT NULL THEN 1 ELSE 0 END AS isReserved
+
+        FROM class_info AS ClassInfo
+
+                 INNER JOIN class_type AS ClassType
+                            ON ClassInfo.class_type_id = ClassType.id
+                 INNER JOIN class_point AS ClassPoint
+                            ON ClassInfo.class_point_id = ClassPoint.id
+                 INNER JOIN class_time AS ClassTime
+                            ON ClassInfo.class_time_id = ClassTime.id
+                 INNER JOIN instructor_info AS InstInfo
+                            ON ClassInfo.instructor_id = InstInfo.id
+
+-- 수업별 예약 수 집계 서브쿼리
+                 LEFT JOIN (SELECT class_id, COUNT(*) AS reserved_count
+                            FROM user_reservation
+                            WHERE cancel_flag != 1
+                            GROUP BY class_id) AS ReserveSummary
+                           ON ClassInfo.id = ReserveSummary.class_id
+
+-- 사용자 예약 여부 판단용 (특정 유저 기준으로 예약 여부 체크 시)
+                 LEFT JOIN user_reservation AS ReservationInfo
+                           ON ClassInfo.id = ReservationInfo.class_id
+                               AND ReservationInfo.user_id = #{userId}
+                               AND ReservationInfo.cancel_flag != 1
+
+        WHERE ClassInfo.class_date = #{class_date}
+          AND ClassTime.class_start_time = #{class_start_time}
     </select>
 
     <!--검색용 수업 일람 쿼리-->
     <select id="getSearchData" parameterType="map" resultType="ClassInfoDto">
-        select ClassInfo.id,
-        ClassInfo.reservation_cnt,
+        SELECT
+        ClassInfo.id,
+        ClassInfo.maximum - IFNULL(ReserveSummary.reserved_count, 0) AS vacancy, -- 남은 인원 수
         ClassType.class_type_name,
         ClassType.class_name,
         ClassPoint.class_point_name,
@@ -77,17 +93,35 @@
         ClassInfo.create_dt,
         ClassInfo.update_dt,
         ClassInfo.updated,
-        ReservationInfo.id as reservation_id,
-        CASE WHEN ReservationInfo.user_id IS NOT NULL THEN 1 ELSE 0 END as isReserved,
-        ClassInfo.maximum - ClassInfo.reservation_cnt as vacancy
-        from class_info as ClassInfo
-        inner join class_type as ClassType on ClassInfo.class_type_id = ClassType.id
-        inner join class_point as ClassPoint on ClassInfo.class_point_id = ClassPoint.id
-        inner join class_time as ClassTime on ClassInfo.class_time_id = ClassTime.id
-        inner join instructor_info as InstInfo on ClassInfo.instructor_id = InstInfo.id
-        left join user_reservation as ReservationInfo
-        on ClassInfo.id = ReservationInfo.class_id
-        and ReservationInfo.user_id = #{userId} and ReservationInfo.cancel_flag != 1
+        ReservationInfo.id AS reservation_id,
+        CASE WHEN ReservationInfo.user_id IS NOT NULL THEN 1 ELSE 0 END AS isReserved
+
+        FROM class_info AS ClassInfo
+
+        INNER JOIN class_type AS ClassType
+        ON ClassInfo.class_type_id = ClassType.id
+        INNER JOIN class_point AS ClassPoint
+        ON ClassInfo.class_point_id = ClassPoint.id
+        INNER JOIN class_time AS ClassTime
+        ON ClassInfo.class_time_id = ClassTime.id
+        INNER JOIN instructor_info AS InstInfo
+        ON ClassInfo.instructor_id = InstInfo.id
+
+        -- 수업별 예약 수 집계
+        LEFT JOIN (
+        SELECT class_id, COUNT(*) AS reserved_count
+        FROM user_reservation
+        WHERE cancel_flag != 1
+        GROUP BY class_id
+        ) AS ReserveSummary
+        ON ClassInfo.id = ReserveSummary.class_id
+
+        -- 로그인 유저의 예약 여부 확인
+        LEFT JOIN user_reservation AS ReservationInfo
+        ON ClassInfo.id = ReservationInfo.class_id
+        AND ReservationInfo.user_id = #{userId}
+        AND ReservationInfo.cancel_flag != 1
+
         <where>
             STR_TO_DATE(CONCAT(class_date, ' ', class_start_time), '%Y-%m-%d %H:%i') > NOW()
 
@@ -103,7 +137,8 @@
                 AND instructor_name = #{searchInstructor}
             </if>
         </where>
-        ORDER BY class_date asc, class_start_time asc
+
+        ORDER BY class_date ASC, class_start_time ASC
         LIMIT #{size} OFFSET #{offset}
     </select>
 
@@ -134,4 +169,15 @@
         LIMIT 1 OFFSET #{offset}
     </select>
 
+    <!--    <update id="updateVacancyPlus" parameterType="classId">-->
+    <!--        UPDATE class_info-->
+    <!--        SET reservation_cnt = reservation_cnt + 1-->
+    <!--        WHERE id = #{classId}-->
+    <!--    </update>-->
+
+    <!--    <update id="updateVacancyMinus" parameterType="classId">-->
+    <!--        UPDATE class_info-->
+    <!--        SET reservation_cnt = reservation_cnt - 1-->
+    <!--        WHERE id = #{classId}-->
+    <!--    </update>-->
 </mapper>
