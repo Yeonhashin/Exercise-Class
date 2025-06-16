@@ -54,8 +54,10 @@ public class EmailServiceImpl implements EmailService {
         String htmlContent = null;
         if (status == "reservate") {
             htmlContent = templateEngine.process("reservation-email", context); // reservation-email.html
-        } else {
+        } else if (status == "cancel") {
             htmlContent = templateEngine.process("cancel-reservation-email", context); // cancel-reservation-email.html
+        } else if (status == "reservate-wait") {
+            htmlContent = templateEngine.process("wait-reservation-email", context); // wait-reservation-email.html
         }
 
         try {
@@ -67,8 +69,10 @@ public class EmailServiceImpl implements EmailService {
 
             if (status == "reservate") {
                 helper.setSubject("[필라테스 예약 완료 안내]");
-            } else {
+            } else if (status == "cancel") {
                 helper.setSubject("[필라테스 예약 취소 안내]");
+            } else if (status == "reservate-wait") {
+                helper.setSubject("[필라테스 대기 예약 안내]");
             }
             helper.setText(htmlContent, true); // HTML로 설정
 

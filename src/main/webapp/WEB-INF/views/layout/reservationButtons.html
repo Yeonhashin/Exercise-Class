@@ -1,5 +1,5 @@
 <div th:fragment="reservationButtons(classId, classTypeName, className, instructorName, startTime, endTime, date, reservation_id, isReserved, past, has_waiting)">
-    <!-- 예약된 경우 -->
+    <!-- 예약된 수업의 경우 -->
     <div th:if="${isReserved == 1}">
         <span class="text-reserved">
             <i class="bi bi-check-circle-fill me-1"></i> 예약중
@@ -21,9 +21,9 @@
         </button>
     </div>
 
-    <!-- 예약 안된 경우 -->
+    <!-- 예약 가능한 수업의 경우 -->
     <button type="button"
-            th:if="${isReserved != 1} and ${!past}"
+            th:if="${isReserved != 1} and ${!past} and ${!has_waiting}"
             class="btn-reserve mt-1 open-reserve-modal"
             data-bs-toggle="modal"
             data-bs-target="#reserveModal"
@@ -34,7 +34,24 @@
                  data-class-start-time=${startTime},
                  data-class-end-time=${endTime},
                  data-class-date=${date}"
-            th:text="${has_waiting} ? '대기예약하기' : '예약하기'">
-        예약하기 <!-- 기본 텍스트 (th:text가 없을 경우 보여짐) -->
+            th:text="예약하기">
+        예약하기
+    </button>
+
+    <!-- 대기 예약의 경우 -->
+    <button type="button"
+            th:if="${isReserved != 1} and ${!past} and ${has_waiting}"
+            class="btn-reserve-wait mt-1 open-reserve-wait-modal"
+            data-bs-toggle="modal"
+            data-bs-target="#reserveModal"
+            th:attr="data-class-id=${classId},
+                 data-class-type-name=${classTypeName},
+                 data-class-name=${className},
+                 data-class-instructor-name=${instructorName},
+                 data-class-start-time=${startTime},
+                 data-class-end-time=${endTime},
+                 data-class-date=${date}"
+            th:text="대기예약하기">
+        대기예약하기
     </button>
 </div>

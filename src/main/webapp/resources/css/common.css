@@ -61,7 +61,7 @@ html, body, form {
 }
 
 .text-reserved {
-    color: #27ae60; /* 진초록 */
+    color: #217c46; /* 진초록 */
     font-weight: 600;
     font-size: 14px;
     margin-left: 5px;
@@ -81,6 +81,22 @@ html, body, form {
 
 .btn-reserve:hover {
     background-color: #2980b9;
+}
+
+.btn-reserve-wait {
+    background-color: #e88461 !important; /* 오렌지색 c4af9b*/
+    color: white !important;
+    font-weight: bold !important;
+    border: none !important;
+    border-radius: 20px !important;
+    padding: 6px 16px !important;
+    font-size: 14px !important;
+    cursor: pointer !important;
+    transition: background-color 0.3s ease !important;
+}
+
+.btn-reserve-wait:hover {
+    background-color: #c66847 !important;
 }
 
 .btn-cancel {

@@ -26,6 +26,7 @@ public class UserReservationController {
         this.userReservationService = userReservationService;
     }
 
+    // getReservedList :: 예약 일람 표시
     @GetMapping("/list")
     public String getReservedList(
             @RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
@@ -41,6 +42,7 @@ public class UserReservationController {
         return "reservedList";
     }
 
+    // loadMoreReserved :: 예약 더보기 표시
     @GetMapping("/list/more")
     @ResponseBody
     public Map<String, Object> loadMoreReserved(@RequestParam int offset,
@@ -82,6 +84,33 @@ public class UserReservationController {
         }
     }
 
+    // reserveWaitClass :: 수업 대기예약
+    @RequestMapping(value = "/wait-add", method = RequestMethod.POST)
+    public void reserveWaitClass(@RequestParam("classId") int classId,
+                                 HttpSession session,
+                                 HttpServletResponse response) {
+        try {
+            int userId = getUserIdFromSession(session);
+            int result = userReservationService.reserveWaitClass(userId, classId);
+            if (result > 0) {
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.getWriter().write("{\"result\":\"success\"}");
+            } else {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().write("{\"result\":\"fail\", \"message\":\"대기 예약 실패\"}");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                response.getWriter().write("{\"result\":\"fail\", \"message\":\"서버 오류\"}");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    // cancelReservation :: 수업 예약 취소
     @RequestMapping(value = "/cancel", method = RequestMethod.POST)
     public void cancelReservation(@RequestParam("reservationId") int reservationId,
                                   HttpSession session,
@@ -107,11 +136,10 @@ public class UserReservationController {
         }
     }
 
+    // getUserIdFromSession :: 세션으로부터 유저아이디 취득
     private int getUserIdFromSession(HttpSession session) {
         Object userId = session.getAttribute("user_id");
         if (userId instanceof Integer) return (Integer) userId;
         throw new IllegalStateException("로그인이 필요합니다.");
     }
-
-
 }

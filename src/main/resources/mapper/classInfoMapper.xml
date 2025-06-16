@@ -47,9 +47,7 @@
                ClassInfo.updated,
                ReservationInfo.id                                              AS reservation_id,
                CASE WHEN ReservationInfo.user_id IS NOT NULL THEN 1 ELSE 0 END AS isReserved
-
         FROM class_info AS ClassInfo
-
                  INNER JOIN class_type AS ClassType
                             ON ClassInfo.class_type_id = ClassType.id
                  INNER JOIN class_point AS ClassPoint
@@ -59,18 +57,29 @@
                  INNER JOIN instructor_info AS InstInfo
                             ON ClassInfo.instructor_id = InstInfo.id
 
--- 수업별 예약 수 집계 서브쿼리
+            -- 수업별 예약 수 집계 서브쿼리
                  LEFT JOIN (SELECT class_id, COUNT(*) AS reserved_count
                             FROM user_reservation
                             WHERE cancel_flag != 1
                             GROUP BY class_id) AS ReserveSummary
                            ON ClassInfo.id = ReserveSummary.class_id
 
--- 사용자 예약 여부 판단용 (특정 유저 기준으로 예약 여부 체크 시)
+            -- 사용자 예약 여부 판단용 (특정 유저 기준으로 예약 여부 체크 시)
                  LEFT JOIN user_reservation AS ReservationInfo
                            ON ClassInfo.id = ReservationInfo.class_id
                                AND ReservationInfo.user_id = #{userId}
                                AND ReservationInfo.cancel_flag != 1
+
+            -- 예약 순번 서브쿼리
+                LEFT JOIN (
+                    SELECT
+                        class_id,
+                        user_id,
+                        ROW_NUMBER() OVER (PARTITION BY class_id ORDER BY id ASC) AS reserve_order
+                    FROM user_reservation
+                    WHERE cancel_flag != 1
+                ) AS UserRank
+        ON ClassInfo.id = UserRank.class_id AND UserRank.user_id = #{userId}
 
         WHERE ClassInfo.class_date = #{class_date}
           AND ClassTime.class_start_time = #{class_start_time}

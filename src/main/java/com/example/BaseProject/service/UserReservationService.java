@@ -37,15 +37,13 @@ public class UserReservationService {
     @Autowired
     private ApplicationContext context;
 
+    // 수업 예약
     public int reserveClass(int userId, int classId) throws Exception {
         UserReservationDto reservation = new UserReservationDto();
         reservation.setUser_id(userId);
         reservation.setClass_id(classId);
 
         int result = userReservationDao.insert(reservation);
-//        int classInfoUpdate = classInfoDao.updateVacancy(classId);
-
-
         if (result > 0) {
             int reservationId = reservation.getId();
             String status = "reservate";
@@ -54,6 +52,22 @@ public class UserReservationService {
         return result;
     }
 
+    // 수업 대기 예약
+    public int reserveWaitClass(int userId, int classId) throws Exception {
+        UserReservationDto reservation = new UserReservationDto();
+        reservation.setUser_id(userId);
+        reservation.setClass_id(classId);
+
+        int result = userReservationDao.insert(reservation);
+        if (result > 0) {
+            int reservationId = reservation.getId();
+            String status = "reservate-wait";
+            context.getBean(EmailAsyncService.class).triggerEmailAsync(reservationId, status);
+        }
+        return result;
+    }
+
+    // 수업 예약 취소
     public int cancelReservation(int userId, int reservationId) throws Exception {
         UserReservationDto reservation = new UserReservationDto();
         reservation.setUser_id(userId);
@@ -67,6 +81,7 @@ public class UserReservationService {
         return result;
     }
 
+    // 톱 페이지 예약 일람 표시
     public List<UserReservationDto> reservedClassByUser(int userId) throws Exception {
         List<UserReservationDto> reservedList = userReservationDao.reservedClassByUser(userId);
         for (UserReservationDto dto : reservedList) {
@@ -76,6 +91,7 @@ public class UserReservationService {
         return reservedList;
     }
 
+    // 예약 일람 표시
     public List<UserReservationDto> reservedAllClassByUser(int userId, int offset, int size) throws Exception {
         List<UserReservationDto> reservedList = userReservationDao.reservedAllClassByUser(userId, offset, size);
         for (UserReservationDto dto : reservedList) {
@@ -85,6 +101,7 @@ public class UserReservationService {
         return reservedList;
     }
 
+    // 예약 일람 더보기 표시
     public boolean hasMore(int offset, int userId) throws Exception {
         return userReservationDao.hasMore(offset, userId);
     }
