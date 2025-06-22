@@ -61,11 +61,13 @@ public class UserReservationController {
     // reserveClass :: 수업 예약
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public void reserveClass(@RequestParam("classId") int classId,
+                             @RequestParam(value = "wait", required = false) boolean isWait,
                              HttpSession session,
                              HttpServletResponse response) {
         try {
             int userId = getUserIdFromSession(session);
-            int result = userReservationService.reserveClass(userId, classId);
+            int result = userReservationService.reserveClass(userId, classId, isWait);
+
             if (result > 0) {
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.getWriter().write("{\"result\":\"success\"}");
@@ -84,40 +86,16 @@ public class UserReservationController {
         }
     }
 
-    // reserveWaitClass :: 수업 대기예약
-    @RequestMapping(value = "/wait-add", method = RequestMethod.POST)
-    public void reserveWaitClass(@RequestParam("classId") int classId,
-                                 HttpSession session,
-                                 HttpServletResponse response) {
-        try {
-            int userId = getUserIdFromSession(session);
-            int result = userReservationService.reserveWaitClass(userId, classId);
-            if (result > 0) {
-                response.setStatus(HttpServletResponse.SC_OK);
-                response.getWriter().write("{\"result\":\"success\"}");
-            } else {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().write("{\"result\":\"fail\", \"message\":\"대기 예약 실패\"}");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            try {
-                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                response.getWriter().write("{\"result\":\"fail\", \"message\":\"서버 오류\"}");
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-
     // cancelReservation :: 수업 예약 취소
     @RequestMapping(value = "/cancel", method = RequestMethod.POST)
     public void cancelReservation(@RequestParam("reservationId") int reservationId,
+                                  @RequestParam(value = "wait", required = false) boolean isWait,
                                   HttpSession session,
                                   HttpServletResponse response) {
         try {
             int userId = getUserIdFromSession(session);
-            int result = userReservationService.cancelReservation(userId, reservationId);
+            int result = userReservationService.cancelReservation(userId, reservationId, isWait);
+
             if (result > 0) {
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.getWriter().write("{\"result\":\"success\"}");

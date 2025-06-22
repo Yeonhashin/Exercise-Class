@@ -1,15 +1,19 @@
 document.addEventListener('DOMContentLoaded', function () {
     const modalClassId = document.getElementById('modalClassId');
     const modalReservationId = document.getElementById('modalReservationId');
+
     const confirmReserveBtn = document.getElementById('confirmReserveBtn');
     const confirmReserveWaitBtn = document.getElementById('confirmReserveWaitBtn');
     const confirmCancelBtn = document.getElementById('confirmCancelBtn');
+    const confirmCancelWaitBtn = document.getElementById('confirmCancelWaitBtn');
+
 
     // 이벤트 위임: 전체 문서에 클릭 리스너 등록
     document.body.addEventListener('click', function (event) {
         const reserveBtn = event.target.closest('.open-reserve-modal');
         const reserveWaitBtn = event.target.closest('.open-reserve-wait-modal');
         const cancelBtn = event.target.closest('.open-cancel-modal');
+        const cancelWaitBtn = event.target.closest('.open-cancel-wait-modal');
 
         if (reserveBtn) {
             openModal(reserveBtn, 'reserve');
@@ -17,6 +21,8 @@ document.addEventListener('DOMContentLoaded', function () {
             openModal(reserveWaitBtn, 'reserve-wait');
         } else if (cancelBtn) {
             openModal(cancelBtn, 'cancel');
+        } else if (cancelWaitBtn) {
+            openModal(cancelWaitBtn, 'cancel-wait');
         }
     });
 
@@ -47,42 +53,43 @@ document.addEventListener('DOMContentLoaded', function () {
             confirmReserveBtn.style.display = 'inline-block';
             confirmReserveWaitBtn.style.display = 'none';
             confirmCancelBtn.style.display = 'none';
+            confirmCancelWaitBtn.style.display = 'none';
         } else if (actionType === 'reserve-wait') {
             confirmReserveBtn.style.display = 'none';
             confirmReserveWaitBtn.style.display = 'inline-block';
             confirmCancelBtn.style.display = 'none';
+            confirmCancelWaitBtn.style.display = 'none';
         } else if (actionType === 'cancel') {
             confirmReserveBtn.style.display = 'none';
             confirmReserveWaitBtn.style.display = 'none';
             confirmCancelBtn.style.display = 'inline-block';
+            confirmCancelWaitBtn.style.display = 'none';
+        } else if (actionType === 'cancel-wait') {
+            confirmReserveBtn.style.display = 'none';
+            confirmReserveWaitBtn.style.display = 'none';
+            confirmCancelBtn.style.display = 'none';
+            confirmCancelWaitBtn.style.display = 'inline-block';
         }
     }
 
-    // 예약 버튼 클릭시
-    confirmReserveBtn.addEventListener('click', function () {
+    function handleReservation(isWait = false) {
         const classId = modalClassId.value;
-        fetch(`/reservation/add?classId=${classId}`, {
-            method: 'POST'
-        })
+        const url = `/reservation/add?classId=${classId}${isWait ? '&wait=true' : ''}`;
+
+        fetch(url, {method: 'POST'})
             .then(response => response.json())
             .then(data => {
-                if (data.result === 'success') {
-                    Swal.fire({
-                        title: '예약 완료',
-                        text: '예약이 확정되었습니다!',
-                        icon: 'success',
-                        confirmButtonText: '확인'
-                    }).then(() => {
-                        location.reload();
-                    });
-                } else {
-                    Swal.fire({
-                        title: '예약 실패',
-                        text: '예약에 실패했습니다. 다시 시도해주세요.',
-                        icon: 'error',
-                        confirmButtonText: '확인'
-                    });
-                }
+                const isSuccess = data.result === 'success';
+                Swal.fire({
+                    title: isSuccess ? (isWait ? '대기 예약 완료' : '예약 완료') : (isWait ? '대기 예약 실패' : '예약 실패'),
+                    text: isSuccess
+                        ? (isWait ? '대기 예약이 확정되었습니다!' : '예약이 확정되었습니다!')
+                        : (isWait ? '대기 예약에 실패했습니다. 다시 시도해주세요.' : '예약에 실패했습니다. 다시 시도해주세요.'),
+                    icon: isSuccess ? 'success' : 'error',
+                    confirmButtonText: '확인'
+                }).then(() => {
+                    if (isSuccess) location.reload();
+                });
             })
             .catch(error => {
                 console.error('에러 발생:', error);
@@ -93,71 +100,26 @@ document.addEventListener('DOMContentLoaded', function () {
                     confirmButtonText: '확인'
                 });
             });
-    });
+    }
 
-    // 대기예약 버튼 클릭시
-    confirmReserveWaitBtn.addEventListener('click', function () {
-        const classId = modalClassId.value;
-        fetch(`/reservation/wait-add?classId=${classId}`, {
-            method: 'POST'
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.result === 'success') {
-                    Swal.fire({
-                        title: '대기 예약 완료',
-                        text: '대기 예약이 확정되었습니다!',
-                        icon: 'success',
-                        confirmButtonText: '확인'
-                    }).then(() => {
-                        location.reload();
-                    });
-                } else {
-                    Swal.fire({
-                        title: '대기 예약 실패',
-                        text: '대기 예약에 실패했습니다. 다시 시도해주세요.',
-                        icon: 'error',
-                        confirmButtonText: '확인'
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('에러 발생:', error);
-                Swal.fire({
-                    title: '서버 오류',
-                    text: '서버 오류가 발생했습니다.',
-                    icon: 'error',
-                    confirmButtonText: '확인'
-                });
-            });
-    });
-
-    // 취소 버튼 클릭시
-    confirmCancelBtn.addEventListener('click', function () {
+    function handleCancelReservation(isWait = false) {
         const reservationId = modalReservationId.value;
+        const url = `/reservation/cancel?reservationId=${reservationId}${isWait ? '&wait=true' : ''}`;
 
-        fetch(`/reservation/cancel?reservationId=${reservationId}`, {
-            method: 'POST'
-        })
+        fetch(url, {method: 'POST'})
             .then(response => response.json())
             .then(data => {
-                if (data.result === 'success') {
-                    Swal.fire({
-                        title: '예약 취소 완료',
-                        text: '예약이 취소되었습니다!',
-                        icon: 'success',
-                        confirmButtonText: '확인'
-                    }).then(() => {
-                        location.reload();
-                    });
-                } else {
-                    Swal.fire({
-                        title: '취소 실패',
-                        text: '취소에 실패했습니다. 다시 시도해주세요.',
-                        icon: 'error',
-                        confirmButtonText: '확인'
-                    });
-                }
+                const isSuccess = data.result === 'success';
+                Swal.fire({
+                    title: isSuccess ? (isWait ? '대기 예약 취소 완료' : '예약 취소 완료') : (isWait ? '대기 예약 취소 실패' : '예약 취소 실패'),
+                    text: isSuccess
+                        ? (isWait ? '대기 예약 취소가 확정되었습니다!' : '예약이 취소되었습니다!')
+                        : (isWait ? '대기 예약 취소에 실패했습니다. 다시 시도해주세요.' : '예약 취소에 실패했습니다. 다시 시도해주세요.'),
+                    icon: isSuccess ? 'success' : 'error',
+                    confirmButtonText: '확인'
+                }).then(() => {
+                    if (isSuccess) location.reload();
+                });
             })
             .catch(error => {
                 console.error('에러 발생:', error);
@@ -168,7 +130,58 @@ document.addEventListener('DOMContentLoaded', function () {
                     confirmButtonText: '확인'
                 });
             });
-    });
+    }
+
+    // 예약 버튼 클릭
+    confirmReserveBtn.addEventListener('click', () => handleReservation(false));
+
+    // 대기예약 버튼 클릭
+    confirmReserveWaitBtn.addEventListener('click', () => handleReservation(true));
+
+    // 예약 취소 버튼 클릭
+    confirmCancelBtn.addEventListener('click', () => handleCancelReservation(false));
+
+    // 대기예약 취소 버튼 클릭
+    confirmCancelWaitBtn.addEventListener('click', () => handleCancelReservation(true));
+
+
+    /*    // 취소 버튼 클릭시
+        confirmCancelBtn.addEventListener('click', function () {
+            const reservationId = modalReservationId.value;
+
+            fetch(`/reservation/cancel?reservationId=${reservationId}`, {
+                method: 'POST'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.result === 'success') {
+                        Swal.fire({
+                            title: '예약 취소 완료',
+                            text: '예약이 취소되었습니다!',
+                            icon: 'success',
+                            confirmButtonText: '확인'
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            title: '취소 실패',
+                            text: '취소에 실패했습니다. 다시 시도해주세요.',
+                            icon: 'error',
+                            confirmButtonText: '확인'
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('에러 발생:', error);
+                    Swal.fire({
+                        title: '서버 오류',
+                        text: '서버 오류가 발생했습니다.',
+                        icon: 'error',
+                        confirmButtonText: '확인'
+                    });
+                });
+        });*/
 });
 
 let offset = 0;

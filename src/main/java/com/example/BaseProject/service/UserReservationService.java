@@ -37,8 +37,8 @@ public class UserReservationService {
     @Autowired
     private ApplicationContext context;
 
-    // 수업 예약
-    public int reserveClass(int userId, int classId) throws Exception {
+    // 수업 예약 new
+    public int reserveClass(int userId, int classId, boolean isWait) throws Exception {
         UserReservationDto reservation = new UserReservationDto();
         reservation.setUser_id(userId);
         reservation.setClass_id(classId);
@@ -46,36 +46,21 @@ public class UserReservationService {
         int result = userReservationDao.insert(reservation);
         if (result > 0) {
             int reservationId = reservation.getId();
-            String status = "reservate";
-            context.getBean(EmailAsyncService.class).triggerEmailAsync(reservationId, status);
-        }
-        return result;
-    }
-
-    // 수업 대기 예약
-    public int reserveWaitClass(int userId, int classId) throws Exception {
-        UserReservationDto reservation = new UserReservationDto();
-        reservation.setUser_id(userId);
-        reservation.setClass_id(classId);
-
-        int result = userReservationDao.insert(reservation);
-        if (result > 0) {
-            int reservationId = reservation.getId();
-            String status = "reservate-wait";
+            String status = isWait ? "reserve-wait" : "reserve";
             context.getBean(EmailAsyncService.class).triggerEmailAsync(reservationId, status);
         }
         return result;
     }
 
     // 수업 예약 취소
-    public int cancelReservation(int userId, int reservationId) throws Exception {
+    public int cancelReservation(int userId, int reservationId, boolean isWait) throws Exception {
         UserReservationDto reservation = new UserReservationDto();
         reservation.setUser_id(userId);
         reservation.setClass_id(reservationId);
 
         int result = userReservationDao.update(userId, reservationId);
         if (result > 0) {
-            String status = "cancel";
+            String status = isWait ? "cancel-wait" : "cancel";
             context.getBean(EmailAsyncService.class).triggerEmailAsync(reservationId, status);
         }
         return result;

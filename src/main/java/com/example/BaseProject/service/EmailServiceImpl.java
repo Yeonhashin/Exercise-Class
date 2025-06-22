@@ -30,7 +30,6 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void sendHtmlEmailWithTemplate(Integer reservationId, String status) {
-        System.out.println("sendEmail start - " + Thread.currentThread().getName());
         UserReservationDto reservedClass = null;
         try {
             reservedClass = userReservationDao.selectClassById(reservationId);
@@ -52,12 +51,14 @@ public class EmailServiceImpl implements EmailService {
         context.setVariable("endTime", reservedClass.getClass_end_time());
 
         String htmlContent = null;
-        if (status == "reservate") {
+        if (status == "reserve") {
             htmlContent = templateEngine.process("reservation-email", context); // reservation-email.html
+        } else if (status == "reserve-wait") {
+            htmlContent = templateEngine.process("wait-reservation-email", context); // wait-reservation-email.html
         } else if (status == "cancel") {
             htmlContent = templateEngine.process("cancel-reservation-email", context); // cancel-reservation-email.html
-        } else if (status == "reservate-wait") {
-            htmlContent = templateEngine.process("wait-reservation-email", context); // wait-reservation-email.html
+        } else if (status == "cancel-wait") {
+            htmlContent = templateEngine.process("cancel-wait-reservation-email", context); // cancel-wait-reservation-email.html
         }
 
         try {
@@ -67,12 +68,14 @@ public class EmailServiceImpl implements EmailService {
 
             helper.setTo(reservedClass.getEmail());
 
-            if (status == "reservate") {
+            if (status == "reserve") {
                 helper.setSubject("[필라테스 예약 완료 안내]");
+            } else if (status == "reserve-wait") {
+                helper.setSubject("[필라테스 대기 예약 안내]");
             } else if (status == "cancel") {
                 helper.setSubject("[필라테스 예약 취소 안내]");
-            } else if (status == "reservate-wait") {
-                helper.setSubject("[필라테스 대기 예약 안내]");
+            } else if (status == "cancel-wait") {
+                helper.setSubject("[필라테스 대기 예약 취소 안내]");
             }
             helper.setText(htmlContent, true); // HTML로 설정
 
