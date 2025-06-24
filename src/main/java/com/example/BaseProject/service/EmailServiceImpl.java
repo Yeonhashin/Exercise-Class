@@ -52,13 +52,13 @@ public class EmailServiceImpl implements EmailService {
 
         String htmlContent = null;
         if (status == "reserve") {
-            htmlContent = templateEngine.process("reservation-email", context); // reservation-email.html
+            htmlContent = templateEngine.process("email/reservation-email", context); // reservation-email.html
         } else if (status == "reserve-wait") {
-            htmlContent = templateEngine.process("wait-reservation-email", context); // wait-reservation-email.html
+            htmlContent = templateEngine.process("email/wait-reservation-email", context); // wait-reservation-email.html
         } else if (status == "cancel") {
-            htmlContent = templateEngine.process("cancel-reservation-email", context); // cancel-reservation-email.html
+            htmlContent = templateEngine.process("email/cancel-reservation-email", context); // cancel-reservation-email.html
         } else if (status == "cancel-wait") {
-            htmlContent = templateEngine.process("cancel-wait-reservation-email", context); // cancel-wait-reservation-email.html
+            htmlContent = templateEngine.process("email/cancel-wait-reservation-email", context); // cancel-wait-reservation-email.html
         }
 
         try {

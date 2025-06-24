@@ -43,8 +43,21 @@
         <property name="characterEncoding" value="UTF-8"/>
     </bean>
 
-    <bean id="templateEngine" class="org.thymeleaf.spring5.SpringTemplateEngine">
-        <property name="templateResolver" ref="templateResolver"/>
+    <bean id="emailTemplateResolver" class="org.thymeleaf.templateresolver.ClassLoaderTemplateResolver">
+        <property name="prefix" value="email/"/>
+        <property name="suffix" value=".html"/>
+        <property name="templateMode" value="HTML"/>
+        <property name="characterEncoding" value="UTF-8"/>
+        <property name="order" value="2"/>
+    </bean>
+
+    <bean id="templateEngine" class="org.thymeleaf.TemplateEngine">
+        <property name="templateResolvers">
+            <set>
+                <ref bean="templateResolver"/>         <!-- 웹용 -->
+                <ref bean="emailTemplateResolver"/>    <!-- 이메일용 -->
+            </set>
+        </property>
     </bean>
 
     <context:property-placeholder location="classpath:mail.properties"/>

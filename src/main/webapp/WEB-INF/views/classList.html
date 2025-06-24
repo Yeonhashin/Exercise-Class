@@ -74,7 +74,6 @@
         </tbody>
     </table>
 
-
     <form id="searchForm" th:action="@{/class/list}" method="get">
         <div>
             <p><strong>날짜/수업으로 검색하여 예약하기</strong></p>
@@ -124,7 +123,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="classmap : ${entry.value}">
+                    <tr th:each="classmap : ${entry.value}" th:id="'class-' + ${classmap.id}">
                         <td>
                             <span th:text="${classmap.class_date}"></span> <br>
                             <span th:text="${classmap.class_start_time}"></span> -
@@ -157,9 +156,9 @@
             </div>
         </div>
     </form>
-    <div class="text-center mt-3" th:if="${hasMore}">
-        <button id="loadMoreBtn" class="btn btn-primary" type="button">레슨이력 더보기</button>
-    </div>
+    <!--    <div class="text-center mt-3" th:if="${hasMore}">-->
+    <!--        <button id="loadMoreBtn" class="btn btn-primary" type="button">레슨이력 더보기</button>-->
+    <!--    </div>-->
 </div>
 <div th:replace="layout/reservationModal :: reservationModal"></div>
 
@@ -168,7 +167,7 @@
 <script src="/resources/js/class-date-selecter.js"></script>
 <script>
     flatpickr("#searchClassDate", {
-        dateFormat: "Y-m-d", // yyyy-mm-dd
+        dateFormat: "Y-m-d",
     });
 </script>
 

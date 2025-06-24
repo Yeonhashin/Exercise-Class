@@ -50,7 +50,7 @@ public class UserClassController {
             @RequestParam(value = "searchClassName", required = false) String searchClassName,
             @RequestParam(value = "searchInstructor", required = false) String searchInstructor,
             @RequestParam(value = "offset", defaultValue = "0") int offset,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "3") int size,
             @RequestParam(defaultValue = "5") int days,
             Model model, HttpSession session) {
 
