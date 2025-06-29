@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pilates K :: Home</title>
+    <!-- Bootstrap 5 CSS -->
+    <link rel="stylesheet" href="/resources/css/common.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .form-floating > label {
+            left: 1rem;
+        }
+
+        .form-check-input:checked {
+            background-color: #3b71ca;
+            border-color: #3b71ca;
+        }
+
+        .btn-primary {
+            background-color: #3b71ca;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #2f5db8;
+        }
+
+        .social-icons i {
+            font-size: 24px;
+            margin: 0 10px;
+            color: #333;
+        }
+
+        .social-icons i:hover {
+            color: #3b71ca;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="col-md-4">
+        <h3 class="text-center mb-4">Sign in</h3>
+        <div class="alert alert-danger mt-3" th:if="${msg != null}">
+            <i class="fa fa-exclamation-circle me-1"></i>
+            <span th:text="${msg}"></span>
+        </div>
+        <form th:action="@{/login/login}" method="post" onsubmit="return formCheck(this);">
+            <div class="form-floating mb-3">
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email address" th:value="${email != null ? email : rememberEmail}" th:classappend="${error} ? ' is-invalid'"  required>
+                <label for="email">Email address</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password" value="" th:classappend="${error} ? ' is-invalid'"  required>
+                <label for="password">Password</label>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="on" id="rememberMe" name="rememberId" th:checked="${rememberEmail != ''}">
+                    <label class="form-check-label" for="rememberMe">Remember me</label>
+                </div>
+                <a href="#" class="text-decoration-none">Forgot password?</a>
+            </div>
+
+            <div class="d-grid mb-3">
+                <button type="submit" class="btn btn-primary btn-block">SIGN IN</button>
+            </div>
+
+            <div class="text-center">
+                <p>Not a member? <a href="/login/register" class="text-decoration-none">Register</a></p>
+                <p>or sign up with:</p>
+                <div class="social-icons">
+                    <i class="fab fa-facebook-f"></i>
+                    <i class="fab fa-google"></i>
+                    <i class="fab fa-twitter"></i>
+                    <i class="fab fa-github"></i>
+                </div>
+            </div>
+            <input type="hidden" name="toURL" value="${param.toURL}">
+        </form>
+    </div>
+</div>
+
+<!-- Bootstrap 5 JS 및 Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+<script>
+    function formCheck(frm) {
+        let msg = '';
+        if (frm.email.value.length == 0) {
+            setMessage('이메일을 입력해주세요.', frm.email);
+            return false;
+        }
+        if (frm.password.value.length == 0) {
+            setMessage('패스워드를 입력해주세요.', frm.password);
+            return false;
+        }
+        return true;
+    }
+
+    function setMessage(msg, element) {
+        document.getElementById("msg").innerHTML = msg;
+        if (element) {
+            element.select();
+        }
+    }
+</script>
+</body>
+</html>

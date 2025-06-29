@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>수업 대기 예약 취소 완료</title>
+</head>
+<body>
+<h2 th:text="${userName} + '님, 대기 예약이 취소되었습니다!'"></h2>
+<p><strong>수업명:</strong> <span th:text="${className}"></span></p>
+<p><strong>수업일시:</strong> <span th:text="${date}"></span></p>
+<p><strong>수업시간:</strong> <span th:text="${startTime} + ' - ' + ${endTime}"></span></p>
+<p>감사합니다. 좋은 하루 되세요!</p>
+</body>
+</html>

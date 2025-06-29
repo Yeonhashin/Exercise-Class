@@ -1,0 +1,140 @@
+/* 슬라이드 쇼 */
+.carousel-item img {
+    height: 400px;
+    object-fit: contain;
+    margin: 100px;
+}
+
+.carousel-caption {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.carousel-caption h5 {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.carousel-caption p {
+    font-size: 1.25rem;
+}
+
+/* 컨텐츠 섹션 */
+.container h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.container p {
+    font-size: 1rem;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+table {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #f4ebe6;
+    font-weight: bold;
+}
+
+/* 행(tr) 호버 효과 */
+tr:hover {
+    background-color: #f0f0f0; /* 연한 회색 */
+    transition: background-color 0.3s ease;
+}
+
+.lesson-title {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.delete-btn {
+    background-color: #888;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.delete-btn:hover {
+    background-color: #555;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 40px;
+    margin-bottom: 15px;
+}
+
+.button-container button {
+    padding: 8px 15px;
+    border: 1px solid black;
+    background: white;
+    cursor: pointer;
+}
+
+.button-container button:hover {
+    background: #ddd;
+}
+
+.form-row {
+    display: flex;
+    align-items: center; /* 수직 가운데 정렬 */
+    gap: 16px; /* 수업날짜랑 수업명 사이 간격 */
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.form-lavel {
+    margin-bottom: 3px;
+}
+
+.flatpickr-input,
+select {
+    width: 200px;
+    padding: 8px 12px;
+    font-size: 14px; /* ✅ 둘 다 14px 통일 */
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    color: #6b7280; /* 기본 텍스트 색 (input이랑 맞춤) */
+}
+
+select {
+    width: 200px;
+    padding: 8px 12px;
+    font-size: 14px; /* ✅ 둘 다 14px 통일 */
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    color: #6b7280; /* 기본 텍스트 색 (input이랑 맞춤) */
+}
+
+
+
+
+
+
+
+
+
+
+

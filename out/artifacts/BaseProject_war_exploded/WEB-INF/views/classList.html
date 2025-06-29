@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pilates K :: Schedule</title>
+    <!-- Bootstrap 5 CSS -->
+    <link rel="stylesheet" href="/resources/css/common.css">
+    <link rel="stylesheet" href="/resources/css/schedule.css">
+    <link rel="stylesheet" href="/resources/css/home.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- SweetAlert2 -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+    <!-- Flatpickr -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
+</head>
+<body>
+<!-- Bootstrap 5 JS 및 Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+<div th:replace="layout/header"></div>
+<div class="container mt-2">
+
+    <div class="title">레슨 찾기</div>
+    <p><strong>타임테이블로 예약하기</strong></p>
+
+    <div class="table-navigation">
+        <button id="prev-btn">&lt; 이전 5일 보기</button>
+        <button id="next-btn">다음 5일 보기 &gt;</button>
+    </div>
+
+    <table class="schedule-table" id="schedule-table">
+        <thead>
+        <tr>
+            <th>시작시간</th>
+            <th th:each="date : ${formattedDates}" th:text="${date}"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="time : ${times}">
+            <td th:text="${time}"></td>
+            <td th:each="date : ${formattedDates}">
+            <span th:each="class : ${scheduleMap.get(time).get(date)}">
+                <div th:text="${class.class_name}" class="fw-bold"></div>
+                <div th:text="'잔여 : ' + ${class.vacancy} + '명'"></div>
+                <div th:if="${class.past}" class="unavailable"><i
+                        class="bi bi-exclamation-circle me-1"></i> 예약 불가</div>
+                <div th:if="${!class.past}" th:replace="layout/reservationButtons :: reservationButtons(
+                        ${class.id},
+                        ${class.class_type_name},
+                        ${class.class_name},
+                        ${class.instructor_name},
+                        ${class.class_start_time},
+                        ${class.class_end_time},
+                        ${class.class_date},
+                        ${class.reservation_id},
+                        ${class.isReserved},
+                        ${class.past},
+                        ${class.has_waiting}
+                     )"></div>
+            </span>
+                <span class="no-class"
+                      th:if="${scheduleMap.get(time) == null or scheduleMap.get(time).get(date) == null or #lists.isEmpty(scheduleMap.get(time).get(date))}">
+                    수업 없음
+                </span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <form id="searchForm" th:action="@{/class/list}" method="get">
+        <div>
+            <p><strong>날짜/수업으로 검색하여 예약하기</strong></p>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label" for="searchClassDate">수업 날짜</label>
+                <input type="text" id="searchClassDate" name="searchClassDate" class="flatpickr-input"
+                       placeholder="-- 날짜를 선택하세요 --"
+                       th:value="${selectedDate}">
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="className">수업명</label>
+                <select id="className" name="searchClassName">
+                    <option class="placeholder-option_th" value="">-- 수업을 선택하세요 --</option>
+                    <option class="placeholder-option_tk" th:each="c : ${classNames}"
+                            th:value="${c}"
+                            th:text="${c}"
+                            th:selected="${c == selectedClassName}">
+                    </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="instructor">강사명</label>
+                <select id="instructor" name="searchInstructor">
+                    <option class="placeholder-option_th" value="">-- 강사를 선택하세요 --</option>
+                    <option class="placeholder-option_tk" th:each="c : ${instructors}"
+                            th:value="${c}"
+                            th:text="${c}"
+                            th:selected="${c == selectedInstructor}">
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div class="button-container mt-2">
+            <button type="submit">해당 조건으로 검색하기</button>
+            <button type="button" id="resetSearchBtn">검색 초기화</button>
+        </div>
+
+        <div id="searchResultTables">
+            <div th:each="entry : ${groupedClassMap}">
+                <table class="search-table" th:attr="data-date=${entry.key}">
+                    <thead>
+                    <tr>
+                        <th class="entry-header" colspan="4" th:text="${entry.key}"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="classmap : ${entry.value}" th:id="'class-' + ${classmap.id}">
+                        <td>
+                            <span th:text="${classmap.class_date}"></span> <br>
+                            <span th:text="${classmap.class_start_time}"></span> -
+                            <span th:text="${classmap.class_end_time}"></span> <br>
+                            <span th:text="${classmap.instructor_name}"></span> <br>
+                            <span th:text="${classmap.class_point_name}"></span>
+                        </td>
+                        <td class="lesson-title" th:text="${classmap.class_name}"></td>
+                        <td th:text="${classmap.class_type_name}"></td>
+                        <td>
+                            <div th:replace="layout/reservationButtons :: reservationButtons(
+                                ${classmap.id},
+                                ${classmap.class_type_name},
+                                ${classmap.class_name},
+                                ${classmap.instructor_name},
+                                ${classmap.class_start_time},
+                                ${classmap.class_end_time},
+                                ${classmap.class_date},
+                                ${classmap.reservation_id},
+                                ${classmap.isReserved},
+                                false,
+                                ${classmap.has_waiting}
+                            )">
+                            </div>
+                            <div th:text="'잔여 : ' + ${classmap.vacancy} + '명'"></div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+    <!--    <div class="text-center mt-3" th:if="${hasMore}">-->
+    <!--        <button id="loadMoreBtn" class="btn btn-primary" type="button">레슨이력 더보기</button>-->
+    <!--    </div>-->
+</div>
+<div th:replace="layout/reservationModal :: reservationModal"></div>
+
+<div th:replace="layout/footer"></div>
+<script src="/resources/js/class-reservate.js"></script>
+<script src="/resources/js/class-date-selecter.js"></script>
+<script>
+    flatpickr("#searchClassDate", {
+        dateFormat: "Y-m-d",
+    });
+</script>
+
+<script th:if="${searchExecuted}">
+    window.addEventListener('load', function () {
+        const result = document.getElementById("searchForm");
+        if (result) {
+            result.scrollIntoView({behavior: "smooth"});
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+/* 스케쥴 리스트 */
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 40px;
+    margin-bottom: 30px;
+}
+
+.button-container button {
+    padding: 8px 15px;
+    border: 1px solid black;
+    background: white;
+    cursor: pointer;
+}
+
+.table-navigation {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.table-navigation button {
+    padding: 10px 15px;
+    margin: 5px;
+    border: none;
+    background-color: #007BFF;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.table-navigation button:hover {
+    background-color: #0056b3;
+}
+
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.schedule-table th, .schedule-table td {
+    border: 1px solid #ddd;
+    padding: 15px;
+    text-align: center;
+
+    height: 90px; /* 원하는 높이 지정 */
+    position: relative;
+    vertical-align: middle;
+    overflow: hidden; /* 내용 넘치면 숨김 */
+}
+
+.schedule-table th {
+    background-color: #f0f0f0;
+}
+
+/* 표 테이블 기본 스타일 조금 깔끔하게 */
+.search-table {
+    table-layout: fixed; /* 컬럼 넓이 고정 */
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 24px;
+}
+
+.search-table td, .search-table th {
+    border: 1px solid #e5e7eb;
+    padding: 10px;
+    word-wrap: break-word;
+}
+
+.entry-header {
+    background-color: #f3f4f6;
+    width: 100%;
+    font-weight: bold;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.lesson {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.reserve-btn, .cancel-btn, .waitlist-btn, .reserved {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.reserve-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.reserve-btn:hover {
+    background-color: #218838;
+}
+
+.cancel-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.cancel-btn:hover {
+    background-color: #c82333;
+}
+
+.waitlist-btn {
+    background-color: #ffc107;
+    color: black;
+}
+
+.waitlist-btn:hover {
+    background-color: #e0a800;
+}
+
+.reserved {
+    background-color: #6c757d;
+    color: white;
+}
+
+.table-date-header {
+    background-color: #f0f0f0;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+}
