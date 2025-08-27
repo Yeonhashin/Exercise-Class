@@ -152,6 +152,7 @@
                         </td>
                     </tr>
                     </tbody>
+                    <div id="scrollSentinel"></div>
                 </table>
             </div>
         </div>
@@ -165,6 +166,8 @@
 <div th:replace="layout/footer"></div>
 <script src="/resources/js/class-reservate.js"></script>
 <script src="/resources/js/class-date-selecter.js"></script>
+<script src="/resources/js/scroll.js" defer></script>
+
 <script>
     flatpickr("#searchClassDate", {
         dateFormat: "Y-m-d",

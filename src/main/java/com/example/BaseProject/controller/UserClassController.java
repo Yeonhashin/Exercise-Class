@@ -50,7 +50,7 @@ public class UserClassController {
             @RequestParam(value = "searchClassName", required = false) String searchClassName,
             @RequestParam(value = "searchInstructor", required = false) String searchInstructor,
             @RequestParam(value = "offset", defaultValue = "0") int offset,
-            @RequestParam(defaultValue = "3") int size,
+            @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "5") int days,
             Model model, HttpSession session) {
 
@@ -104,6 +104,7 @@ public class UserClassController {
                 .collect(Collectors.groupingBy(ClassInfoDto::getClass_date, LinkedHashMap::new, Collectors.toList()));
 
         model.addAttribute("groupedClassMap", grouped);
+        System.out.println("grouped = " + grouped);
         model.addAttribute("hasMore", userClassService.hasMore(offset + size, date, name, instructor));
         model.addAttribute("searchExecuted", isSearchPerformed(date, name, instructor));
         model.addAttribute("selectedDate", date);

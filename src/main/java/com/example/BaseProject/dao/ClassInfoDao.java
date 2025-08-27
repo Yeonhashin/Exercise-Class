@@ -57,4 +57,19 @@ public class ClassInfoDao {
     public int updateVacancyMinus(Integer classId) throws Exception {
         return session.update(namespace + "updateVacancyMinus", classId);
     }
+
+
+    public int countClassInfo() {
+        return session.selectOne(namespace + "countClassInfo");
+    }
+
+    public void insertClassInfo(ClassInfoDto classInfoDto) {
+        session.insert(namespace + "insertClassInfo", classInfoDto);
+    }
+
+    public List<ClassInfoDto> getClassByDate(LocalDate classDate) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("class_date", classDate);
+        return session.selectList(namespace + "getClassByDate", map);
+    }
 }
