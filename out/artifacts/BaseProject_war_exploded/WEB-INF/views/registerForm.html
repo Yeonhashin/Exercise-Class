@@ -42,24 +42,29 @@
 <div class="container d-flex justify-content-center align-items-center min-vh-100">
     <div class="col-md-4">
         <h3 class="text-center mb-4">Sign Up</h3>
-\        <form th:action="@{/login/register}" method="post" onsubmit="return formCheck(this);">
+        <form th:action="@{/login/register}" method="post" onsubmit="return formCheck(this);">
+            <div id="msg" style="color:red; font-size:0.9em; margin-bottom:10px;"></div>
+
             <div class="form-floating mb-3">
-                <input type="email" class="form-control" id="email" name="email" placeholder="Email address" value="" required>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email address" value=""
+                       required>
                 <label for="email">Email address</label>
             </div>
 
             <div class="form-floating mb-3">
-                <input type="password" class="form-control" id="name" name="name" placeholder="name" value="" required>
+                <input type="text" class="form-control" id="name" name="name" placeholder="name" value="" required>
                 <label for="name">Name</label>
             </div>
 
             <div class="form-floating mb-3">
-                <input type="password" class="form-control" id="password" name="password" placeholder="Password" value="" required>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password"
+                       value="" required>
                 <label for="password">Password</label>
             </div>
 
             <div class="form-floating mb-3">
-                <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="confirm_password" value="" required>
+                <input type="password" class="form-control" id="confirm_password" name="confirm_password"
+                       placeholder="confirm_password" value="" required>
                 <label for="confirm_password">Password Again</label>
             </div>
 
@@ -86,7 +91,7 @@
             return false;
         }
 
-        if (frm.password.value.length != frm.confirm_password.value.length) {
+        if (frm.password.value !== frm.confirm_password.value) {
             setMessage('패스워드가 일치하지 않습니다.', frm.confirm_password);
             return false;
         }

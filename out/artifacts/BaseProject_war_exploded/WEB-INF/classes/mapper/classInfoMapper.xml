@@ -178,15 +178,20 @@
         LIMIT 1 OFFSET #{offset}
     </select>
 
-    <!--    <update id="updateVacancyPlus" parameterType="classId">-->
-    <!--        UPDATE class_info-->
-    <!--        SET reservation_cnt = reservation_cnt + 1-->
-    <!--        WHERE id = #{classId}-->
-    <!--    </update>-->
+    <insert id="insertClassInfo" parameterType="map">
+        INSERT INTO class_info (class_type_id, class_time_id, class_point_id, instructor_id, class_date, maximum)
+        VALUES (#{class_type_id}, #{class_time_id}, #{class_point_id}, #{instructor_id}, #{class_date}, #{maximum})
+    </insert>
 
-    <!--    <update id="updateVacancyMinus" parameterType="classId">-->
-    <!--        UPDATE class_info-->
-    <!--        SET reservation_cnt = reservation_cnt - 1-->
-    <!--        WHERE id = #{classId}-->
-    <!--    </update>-->
+    <select id="countClassInfo" resultType="int">
+        SELECT COUNT(*)
+        FROM class_info
+    </select>
+
+    <select id="getClassByDate" resultType="com.example.BaseProject.domain.ClassInfoDto"
+            parameterType="java.time.LocalDate">
+        SELECT *
+        FROM class_info
+        WHERE class_date = #{class_date}
+    </select>
 </mapper>

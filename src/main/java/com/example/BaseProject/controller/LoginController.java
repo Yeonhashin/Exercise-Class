@@ -5,8 +5,10 @@ import com.example.BaseProject.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -55,14 +57,12 @@ public class LoginController {
         map.put("email", email);
         map.put("password", password);
         UserDto user = loginService.selectUser(map);
-        if(user == null){
+        if (user == null) {
             m.addAttribute("msg", "이메일 또는 비밀번호가 올바르지 않습니다.");
             m.addAttribute("email", email);
             m.addAttribute("error", true);
             return "loginForm";
         }
-
-//        loginService.selectUser(map);
 
         HttpSession session = request.getSession();
         session.setAttribute("email", user.getEmail());
@@ -85,7 +85,7 @@ public class LoginController {
             toURL = "/";
         }
 
-        return "redirect:"+toURL;
+        return "redirect:" + toURL;
     }
 
     @GetMapping("/register")
@@ -94,16 +94,21 @@ public class LoginController {
     }
 
     @PostMapping("/register")
-    public String register(String email, String password, String name, Model m, HttpServletRequest request) throws Exception {
+    public String register(String email, String password, String name, Model m, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map map = new HashMap();
         map.put("email", email);
         map.put("password", password);
         map.put("name", name);
         int insertUser = loginService.insertUser(map);
-        if(insertUser == 0){
+        if (insertUser == 0) {
             String msg = URLEncoder.encode("회원가입에 실패하였습니다.", "utf-8");
-            return "redirect:/login/register?msg="+msg;
+            return "redirect:/login/register?msg=" + msg;
         }
+
+        Cookie cookie = new Cookie("rememberEmail", "");
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        response.addCookie(cookie);
 
         return "redirect:/";
     }
