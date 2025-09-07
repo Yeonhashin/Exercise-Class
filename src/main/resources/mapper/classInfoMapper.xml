@@ -151,7 +151,7 @@
         LIMIT #{size} OFFSET #{offset}
     </select>
 
-    <!--더보기 유무 판단 쿼리-->
+    <!---->
     <select id="hasMore" parameterType="map" resultType="int">
         SELECT 1
         from class_info as ClassInfo

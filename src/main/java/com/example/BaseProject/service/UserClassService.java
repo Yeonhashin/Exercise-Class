@@ -55,7 +55,7 @@ public class UserClassService {
         return classList;
     }
 
-    // hasMore :: 더보기 버튼 표시용
+    // hasMore ::
     public boolean hasMore(int offset, String searchClassDate, String searchClassName, String searchInstructor) throws Exception {
         return classInfoDao.hasMore(offset, searchClassDate, searchClassName, searchInstructor);
     }

@@ -69,7 +69,7 @@ public class UserClassController {
         return "classList";
     }
 
-    // getClassListLoadMore :: 더보기 버튼 클릭시 수업 일람 표시
+    // getClassListLoadMore ::
     @GetMapping("/list/more")
     @ResponseBody
     public Map<String, Object> getClassListLoadMore(
@@ -77,7 +77,7 @@ public class UserClassController {
             @RequestParam(value = "searchClassName", required = false) String searchClassName,
             @RequestParam(value = "searchInstructor", required = false) String searchInstructor,
             @RequestParam int offset,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "20") int size,
             HttpSession session) throws Exception {
 
         int userId = getUserIdFromSession(session);

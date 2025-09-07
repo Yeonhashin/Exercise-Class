@@ -32,7 +32,6 @@ function loadMore() {
         searchClassName: document.getElementById('className')?.value || '',
         searchInstructor: document.getElementById('instructor')?.value || ''
     });
-    console.log('loadMore!!!!!');
 
     fetch(`/class/list/more?${params.toString()}`)
         .then(response => {
@@ -74,6 +73,7 @@ function loadMore() {
                 classList.forEach(classmap => {
                     const isReserved = classmap.isReserved == 1;
                     const row = document.createElement('tr');
+                    row.id = 'class-' + classmap.id;
 
                     row.innerHTML = `
                         <td>
@@ -85,41 +85,46 @@ function loadMore() {
                         <td class="lesson-title">${classmap.class_name}</td>
                         <td>${classmap.class_type_name}</td>
                         <td>
-                            ${isReserved ? `
-                            <span class="text-reserved">
-                                <i class="bi bi-check-circle-fill me-1"></i> 예약중
-                            </span>
-                                <button type="button"
-                                    class="btn-cancel open-cancel-modal"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#reserveModal"
-                                    data-class-id="${classmap.id}"
-                                    data-class-type-name="${classmap.class_type_name}"
-                                    data-class-name="${classmap.class_name}"
-                                    data-class-instructor-name="${classmap.instructor_name}"
-                                    data-class-start-time="${classmap.class_start_time}"
-                                    data-class-end-time="${classmap.class_end_time}"
-                                    data-class-date="${classmap.class_date}"
-                                    data-reservate-id="${classmap.reservation_id}">
-                                    예약 취소
-                                </button>
+                             ${isReserved ? `
+                                <span class="text-reserved">
+                                    <i class="bi bi-check-circle-fill me-1"></i> 예약중
+                                </span>
+                                <div>
+                                    <button type="button"
+                                        class="btn-cancel open-cancel-modal"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#reserveModal"
+                                        data-class-id="${classmap.id}"
+                                        data-class-type-name="${classmap.class_type_name}"
+                                        data-class-name="${classmap.class_name}"
+                                        data-class-instructor-name="${classmap.instructor_name}"
+                                        data-class-start-time="${classmap.class_start_time}"
+                                        data-class-end-time="${classmap.class_end_time}"
+                                        data-class-date="${classmap.class_date}"
+                                        data-reservate-id="${classmap.reservation_id}">
+                                        예약 취소
+                                    </button>
+                                </div>
                             ` : `
-                                <button type="button"
-                                    class="btn-reserve mt-1 open-reserve-modal"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#reserveModal"
-                                    data-class-id="${classmap.id}"
-                                    data-class-type-name="${classmap.class_type_name}"
-                                    data-class-name="${classmap.class_name}"
-                                    data-class-instructor-name="${classmap.instructor_name}"
-                                    data-class-start-time="${classmap.class_start_time}"
-                                    data-class-end-time="${classmap.class_end_time}"
-                                    data-class-date="${classmap.class_date}">
-                                    예약하기
-                                </button>
+                                <div>
+                                    <button type="button"
+                                        class="btn-reserve mt-1 open-reserve-modal"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#reserveModal"
+                                        data-class-id="${classmap.id}"
+                                        data-class-type-name="${classmap.class_type_name}"
+                                        data-class-name="${classmap.class_name}"
+                                        data-class-instructor-name="${classmap.instructor_name}"
+                                        data-class-start-time="${classmap.class_start_time}"
+                                        data-class-end-time="${classmap.class_end_time}"
+                                        data-class-date="${classmap.class_date}">
+                                        예약하기
+                                    </button>
+                                </div>
                             `}
+                            <div>잔여 : ${classmap.vacancy}명</div>
                         </td>
-                    `;
+                        `;
                     tbody.appendChild(row);
                 });
             });

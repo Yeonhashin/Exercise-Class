@@ -41,43 +41,47 @@
 <body>
 <div class="container d-flex justify-content-center align-items-center min-vh-100">
     <div class="col-md-4">
-        <h3 class="text-center mb-4">Sign in</h3>
+        <h3 class="text-center mb-4">Mypage Login</h3>
         <div class="alert alert-danger mt-3" th:if="${msg != null}">
             <i class="fa fa-exclamation-circle me-1"></i>
             <span th:text="${msg}"></span>
         </div>
         <form th:action="@{/login/login}" method="post" onsubmit="return formCheck(this);">
             <div class="form-floating mb-3">
-                <input type="email" class="form-control" id="email" name="email" placeholder="Email address" th:value="${email != null ? email : rememberEmail}" th:classappend="${error} ? ' is-invalid'"  required>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email address"
+                       th:value="${email != null ? email : rememberEmail}" th:classappend="${error} ? ' is-invalid'"
+                       required>
                 <label for="email">Email address</label>
             </div>
 
             <div class="form-floating mb-3">
-                <input type="password" class="form-control" id="password" name="password" placeholder="Password" value="" th:classappend="${error} ? ' is-invalid'"  required>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password"
+                       value="" th:classappend="${error} ? ' is-invalid'" required>
                 <label for="password">Password</label>
             </div>
 
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="on" id="rememberMe" name="rememberId" th:checked="${rememberEmail != ''}">
-                    <label class="form-check-label" for="rememberMe">Remember me</label>
+                    <input class="form-check-input" type="checkbox" value="on" id="rememberMe" name="rememberId"
+                           th:checked="${rememberEmail != ''}">
+                    <label class="form-check-label" for="rememberMe">Email 기억하기</label>
                 </div>
-                <a href="#" class="text-decoration-none">Forgot password?</a>
+                <!--                <a href="#" class="text-decoration-none">Forgot password?</a>-->
             </div>
 
             <div class="d-grid mb-3">
-                <button type="submit" class="btn btn-primary btn-block">SIGN IN</button>
+                <button type="submit" class="btn btn-primary btn-block">로그인하기</button>
             </div>
 
             <div class="text-center">
-                <p>Not a member? <a href="/login/register" class="text-decoration-none">Register</a></p>
-                <p>or sign up with:</p>
-                <div class="social-icons">
-                    <i class="fab fa-facebook-f"></i>
-                    <i class="fab fa-google"></i>
-                    <i class="fab fa-twitter"></i>
-                    <i class="fab fa-github"></i>
-                </div>
+                <p>아직 아이디가 없다면? <a href="/login/register" class="text-decoration-none">회원가입하기</a></p>
+                <!--                <p>or sign up with:</p>-->
+                <!--                <div class="social-icons">-->
+                <!--                    <i class="fab fa-facebook-f"></i>-->
+                <!--                    <i class="fab fa-google"></i>-->
+                <!--                    <i class="fab fa-twitter"></i>-->
+                <!--                    <i class="fab fa-github"></i>-->
+                <!--                </div>-->
             </div>
             <input type="hidden" name="toURL" value="${param.toURL}">
         </form>

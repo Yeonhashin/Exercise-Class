@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           https://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           https://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/tx
+           https://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!-- ✅ DAO와 domain만 스캔 -->
+    <context:component-scan base-package="com.example.BaseProject.dao"/>
+    <context:component-scan base-package="com.example.BaseProject.domain"/>
+
+    <!-- ✅ 실제 MySQL 데이터소스 -->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3305/post?useUnicode=true&amp;characterEncoding=utf8"/>
+        <property name="username" value="root"/>
+        <property name="password" value="8699"/>
+    </bean>
+
+    <!-- 트랜잭션 매니저 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!-- MyBatis SqlSessionFactory -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="mapperLocations" value="classpath*:mapper/*.xml"/>
+        <!-- ✅ typeAliasesPackage 설정 (XML alias 문제 방지) -->
+        <property name="typeAliasesPackage" value="com.example.BaseProject.domain"/>
+    </bean>
+
+    <!-- MyBatis SqlSessionTemplate -->
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="sqlSessionFactory"/>
+    </bean>
+
+</beans>
