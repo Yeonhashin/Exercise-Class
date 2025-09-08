@@ -114,7 +114,7 @@
             <button type="button" id="resetSearchBtn">검색 초기화</button>
         </div>
 
-        <div id="searchResultTables">
+        <div id="searchResultTables" th:if="${!#lists.isEmpty(groupedClassMap)}">
             <div th:each="entry : ${groupedClassMap}">
                 <table class="search-table" th:attr="data-date=${entry.key}">
                     <thead>
@@ -156,6 +156,13 @@
                 </table>
             </div>
         </div>
+        <div th:if="${#maps.isEmpty(groupedClassMap)}" class="d-flex justify-content-center mt-4">
+            <div class="alert alert-secondary text-center shadow-sm" role="alert" style="max-width: 1000px;">
+                <i class="bi bi-search me-2"></i>
+                <span>일치하는 결과가 없습니다</span>
+            </div>
+        </div>
+
     </form>
     <!--    <div class="text-center mt-3" th:if="${hasMore}">-->
     <!--        <button id="loadMoreBtn" class="btn btn-primary" type="button">레슨이력 더보기</button>-->
@@ -171,6 +178,7 @@
 <script>
     flatpickr("#searchClassDate", {
         dateFormat: "Y-m-d",
+        minDate: "today"
     });
 </script>
 
