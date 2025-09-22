@@ -52,6 +52,7 @@
     <!--톱 페이지 예약 일람 표시 쿼리-->
     <select id="selectReservedClassByUser" parameterType="int" resultType="UserReservationDto">
         SELECT UR.id       as reservation_id,
+               UR.user_id  as user_id,
                UR.class_id as class_id,
                CTY.class_type_name,
                CTY.class_name,
@@ -76,13 +77,15 @@
         SELECT UR.*,
                US.email,
                US.name,
+               UR.user_id as user_id,
                CTY.class_type_name,
                CTY.class_name,
                CP.class_point_name,
                II.instructor_name,
                CT.class_start_time,
                CT.class_end_time,
-               CI.class_date
+               CI.class_date,
+               CI.id      as class_id
         FROM user_reservation AS UR
                  INNER JOIN post.class_info AS CI ON UR.class_id = CI.id
                  INNER JOIN post.class_type AS CTY ON CI.class_type_id = CTY.id

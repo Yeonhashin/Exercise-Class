@@ -47,21 +47,17 @@ public class UserReservationService {
         if (result > 0) {
             int reservationId = reservation.getId();
             String status = isWait ? "reserve-wait" : "reserve";
-            context.getBean(EmailAsyncService.class).triggerEmailAsync(reservationId, status);
+            emailAsyncService.triggerEmailAsync(reservationId, status);
         }
         return result;
     }
 
     // 수업 예약 취소
     public int cancelReservation(int userId, int reservationId, boolean isWait) throws Exception {
-        UserReservationDto reservation = new UserReservationDto();
-        reservation.setUser_id(userId);
-        reservation.setClass_id(reservationId);
-
         int result = userReservationDao.update(userId, reservationId);
         if (result > 0) {
             String status = isWait ? "cancel-wait" : "cancel";
-            context.getBean(EmailAsyncService.class).triggerEmailAsync(reservationId, status);
+            emailAsyncService.triggerEmailAsync(reservationId, status);
         }
         return result;
     }
