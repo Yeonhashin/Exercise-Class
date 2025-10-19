@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -94,15 +94,26 @@ public class LoginController {
     }
 
     @PostMapping("/register")
-    public String register(String email, String password, String name, Model m, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public String register(String email, String password, String name, Model m, HttpServletResponse response, RedirectAttributes redirectAttributes) throws Exception {
+
+        if (loginService.existsByEmail(email)) {
+            m.addAttribute("msg", "이미 등록된 이메일입니다.");
+            m.addAttribute("email", email);
+            m.addAttribute("name", name);
+            return "registerForm";
+        }
+
         Map map = new HashMap();
         map.put("email", email);
         map.put("password", password);
         map.put("name", name);
         int insertUser = loginService.insertUser(map);
+
         if (insertUser == 0) {
-            String msg = URLEncoder.encode("회원가입에 실패하였습니다.", "utf-8");
-            return "redirect:/login/register?msg=" + msg;
+            m.addAttribute("msg", "회원가입이 실패하였습니다. 다시 한번 입력해주세요.");
+            m.addAttribute("email", email);
+            m.addAttribute("name", name);
+            return "registerForm";
         }
 
         Cookie cookie = new Cookie("rememberEmail", "");
@@ -110,7 +121,8 @@ public class LoginController {
         cookie.setPath("/");
         response.addCookie(cookie);
 
-        return "redirect:/";
+        redirectAttributes.addAttribute("registered", "true");
+        return "redirect:/login/login";
     }
 }
 

@@ -1,7 +1,7 @@
 package com.example.BaseProject.service;
 
-import com.example.BaseProject.dao.*;
-import com.example.BaseProject.domain.*;
+import com.example.BaseProject.dao.UserDao;
+import com.example.BaseProject.domain.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,7 @@ public class LoginService {
     UserDao userDao;
 
     public UserDto selectUser(Map map) throws Exception {
-        if(userDao.selectUser(map) != null) {
+        if (userDao.selectUser(map) != null) {
             userDao.updateLoginInfo(map);
         }
         return userDao.selectUser(map);
@@ -21,5 +21,9 @@ public class LoginService {
 
     public int insertUser(Map map) throws Exception {
         return userDao.insertUser(map);
+    }
+
+    public boolean existsByEmail(String email) throws Exception {
+        return userDao.existsByEmail(email) > 0;
     }
 }

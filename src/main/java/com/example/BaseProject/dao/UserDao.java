@@ -12,7 +12,7 @@ public class UserDao {
 
     @Autowired
     private SqlSession session;
-    private static String namespace="com.example.BaseProject.dao.UserMapper.";
+    private static String namespace = "com.example.BaseProject.dao.UserMapper.";
 
     public UserDto selectUser(Map map) throws Exception {
         return session.selectOne(namespace + "select", map);
@@ -24,5 +24,9 @@ public class UserDao {
 
     public int insertUser(Map map) throws Exception {
         return session.insert(namespace + "insert", map);
+    }
+
+    public int existsByEmail(String email) throws Exception {
+        return session.selectOne(namespace + "countByEmail", email);
     }
 }

@@ -43,16 +43,24 @@
     <div class="col-md-4">
         <h3 class="text-center mb-4">Sign Up</h3>
         <form th:action="@{/login/register}" method="post" onsubmit="return formCheck(this);">
-            <div id="msg" style="color:red; font-size:0.9em; margin-bottom:10px;"></div>
+            <!-- 공통 메시지 박스 -->
+            <div id="msgBox"
+                 th:if="${msg}"
+                 class="alert alert-danger text-center py-2 mb-3"
+                 role="alert"
+                 th:text="${msg}">
+            </div>
 
             <div class="form-floating mb-3">
-                <input type="email" class="form-control" id="email" name="email" placeholder="Email address" value=""
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email address"
+                       th:value="${email}"
                        required>
                 <label for="email">Email address</label>
             </div>
 
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="name" name="name" placeholder="name" value="" required>
+                <input type="text" class="form-control" id="name" name="name" placeholder="name" th:value="${name}"
+                       required>
                 <label for="name">Name</label>
             </div>
 
@@ -81,27 +89,34 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 <script>
     function formCheck(frm) {
-        let msg = '';
-        if (frm.email.value.length == 0) {
-            setMessage('이메일을 입력해주세요.', frm.email);
-            return false;
-        }
-        if (frm.password.value.length == 0) {
-            setMessage('패스워드를 입력해주세요.', frm.password);
+        // 비밀번호 확인
+        if (frm.password.value.length < 4) {
+            showMessage('비밀번호는 4자 이상이어야 합니다.');
+            frm.password.focus();
             return false;
         }
 
         if (frm.password.value !== frm.confirm_password.value) {
-            setMessage('패스워드가 일치하지 않습니다.', frm.confirm_password);
+            showMessage('비밀번호가 일치하지 않습니다.');
+            frm.confirm_password.focus();
             return false;
         }
+
         return true;
     }
 
-    function setMessage(msg, element) {
-        document.getElementById("msg").innerHTML = msg;
-        if (element) {
-            element.select();
+    function showMessage(msg) {
+        const msgBox = document.getElementById('msgBox');
+        if (msgBox) {
+            msgBox.style.display = 'block';
+            msgBox.innerText = msg;
+        } else {
+            const newBox = document.createElement('div');
+            newBox.id = 'msgBox';
+            newBox.className = 'alert alert-danger text-center py-2 mb-3';
+            newBox.innerText = msg;
+            const form = document.querySelector('form');
+            form.prepend(newBox);
         }
     }
 </script>
