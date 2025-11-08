@@ -25,6 +25,7 @@
 | Tools | IntelliJ, GitHub |
 
 ---
+---
 
 ## 2. 시스템 아키텍처
 
@@ -39,6 +40,7 @@
 | `Reservation` | 예약/취소/대기예약 처리 |
 | `Notice` | 게시판 관리 |
 
+---
 ---
 
 ## 3. 데이터베이스 구조
@@ -56,7 +58,6 @@
 | update_dt | DATETIME | 수정일시 |
 | updated | VARCHAR(10) | 최종 수정자 |
 
----
 
 ### class_point
 | 컬럼명 | 타입 | 설명 |
@@ -68,7 +69,6 @@
 | create_dt | DATETIME | 생성일시 |
 | update_dt | DATETIME | 수정일시 |
 
----
 
 ### class_time
 | 컬럼명 | 타입 | 설명 |
@@ -79,7 +79,6 @@
 | create_dt | DATETIME | 생성일시 |
 | update_dt | DATETIME | 수정일시 |
 
----
 
 ### class_type
 | 컬럼명 | 타입 | 설명 |
@@ -92,7 +91,6 @@
 | create_dt | DATETIME | 생성일시 |
 | update_dt | DATETIME | 수정일시 |
 
----
 
 ### instructor_info
 | 컬럼명 | 타입 | 설명 |
@@ -103,7 +101,6 @@
 | create_dt | DATETIME | 생성일시 |
 | update_dt | DATETIME | 수정일시 |
 
----
 
 ### notice
 | 컬럼명 | 타입 | 설명 |
@@ -116,7 +113,6 @@
 | create_dt | DATETIME | 생성일시 |
 | update_dt | DATETIME | 수정일시 |
 
----
 
 ### user
 | 컬럼명 | 타입 | 설명 |
@@ -130,7 +126,6 @@
 | create_dt | DATETIME | 생성일시 |
 | update_dt | DATETIME | 수정일시 |
 
----
 
 ### user_reservation
 | 컬럼명 | 타입 | 설명 |
@@ -143,6 +138,7 @@
 | update_dt | DATETIME | 수정일시 |
 | updated_user | VARCHAR(45) | 최종 수정자 |
 
+---
 ---
 
 ## 4. 주요 화면 사양
@@ -173,6 +169,7 @@
 ### 4.6 공지사항 화면
   1.`notice`테이블 기반 공지사항 정보 표시
 
+---
 ---
 
 ## 5. 주요 로직 
